@@ -1,6 +1,6 @@
 # Cloudflare Tunnel connector for example.com
 # Project folder on the NAS: TO_BE_VERIFIED (likely /volume1/docker/cloudflared)
-# restart: observed auto-restart DISABLED in UGOS on 2026-11-11; unless-stopped is the recommendation
+# restart: live container uses unless-stopped (Portainer stack cloudflared, verified 2026-11-11)
 # command: TO_BE_VERIFIED (inferred; standard for token-managed tunnels)
 # Reconstructed from the running container (11 Nov 2026). The real token
 # is only on the NAS. Put it in a .env file next to this compose file

@@ -10,7 +10,7 @@ Reverse proxy with a web UI. Optional middle hop (Pattern B) between the tunnel 
 | --- | --- |
 | Type | Docker project `npm` |
 | Images | `jc21/nginx-proxy-manager:latest` |
-| Restart policy | `unless-stopped` in this file; observed policy TO_BE_VERIFIED. |
+| Restart policy | `unless-stopped` (Portainer stack `npm`, VERIFIED 2026-11-11). |
 | Inventory entry | [`inventory/services.yaml`](../../inventory/services.yaml) key `nginx-proxy-manager` |
 
 ## Ports
@@ -50,7 +50,7 @@ The apps behind NPM are reached by their own `https://<name>.example.com` addres
 None to start. Pattern B routes depend on it being up.
 
 ## Domain and routing
-Serves no public hostname: the four old `example.net` routes that pointed at it were removed on 2026-11-11, and the `example.com` routes go straight to each app. It can be stopped or removed once nothing on the LAN uses it. NPM was found stopped on 2026-11-11 (stopped 2026-11-04, auto-restart disabled) and started again; set `docker update --restart unless-stopped Nginx-Proxy-Manager` over SSH so it survives restarts. See [domains/nginx-proxy-manager-setup.md](../../domains/nginx-proxy-manager-setup.md).
+Serves no public hostname: the four old `example.net` routes that pointed at it were removed on 2026-11-11, and the `example.com` routes go straight to each app. It can be stopped or removed once nothing on the LAN uses it. NPM was found stopped on 2026-11-11 (stopped 2026-11-04; its policy was `on-failure:5`). Its Portainer stack `npm` now uses `restart: unless-stopped` (redeployed 2026-11-11). See [domains/nginx-proxy-manager-setup.md](../../domains/nginx-proxy-manager-setup.md).
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > nginx-proxy-manager`) and any data subfolders listed above.

@@ -9,6 +9,8 @@ Newest first. Infrastructure changes and documentation baselines.
 - **cloudflare**: Access app "NAS admin (mynas + portainer)" with reusable policy "Owner only"
   now protects `mynas` and `portainer`.
 - **home-assistant**: `ha.example.com` now points at the HA VM (192.168.30.99:8123) and loads.
+- **npm, mattermost**: Portainer stacks changed from `restart: on-failure:5` to `unless-stopped` and redeployed;
+  Mattermost site URL now `https://mattermost.example.com`. `cloudflare-tunnel` already used `unless-stopped`.
 - **review**: full NAS settings review (kept in the private edition).
 
 ## 2026-11-11 (dashboard)

@@ -30,14 +30,13 @@ Removed: `oknote`, `portainer`, `mattermost`, `siyuan` (were Pattern B through N
 Notes:
 - The new domain does not use Nginx Proxy Manager, so an NPM outage no longer takes apps offline.
   NPM no longer serves any public hostname.
-- NPM stopped on 2026-11-04 at 22:15 (it received a stop signal, exit code 0) and did not come
-  back because its auto-restart is disabled. Started again 2026-11-11. Same for Mattermost and
-  Mattermost-DB. **cloudflare-tunnel also has auto-restart disabled**, so after a NAS reboot remote access stays down
-  until it is started by hand. Fix for good: `docker update --restart unless-stopped cloudflare-tunnel Nginx-Proxy-Manager Mattermost Mattermost-DB`
-  over SSH (these projects were created outside the UGOS Docker app, which cannot edit them).
+- NPM stopped on 2026-11-04 at 22:15 (stop signal, exit code 0) and did not come back because its
+  restart policy was `on-failure:5`, which ignores a clean stop. Mattermost and Mattermost-DB had the same.
+  Fixed 2026-11-11: their Portainer stacks (`npm`, `mattermost`) now use `restart: unless-stopped` and were
+  redeployed. `cloudflare-tunnel` already had `unless-stopped` (it came back by itself on 2026-11-05).
+  UGOS shows "Disabled" for every policy except `always`, so its Auto-restart field is misleading.
 - Immich external domain set to `https://immich.example.com` (2026-11-11).
-- Mattermost's running container still has `MM_SERVICESETTINGS_SITEURL=https://mattermost.example.net`;
-  the compose file in this repo has the new value. Recreate the container to apply it.
+- Mattermost's site URL is `https://mattermost.example.com` (Portainer stack `mattermost`, redeployed 2026-11-11).
 - Cloudflare Access app "NAS admin (mynas + portainer)" protects `mynas.example.com` and
   `portainer.example.com` with the reusable policy "Owner only" (email one-time code, the owner's
   address only). Both apps still ask for their own login after that.

@@ -12,7 +12,7 @@ Work from the outside in: DNS -> Cloudflare -> tunnel -> NPM -> app.
 | **413** / big uploads fail | Cloudflare free plan 100 MB per request, or NPM limit | Upload large files on LAN; NPM Advanced `client_max_body_size 0;` |
 | Websocket apps break | Websockets not enabled | NPM: tick Websockets Support |
 | Access login loop for phone app | Phone apps cannot do browser Access | Remove Access for that host or use a service token |
-| Everything down after reboot | cloudflared auto-restart disabled | Set `restart: unless-stopped` |
+| Everything down after reboot | a container's restart policy is `no` or `on-failure` | Set `restart: unless-stopped` in its Portainer stack |
 
 Useful commands (NAS, read only):
 ```sh

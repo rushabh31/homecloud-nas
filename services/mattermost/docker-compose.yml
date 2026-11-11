@@ -1,7 +1,7 @@
 # Mattermost Team Edition + PostgreSQL 18
 # Project folder on the NAS: Shared folder/docker/mattermost
 # Reconstructed from the containers (11 Nov 2026). Currently stopped.
-# restart: observed auto-restart DISABLED in UGOS; unless-stopped is the recommendation
+# restart: live stack uses unless-stopped (Portainer stack mattermost, 2026-11-11)
 # Secrets come from .env (see .env.example).
 
 services:

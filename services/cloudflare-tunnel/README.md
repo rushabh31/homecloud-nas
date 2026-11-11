@@ -10,7 +10,7 @@ Outbound-only connector that publishes selected NAS apps at `*.example.com` with
 | --- | --- |
 | Type | Docker container `cloudflare-tunnel` (project folder TO_BE_VERIFIED) |
 | Images | `cloudflare/cloudflared:latest` |
-| Restart policy | Observed: auto-restart **Disabled** in UGOS (VERIFIED 2026-11-11). Recommended: `unless-stopped` (this file) so the tunnel returns after a reboot. |
+| Restart policy | `unless-stopped` (read from Docker through Portainer, VERIFIED 2026-11-11). UGOS shows "Disabled" because it only counts `always`. Managed as Portainer stack `cloudflared`. |
 | Inventory entry | [`inventory/services.yaml`](../../inventory/services.yaml) key `cloudflare-tunnel` |
 
 ## Ports
@@ -66,7 +66,7 @@ Redeploy with the same token. If the token is lost: rotate it in the dashboard (
 | --- | --- |
 | Error 1033 | Tunnel not connected: container stopped or token wrong. |
 | 502 Bad Gateway | Tunnel fine, origin app down or wrong IP:port in the route. |
-| Tunnel shows `Down` after reboot | Auto-restart disabled; set restart policy. |
+| Tunnel shows `Down` after reboot | Check the container's restart policy in Portainer; it should be `unless-stopped`. |
 
 ## Security notes
 Whoever holds the token can run the tunnel. Rotate it if it leaks. Consider Cloudflare Access in front of every hostname.

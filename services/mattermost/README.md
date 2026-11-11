@@ -10,7 +10,7 @@ Self-hosted team chat.
 | --- | --- |
 | Type | Docker project `mattermost` (2 containers) |
 | Images | `mattermost/mattermost-team-edition:latest`, `postgres:18` |
-| Restart policy | Observed: auto-restart **Disabled** (VERIFIED 2026-11-11). This file uses `unless-stopped`. |
+| Restart policy | `unless-stopped` (Portainer stack `mattermost`, changed from `on-failure:5` on 2026-11-11). |
 | Inventory entry | [`inventory/services.yaml`](../../inventory/services.yaml) key `mattermost` |
 
 ## Ports
@@ -50,7 +50,7 @@ The site URL in the compose file must match the address people use, or links and
 `db` must be healthy first.
 
 ## Domain and routing
-`mattermost.example.com` via Cloudflare Tunnel UGreenNAS, direct to `http://192.168.0.119:8401` (VERIFIED 2026-11-11). The running container still has the old site URL (`MM_SERVICESETTINGS_SITEURL`); the compose file here has the new one, and the container must be recreated to apply it. Auto-restart is off on the running containers: after a NAS restart start them in the Docker app, or set `docker update --restart unless-stopped Mattermost Mattermost-DB` over SSH.
+`mattermost.example.com` via Cloudflare Tunnel UGreenNAS, direct to `http://192.168.0.119:8401` (VERIFIED 2026-11-11). The running containers use the new site URL and `restart: unless-stopped` (Portainer stack `mattermost`, redeployed 2026-11-11). Edit the stack in Portainer, not in the UGOS Docker app, which cannot edit it.
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > mattermost`) and any data subfolders listed above.

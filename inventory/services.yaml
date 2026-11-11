@@ -32,7 +32,7 @@ services:
     networks: [cloudflared_default]
     depends_on: []
     routing: {public_hostname: "8 routes, all example.com, see domains/domain-inventory.md", via: cloudflare}
-    notes: Auto-restart is disabled (UGOS Docker > Others); after a NAS reboot the tunnel stays down until started by hand.
+    notes: Portainer stack "cloudflared" (#2), restart unless-stopped. UGOS shows Auto-restart "Disabled" for anything but always.
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: nginx-proxy-manager

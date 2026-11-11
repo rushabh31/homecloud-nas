@@ -63,8 +63,8 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | Service | Kind | Host port | State | Public hostname | Status of facts |
 | --- | --- | --- | --- | --- | --- |
 | [immich](services/immich/) | Docker project (4 containers) | 2283 | Running | immich.example.com | VERIFIED 2026-11-11 |
-| [cloudflare-tunnel](services/cloudflare-tunnel/) | Docker | none | Running (auto-restart off) | is the entry point | VERIFIED 2026-11-11 |
-| [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Running (started 2026-11-11, auto-restart off) | none (old domain removed) | VERIFIED 2026-11-11 |
+| [cloudflare-tunnel](services/cloudflare-tunnel/) | Docker | none | Running (restart unless-stopped) | is the entry point | VERIFIED 2026-11-11 |
+| [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Running (restart unless-stopped since 2026-11-11) | none (old domain removed) | VERIFIED 2026-11-11 |
 | [portainer](services/portainer/) | Docker | 9000, 8000 | Running | portainer.example.com (Cloudflare Access login) | VERIFIED 2026-11-11 |
 | [mattermost](services/mattermost/) | Docker project (2 containers) | 8401 | Running (started 2026-11-11) | mattermost.example.com | VERIFIED 2026-11-11 |
 | [oknote](services/oknote/) | App Center app (Docker) | 38080 | Running | oknote.example.com | VERIFIED 2026-11-11 |
