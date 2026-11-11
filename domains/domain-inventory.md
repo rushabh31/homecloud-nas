@@ -3,8 +3,9 @@
 Update this table in the same commit as any Cloudflare or NPM change.
 
 Primary domain: **example.com** (registered at Namecheap 2026-11-11, nameservers
-the two Cloudflare nameservers). Old domain **example.net**
-still routes in parallel until the owner approves removing it.
+the two Cloudflare nameservers). Old domain **example.net**:
+all six tunnel routes and their DNS records were removed on 2026-11-11 at the owner's request.
+The zone and its registration were left alone.
 
 Read from the Cloudflare dashboard (tunnel **UGreenNAS**, Routes tab) and opened in a browser on 2026-11-11: VERIFIED.
 
@@ -16,33 +17,30 @@ Read from the Cloudflare dashboard (tunnel **UGreenNAS**, Routes tab) and opened
 | `mattermost.example.com` | Mattermost | `http://192.168.0.119:8401` | Yes, Mattermost loads |
 | `oknote.example.com` | OKNote | `http://192.168.0.119:38080` | Yes, sign-in page loads |
 | `siyuan.example.com` | SiYuan | `http://192.168.0.119:6806` | Yes, unlock page loads |
-| `portainer.example.com` | Portainer | `http://192.168.0.119:9000` | Yes, login page loads (public, see note) |
-| `ha.example.com` | Home Assistant | `http://192.168.0.75:8123` | No, 502: HA itself is down (being moved to VM "HAOS-2026") |
+| `portainer.example.com` | Portainer | `http://192.168.0.119:9000` | Yes, Cloudflare Access (owner only), then Portainer login |
+| `ha.example.com` | Home Assistant | `http://192.168.30.99:8123` | Yes, HA login page loads (HA VM on the NAS) |
+| `mynas.example.com` | UGOS web admin (the NAS itself) | `http://192.168.0.119:9999` | Yes, Cloudflare Access (owner only), then UGOS login |
 | `dashboard.example.com` | Dashboard (Homepage) | `http://192.168.0.119:3010` | Yes, Cloudflare Access sign-in, then the dashboard |
 
-### example.net (old, kept until removal is approved)
+### example.net (routes removed 2026-11-11)
 
-| Hostname | Tunnel target | Pattern |
-| --- | --- | --- |
-| `oknote.example.net` | `http://192.168.0.119` (port 80 = NPM) | B |
-| `portainer.example.net` | `http://192.168.0.119` (NPM) | B |
-| `mattermost.example.net` | `http://192.168.0.119` (NPM) | B |
-| `siyuan.example.net` | `http://192.168.0.119` (NPM) | B |
-| `ha.example.net` | `http://192.168.0.75:8123` | A |
-| `immich.example.net` | `http://192.168.0.119:2283` | A |
+Removed: `oknote`, `portainer`, `mattermost`, `siyuan` (were Pattern B through NPM), `ha` and `immich`
+(were Pattern A). Each route's CNAME was deleted with it. These addresses no longer resolve.
 
 Notes:
 - The new domain does not use Nginx Proxy Manager, so an NPM outage no longer takes apps offline.
-  NPM still serves the four old Pattern B hostnames.
+  NPM no longer serves any public hostname.
 - NPM stopped on 2026-11-04 at 22:15 (it received a stop signal, exit code 0) and did not come
   back because its auto-restart is disabled. Started again 2026-11-11. Same for Mattermost and
-  Mattermost-DB. Fix for good: `docker update --restart unless-stopped Nginx-Proxy-Manager Mattermost Mattermost-DB`
+  Mattermost-DB. **cloudflare-tunnel also has auto-restart disabled**, so after a NAS reboot remote access stays down
+  until it is started by hand. Fix for good: `docker update --restart unless-stopped cloudflare-tunnel Nginx-Proxy-Manager Mattermost Mattermost-DB`
   over SSH (these projects were created outside the UGOS Docker app, which cannot edit them).
 - Immich external domain set to `https://immich.example.com` (2026-11-11).
 - Mattermost's running container still has `MM_SERVICESETTINGS_SITEURL=https://mattermost.example.net`;
   the compose file in this repo has the new value. Recreate the container to apply it.
-- Portainer controls every container. Put Cloudflare Access in front of
-  `portainer.example.com` or remove the route.
+- Cloudflare Access app "NAS admin (mynas + portainer)" protects `mynas.example.com` and
+  `portainer.example.com` with the reusable policy "Owner only" (email one-time code, the owner's
+  address only). Both apps still ask for their own login after that.
 - Records Cloudflare imported from Namecheap on zone setup (apex A, `www` CNAME, MX, TXT) were left as they are.
 - Cloudflare Access application "Patel Home Cloud dashboard" protects `dashboard.example.com` (reusable policy "Owner only", session 7 days).
 - Wildcard `*` route: none.

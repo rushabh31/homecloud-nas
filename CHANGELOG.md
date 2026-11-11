@@ -2,6 +2,15 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-11 (old domain removed, NAS review)
+- **domains**: all six `example.net` tunnel routes and their DNS records removed at the owner's
+  request (zone and registration untouched). The tunnel now has only `example.com` routes.
+- **ugos**: new route `mynas.example.com` to the UGOS web UI (port 9999).
+- **cloudflare**: Access app "NAS admin (mynas + portainer)" with reusable policy "Owner only"
+  now protects `mynas` and `portainer`.
+- **home-assistant**: `ha.example.com` now points at the HA VM (192.168.30.99:8123) and loads.
+- **review**: full NAS settings review (kept in the private edition).
+
 ## 2026-11-11 (dashboard)
 - **dashboard**: new Homepage start page "Patel Home Cloud" (UGOS project `dashboard`, port 3010) with a tile for every
   service. Published at `dashboard.example.com` through the tunnel, behind a new Cloudflare Access app using the "Owner only" policy.

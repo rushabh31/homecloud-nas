@@ -50,7 +50,7 @@ The apps behind NPM are reached by their own `https://<name>.example.com` addres
 None to start. Pattern B routes depend on it being up.
 
 ## Domain and routing
-Serves only the four old `example.net` hostnames (tunnel routes to `http://192.168.0.119:80`). The `example.com` routes go straight to each app and do not need NPM. NPM was found stopped on 2026-11-11 (stopped 2026-11-04, auto-restart disabled) and started again; set `docker update --restart unless-stopped Nginx-Proxy-Manager` over SSH so it survives restarts. See [domains/nginx-proxy-manager-setup.md](../../domains/nginx-proxy-manager-setup.md).
+Serves no public hostname: the four old `example.net` routes that pointed at it were removed on 2026-11-11, and the `example.com` routes go straight to each app. It can be stopped or removed once nothing on the LAN uses it. NPM was found stopped on 2026-11-11 (stopped 2026-11-04, auto-restart disabled) and started again; set `docker update --restart unless-stopped Nginx-Proxy-Manager` over SSH so it survives restarts. See [domains/nginx-proxy-manager-setup.md](../../domains/nginx-proxy-manager-setup.md).
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > nginx-proxy-manager`) and any data subfolders listed above.

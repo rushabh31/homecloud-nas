@@ -27,6 +27,6 @@ sequenceDiagram
 | NPM -> app | HTTP on LAN | No |
 
 Live (VERIFIED 2026-11-11): every `example.com` hostname uses Pattern A (tunnel straight to
-the app port). The old `example.net` hostnames for oknote, portainer, mattermost and siyuan
-still use Pattern B through NPM until they are removed.
+the app port). The old `example.net` routes (four of them Pattern B through NPM) were
+removed on 2026-11-11, so nothing public goes through NPM any more.
 Full guide: [domains/](../domains/README.md).

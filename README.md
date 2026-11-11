@@ -63,13 +63,13 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | Service | Kind | Host port | State | Public hostname | Status of facts |
 | --- | --- | --- | --- | --- | --- |
 | [immich](services/immich/) | Docker project (4 containers) | 2283 | Running | immich.example.com | VERIFIED 2026-11-11 |
-| [cloudflare-tunnel](services/cloudflare-tunnel/) | Docker | none | Running | is the entry point | VERIFIED 2026-11-11 (routes TO_BE_VERIFIED) |
-| [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Running (started 2026-11-11, auto-restart off) | serves the old domain only | VERIFIED 2026-11-11 |
-| [portainer](services/portainer/) | Docker | 9000, 8000 | Running | portainer.example.com (public, see warning) | VERIFIED 2026-11-11 |
+| [cloudflare-tunnel](services/cloudflare-tunnel/) | Docker | none | Running (auto-restart off) | is the entry point | VERIFIED 2026-11-11 |
+| [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Running (started 2026-11-11, auto-restart off) | none (old domain removed) | VERIFIED 2026-11-11 |
+| [portainer](services/portainer/) | Docker | 9000, 8000 | Running | portainer.example.com (Cloudflare Access login) | VERIFIED 2026-11-11 |
 | [mattermost](services/mattermost/) | Docker project (2 containers) | 8401 | Running (started 2026-11-11) | mattermost.example.com | VERIFIED 2026-11-11 |
 | [oknote](services/oknote/) | App Center app (Docker) | 38080 | Running | oknote.example.com | VERIFIED 2026-11-11 |
 | [siyuan](services/siyuan/) | App Center app (Docker) | 6806 | Running | siyuan.example.com | VERIFIED 2026-11-11 |
-| [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | VM stopped | ha.example.com (502 while HA is down) | VERIFIED 2026-11-11 |
+| [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | Running (HA VM, 192.168.30.99) | ha.example.com | VERIFIED 2026-11-11 |
 | [dashboard](services/dashboard/) | Docker project (Homepage) | 3010 | Running | dashboard.example.com (Cloudflare Access login) | VERIFIED 2026-11-11 |
 
 ## Quick access (phone and laptop)
@@ -77,13 +77,13 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | What | At home | Away from home | Phone app |
 | --- | --- | --- | --- |
 | **Dashboard (start here)** | `http://192.168.0.119:3010` | `https://dashboard.example.com` (Cloudflare Access login) | browser, add to home screen |
-| NAS itself (UGOS) | `http://192.168.0.119:9999` | UGREEN NAS app (remote access documented privately) | UGREEN NAS |
+| NAS itself (UGOS) | `http://192.168.0.119:9999` | `https://mynas.example.com` (Cloudflare Access login), or the UGREEN NAS app (remote access documented privately) | UGREEN NAS |
 | Immich | `http://192.168.0.119:2283` | `https://immich.example.com` | Immich |
 | OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` | browser |
 | Mattermost | `http://192.168.0.119:8401` | `https://mattermost.example.com` | Mattermost |
 | SiYuan | `http://192.168.0.119:6806` | `https://siyuan.example.com` | browser |
-| Home Assistant | `http://homeassistant.local:8123` | HA Cloud, VPN or a hostname | Home Assistant |
-| Portainer | `http://192.168.0.119:9000` | `https://portainer.example.com` (public: add Cloudflare Access) | browser |
+| Home Assistant | `http://192.168.30.99:8123` | `https://ha.example.com` | Home Assistant |
+| Portainer | `http://192.168.0.119:9000` | `https://portainer.example.com` (Cloudflare Access login) | browser |
 | NPM admin | `http://192.168.0.119:81` | VPN only, never published | browser |
 
 Details per service: the **Access from a phone or laptop** section of each `services/<name>/README.md`.
