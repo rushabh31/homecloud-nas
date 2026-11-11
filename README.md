@@ -1,6 +1,6 @@
 # home-nas-infrastructure
 
-> **Public edition.** Family member names, the real domain (shown as `example.com`) and some security settings are replaced with placeholders. The full version is kept privately.
+> **Public edition.** Family member names, the real domains (shown as `example.com`, old one as `example.net`) and some security settings are replaced with placeholders. The full version is kept privately.
 
 Operational memory for the family home lab: the UGREEN NAS **HomeCloud**,
 its Docker services and VM, the UniFi network, and the domain
@@ -64,12 +64,12 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | --- | --- | --- | --- | --- | --- |
 | [immich](services/immich/) | Docker project (4 containers) | 2283 | Running | immich.example.com | VERIFIED 2026-11-11 |
 | [cloudflare-tunnel](services/cloudflare-tunnel/) | Docker | none | Running | is the entry point | VERIFIED 2026-11-11 (routes TO_BE_VERIFIED) |
-| [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Stopped | wildcard target (TO_BE_VERIFIED) | VERIFIED 2026-11-11 |
-| [portainer](services/portainer/) | Docker | 9000, 8000 | Running | none | VERIFIED 2026-11-11 |
-| [mattermost](services/mattermost/) | Docker project (2 containers) | 8401 | Stopped | mattermost.example.com | VERIFIED 2026-11-11 |
-| [oknote](services/oknote/) | App Center app (Docker) | 38080 | Running | oknote.example.com (USER-PROVIDED) | VERIFIED 2026-11-11 |
-| [siyuan](services/siyuan/) | App Center app (Docker) | 6806 | Running | none known | VERIFIED 2026-11-11 |
-| [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | VM stopped | none known | VERIFIED 2026-11-11 |
+| [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Running (started 2026-11-11, auto-restart off) | serves the old domain only | VERIFIED 2026-11-11 |
+| [portainer](services/portainer/) | Docker | 9000, 8000 | Running | portainer.example.com (public, see warning) | VERIFIED 2026-11-11 |
+| [mattermost](services/mattermost/) | Docker project (2 containers) | 8401 | Running (started 2026-11-11) | mattermost.example.com | VERIFIED 2026-11-11 |
+| [oknote](services/oknote/) | App Center app (Docker) | 38080 | Running | oknote.example.com | VERIFIED 2026-11-11 |
+| [siyuan](services/siyuan/) | App Center app (Docker) | 6806 | Running | siyuan.example.com | VERIFIED 2026-11-11 |
+| [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | VM stopped | ha.example.com (502 while HA is down) | VERIFIED 2026-11-11 |
 
 ## Quick access (phone and laptop)
 
@@ -77,11 +77,12 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | --- | --- | --- | --- |
 | NAS itself (UGOS) | `http://192.168.0.119:9999` | UGREEN NAS app (remote access documented privately) | UGREEN NAS |
 | Immich | `http://192.168.0.119:2283` | `https://immich.example.com` | Immich |
-| OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` (502 until NPM runs) | browser |
-| Mattermost (stopped) | `http://192.168.0.119:8401` | `https://mattermost.example.com` | Mattermost |
-| SiYuan | `http://192.168.0.119:6806` | `https://siyuan.example.com` (502 until NPM runs) | browser |
+| OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` | browser |
+| Mattermost | `http://192.168.0.119:8401` | `https://mattermost.example.com` | Mattermost |
+| SiYuan | `http://192.168.0.119:6806` | `https://siyuan.example.com` | browser |
 | Home Assistant | `http://homeassistant.local:8123` | HA Cloud, VPN or a hostname | Home Assistant |
-| Portainer, NPM admin | `:9000`, `:81` | VPN only, never published | browser |
+| Portainer | `http://192.168.0.119:9000` | `https://portainer.example.com` (public: add Cloudflare Access) | browser |
+| NPM admin | `http://192.168.0.119:81` | VPN only, never published | browser |
 
 Details per service: the **Access from a phone or laptop** section of each `services/<name>/README.md`.
 A home VPN (UniFi WireGuard or Teleport on the Dream Machine Pro) is not set up yet (TO_BE_VERIFIED).

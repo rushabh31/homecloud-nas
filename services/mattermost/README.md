@@ -50,7 +50,7 @@ The site URL in the compose file must match the address people use, or links and
 `db` must be healthy first.
 
 ## Domain and routing
-`mattermost.example.com` via the tunnel (route target TO_BE_VERIFIED).
+`mattermost.example.com` via Cloudflare Tunnel UGreenNAS, direct to `http://192.168.0.119:8401` (VERIFIED 2026-11-11). The running container still has the old site URL (`MM_SERVICESETTINGS_SITEURL`); the compose file here has the new one, and the container must be recreated to apply it. Auto-restart is off on the running containers: after a NAS restart start them in the Docker app, or set `docker update --restart unless-stopped Mattermost Mattermost-DB` over SSH.
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > mattermost`) and any data subfolders listed above.

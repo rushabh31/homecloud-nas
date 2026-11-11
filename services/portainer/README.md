@@ -35,8 +35,8 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 ## Access from a phone or laptop
 | Device | At home | Away from home |
 | --- | --- | --- |
-| Laptop | Browser: `http://192.168.0.119:9000` | Only through a VPN to the home network (UniFi VPN on the Dream Machine Pro, WireGuard or Teleport; not set up yet, TO_BE_VERIFIED), then use the home address. Do not publish Portainer: it controls every container. |
-| Phone | Same address in the phone browser | VPN only |
+| Laptop | Browser: `http://192.168.0.119:9000` | `https://portainer.example.com` (published 2026-11-11; it controls every container, so add Cloudflare Access or remove the route) |
+| Phone | Same address in the phone browser | `https://portainer.example.com` |
 
 ## Networks
 `portainer_default`.
@@ -45,7 +45,7 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 Docker engine.
 
 ## Domain and routing
-None. Never publish it.
+`portainer.example.com` via Cloudflare Tunnel UGreenNAS, direct to `http://192.168.0.119:9000` (added 2026-11-11 at the owner's request to bring all services up on the new domain). **Risk:** Portainer controls every container. Put Cloudflare Access in front of it or remove the route.
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > portainer`) and any data subfolders listed above.

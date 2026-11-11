@@ -43,7 +43,7 @@ Default `bridge`.
 None.
 
 ## Domain and routing
-None known (TO_BE_VERIFIED in Cloudflare).
+`siyuan.example.com` via Cloudflare Tunnel UGreenNAS, direct to `http://192.168.0.119:6806` (VERIFIED 2026-11-11). Protected by SiYuan's access code.
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > siyuan`) and any data subfolders listed above.

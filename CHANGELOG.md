@@ -2,6 +2,14 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-11 (domain move)
+- **domains**: primary domain is now `example.com` (Cloudflare zone, Namecheap nameservers
+  switched). Six tunnel routes added that go straight to each app's port. Old `example.net`
+  routes kept until removal is approved.
+- **nginx-proxy-manager**: found stopped since 2026-11-04 (auto-restart disabled); started.
+- **mattermost**: both containers started; compose SiteURL changed to the new domain.
+- **immich**: external domain set to `https://immich.example.com`.
+
 ## 2026-11-11
 - **Baseline**: repository created from a read-only review of the NAS (UGOS UI),
   Immich API and UniFi topology page. No shell access used.
@@ -17,7 +25,7 @@ Newest first. Infrastructure changes and documentation baselines.
   validation scripts and GitHub checks. No NAS service was changed.
 - **docs**: added "Access from a phone or laptop" (at home and away) to every
   service README, the service template, and a quick-access table in the README.
-- **immich**: published at `immich.example.com` through Cloudflare Tunnel
+- **immich**: published at `immich.example.net` through Cloudflare Tunnel
   UGreenNAS (direct to 192.168.0.119:2283); Immich External domain set to it.
 - **docs**: tunnel routes read from Cloudflare and recorded. The four NPM-backed
   hostnames return 502 because NPM is stopped (not changed).

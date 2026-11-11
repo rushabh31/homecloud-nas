@@ -31,7 +31,7 @@ services:
       - {name: cloudflare-tunnel, image: "cloudflare/cloudflared:latest", ports: []}
     networks: [cloudflared_default]
     depends_on: []
-    routing: {public_hostname: "6 routes, see domains/domain-inventory.md", via: cloudflare}
+    routing: {public_hostname: "12 routes (6 new, 6 old), see domains/domain-inventory.md", via: cloudflare}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: nginx-proxy-manager
@@ -43,7 +43,7 @@ services:
       - {name: Nginx-Proxy-Manager, image: "jc21/nginx-proxy-manager:latest", ports: ["80:80", "81:81", "443:443"]}
     networks: [npm_default]
     depends_on: []
-    routing: {public_hostname: null, via: null}
+    routing: {public_hostname: "old domain only", via: "tunnel routes on the old domain point at port 80"}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: portainer
@@ -55,7 +55,7 @@ services:
       - {name: Portainer, image: "portainer/portainer-ce:latest", ports: ["9000:9000", "8000:8000"]}
     networks: [portainer_default]
     depends_on: []
-    routing: {public_hostname: null, via: null}
+    routing: {public_hostname: portainer.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.119:9000 (public, no Access yet)"}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: mattermost
@@ -68,7 +68,7 @@ services:
       - {name: Mattermost-DB, image: "postgres:18", ports: []}
     networks: [mattermost_default]
     depends_on: [cloudflare-tunnel]
-    routing: {public_hostname: mattermost.example.com, via: cloudflare-tunnel}
+    routing: {public_hostname: mattermost.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.119:8401"}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: oknote
@@ -80,7 +80,7 @@ services:
       - {name: oknote, image: "oknote/oknote:3.2.7", ports: ["38080:38080"]}
     networks: [bridge]
     depends_on: [cloudflare-tunnel]
-    routing: {public_hostname: oknote.example.com, via: "TO_BE_VERIFIED (USER-PROVIDED hostname)"}
+    routing: {public_hostname: oknote.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.119:38080"}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: siyuan
@@ -92,7 +92,7 @@ services:
       - {name: siyuan-app-1, image: "ugreen/siyuan:v3.8.4", ports: ["6806:6806"]}
     networks: [bridge]
     depends_on: []
-    routing: {public_hostname: null, via: null}
+    routing: {public_hostname: siyuan.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.119:6806"}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: home-assistant
@@ -103,7 +103,7 @@ services:
     containers: []
     networks: [bridge0]
     depends_on: []
-    routing: {public_hostname: null, via: null}
+    routing: {public_hostname: ha.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.75:8123"}
     notes: A separate "homeassistant" device is also on the LAN (UniFi topology). Migration in progress.
     last_verified: 2026-11-11
     status_of_facts: VERIFIED

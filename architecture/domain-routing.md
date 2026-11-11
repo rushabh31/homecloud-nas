@@ -26,6 +26,7 @@ sequenceDiagram
 | cloudflared -> NPM / app | HTTP on LAN | No (stays inside the NAS/LAN) |
 | NPM -> app | HTTP on LAN | No |
 
-Live (VERIFIED 2026-11-11): oknote, portainer, mattermost and siyuan use Pattern B
-(tunnel -> NPM on port 80, currently stopped, so 502); immich and ha use Pattern A.
+Live (VERIFIED 2026-11-11): every `example.com` hostname uses Pattern A (tunnel straight to
+the app port). The old `example.net` hostnames for oknote, portainer, mattermost and siyuan
+still use Pattern B through NPM until they are removed.
 Full guide: [domains/](../domains/README.md).

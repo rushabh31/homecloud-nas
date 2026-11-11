@@ -35,7 +35,7 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 ## Access from a phone or laptop
 | Device | At home | Away from home |
 | --- | --- | --- |
-| Phone | Browser: `http://192.168.0.119:38080`, or `https://oknote.example.com` | `https://oknote.example.com` (if Cloudflare Access is on, sign in with your email code first) |
+| Phone | Browser: `http://192.168.0.119:38080`, or `https://oknote.example.com` | `https://oknote.example.com`  |
 | Laptop | Same as phone | Same as phone |
 
 Add the page to the phone's home screen (Share > Add to Home Screen on iPhone, menu > Add to Home screen on Android) for an app-like icon.
@@ -47,7 +47,7 @@ Default `bridge`.
 None.
 
 ## Domain and routing
-`oknote.example.com` (USER-PROVIDED) via the tunnel to `http://192.168.0.119:38080` (target TO_BE_VERIFIED).
+`oknote.example.com` via Cloudflare Tunnel UGreenNAS, direct to `http://192.168.0.119:38080` (VERIFIED 2026-11-11).
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > oknote`) and any data subfolders listed above.
