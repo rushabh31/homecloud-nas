@@ -35,6 +35,14 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 | `INITIAL_ADMIN_EMAIL`, `INITIAL_ADMIN_PASSWORD` | First-start admin only. **Secret.** |
 | `TZ` | `America/New_York` |
 
+## Access from a phone or laptop
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Laptop | Admin UI: `http://192.168.0.119:81` (NPM must be running) | Only through a VPN to the home network (UniFi VPN on the Dream Machine Pro, WireGuard or Teleport; not set up yet, TO_BE_VERIFIED), then use the home address. Never publish port 81. |
+| Phone | Same address in the phone browser (small screen; laptop is easier) | VPN only |
+
+The apps behind NPM are reached by their own `https://<name>.example.com` addresses, not through this page.
+
 ## Networks
 `npm_default`. Forwards to apps via `192.168.0.119:<port>`.
 

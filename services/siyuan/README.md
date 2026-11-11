@@ -30,6 +30,12 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 | --- | --- |
 | `TZ` | `America/Manaus` observed. Access code is set in the app (secret, not documented). |
 
+## Access from a phone or laptop
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Laptop | Browser: `http://192.168.0.119:6806`, enter the SiYuan access code | Only through a VPN to the home network (UniFi VPN on the Dream Machine Pro, WireGuard or Teleport; not set up yet, TO_BE_VERIFIED), then use the home address, unless a hostname is published (set an access code and Cloudflare Access first) |
+| Phone | Same address in the phone browser | VPN only today |
+
 ## Networks
 Default `bridge`.
 

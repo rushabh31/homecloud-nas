@@ -30,6 +30,12 @@ Names only. Real values live in `.env` on the NAS.
 | --- | --- |
 | `<VAR>` | <meaning; mark secrets> |
 
+## Access from a phone or laptop
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Phone | <app to install, or browser address `http://192.168.0.119:<port>`> | <public hostname / VPN only> |
+| Laptop | <browser address> | <public hostname / VPN only> |
+
 ## Networks
 <project default network / shared `proxy` network>
 

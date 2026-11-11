@@ -15,3 +15,5 @@ Newest first. Infrastructure changes and documentation baselines.
 - **repo**: knowledge base structure added: architecture, per-service folders,
   networking, domains, storage, backups, runbooks, templates, discovery/drift/
   validation scripts and GitHub checks. No NAS service was changed.
+- **docs**: added "Access from a phone or laptop" (at home and away) to every
+  service README, the service template, and a quick-access table in the README.

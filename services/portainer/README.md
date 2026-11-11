@@ -32,6 +32,12 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 | --- | --- |
 | none | |
 
+## Access from a phone or laptop
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Laptop | Browser: `http://192.168.0.119:9000` | Only through a VPN to the home network (UniFi VPN on the Dream Machine Pro, WireGuard or Teleport; not set up yet, TO_BE_VERIFIED), then use the home address. Do not publish Portainer: it controls every container. |
+| Phone | Same address in the phone browser | VPN only |
+
 ## Networks
 `portainer_default`.
 

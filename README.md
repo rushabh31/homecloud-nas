@@ -71,6 +71,21 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | [siyuan](services/siyuan/) | App Center app (Docker) | 6806 | Running | none known | VERIFIED 2026-11-11 |
 | [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | VM stopped | none known | VERIFIED 2026-11-11 |
 
+## Quick access (phone and laptop)
+
+| What | At home | Away from home | Phone app |
+| --- | --- | --- | --- |
+| NAS itself (UGOS) | `http://192.168.0.119:9999` | UGREEN NAS app (remote access documented privately) | UGREEN NAS |
+| Immich | `http://192.168.0.119:2283` | VPN, or a hostname once published | Immich |
+| OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` | browser |
+| Mattermost (stopped) | `http://192.168.0.119:8401` | `https://mattermost.example.com` | Mattermost |
+| SiYuan | `http://192.168.0.119:6806` | VPN | browser |
+| Home Assistant | `http://homeassistant.local:8123` | HA Cloud, VPN or a hostname | Home Assistant |
+| Portainer, NPM admin | `:9000`, `:81` | VPN only, never published | browser |
+
+Details per service: the **Access from a phone or laptop** section of each `services/<name>/README.md`.
+A home VPN (UniFi WireGuard or Teleport on the Dream Machine Pro) is not set up yet (TO_BE_VERIFIED).
+
 ## The one rule
 
 > **No infrastructure change is complete until this repository is updated,

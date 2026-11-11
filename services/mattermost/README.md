@@ -33,6 +33,16 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 | `MM_SQLSETTINGS_DATASOURCE` | Built from the above |
 | `MM_SERVICESETTINGS_SITEURL` | `https://mattermost.example.com` (VERIFIED) |
 
+## Access from a phone or laptop
+Mattermost is **stopped** today; start the project first.
+
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Phone | Install **Mattermost** (App Store / Google Play), server URL `https://mattermost.example.com` (works at home too) | Same URL |
+| Laptop | Browser or the Mattermost desktop app: `https://mattermost.example.com`, or `http://192.168.0.119:8401` on the home network | `https://mattermost.example.com` |
+
+The site URL in the compose file must match the address people use, or links and the mobile app break.
+
 ## Networks
 `mattermost_default`.
 

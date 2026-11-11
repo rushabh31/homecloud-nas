@@ -30,6 +30,9 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 | --- | --- |
 | `TUNNEL_TOKEN` | **Secret.** Zero Trust > Networks > Tunnels > (tunnel) > Configure. Never commit. |
 
+## Access from a phone or laptop
+Nothing to open on a phone or laptop: the tunnel has no web page. Manage it from any browser at the Cloudflare Zero Trust dashboard (Networks > Tunnels). On the NAS, check it in Docker app > Container > `cloudflare-tunnel` > Log.
+
 ## Networks
 Own project network. Reaches apps via the NAS LAN IP `192.168.0.119:<port>`.
 

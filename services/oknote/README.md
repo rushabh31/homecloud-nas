@@ -32,6 +32,14 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 | --- | --- |
 | `TZ` | Container uses `America/Manaus` (VERIFIED); set to `America/New_York` if the App Center allows. |
 
+## Access from a phone or laptop
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Phone | Browser: `http://192.168.0.119:38080`, or `https://oknote.example.com` | `https://oknote.example.com` (if Cloudflare Access is on, sign in with your email code first) |
+| Laptop | Same as phone | Same as phone |
+
+Add the page to the phone's home screen (Share > Add to Home Screen on iPhone, menu > Add to Home screen on Android) for an app-like icon.
+
 ## Networks
 Default `bridge`.
 

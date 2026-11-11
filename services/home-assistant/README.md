@@ -19,6 +19,14 @@ There is no `docker-compose.yml` here on purpose: HAOS is a full OS image, not a
 container. A move or rebuild of Home Assistant is being handled separately; that
 work will add its own notes to this folder.
 
+## Access from a phone or laptop
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Phone | Install **Home Assistant** Companion app. It finds the server on home Wi-Fi, or enter `http://homeassistant.local:8123` / `http://<vm-ip>:8123` | Home Assistant Cloud (paid, simplest), or a VPN to the home network (UniFi VPN on the Dream Machine Pro, WireGuard or Teleport; not set up yet, TO_BE_VERIFIED), then use the home address, or a Cloudflare hostname such as `ha.example.com` (no Cloudflare Access, since the app can't pass it; HA needs `use_x_forwarded_for` and `trusted_proxies` set) |
+| Laptop | Browser: `http://homeassistant.local:8123` | Same options as phone |
+
+In the Companion app, set Settings > Companion app > Server > **Internal URL** (home Wi-Fi) and **External URL** (away), so it switches by itself.
+
 ## Discovery commands (run on the NAS over SSH)
 ```sh
 sudo virsh list --all                 # VM name and state

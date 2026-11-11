@@ -36,6 +36,15 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 | `TZ` | `America/New_York` |
 | `DB_STORAGE_TYPE` | `HDD` (Volume 1 is a hard drive) |
 
+## Access from a phone or laptop
+| Device | At home | Away from home |
+| --- | --- | --- |
+| Phone | Install **Immich** (App Store / Google Play). Server URL `http://192.168.0.119:2283`, sign in with your Immich account, turn on Backup. | Not published yet. Use a VPN to the home network (UniFi VPN on the Dream Machine Pro, WireGuard or Teleport; not set up yet, TO_BE_VERIFIED), then use the home address. Or publish `photos.example.com` ([runbooks/add-new-domain.md](../../runbooks/add-new-domain.md)) and set it as the app's external URL. |
+| Laptop | Browser: `http://192.168.0.119:2283` or `http://dxp6800pro-a416.local:2283` | Same as phone: VPN, or the public hostname once it exists. |
+
+Tip: once a public URL exists, the phone app's **Settings > Networking > Automatic URL switching** uses the home address on home Wi-Fi and the public one elsewhere.
+Phone apps cannot pass a Cloudflare Access login page, so leave Access off this hostname and rely on Immich's own login with 2FA.
+
 ## Networks
 `immich_default` (project network). Containers talk by service name (`database`, `redis`).
 
