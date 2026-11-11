@@ -1,0 +1,34 @@
+# ---- Secrets: never commit ----
+.env
+*.env
+!.env.example
+!**/.env.example
+*.pem
+*.key
+*.crt
+*.p12
+id_rsa*
+id_ed25519*
+cert.pem
+*credentials*.json
+*.token
+secrets/
+# ---- Raw discovery output (may contain secrets before sanitising) ----
+reports/raw/
+*.raw.json
+# ---- Runtime data that belongs in backups, not git ----
+**/data/
+**/db/
+**/postgres/
+**/library/
+**/letsencrypt/
+*.sqlite
+*.db
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+reports/*
+!reports/.gitkeep

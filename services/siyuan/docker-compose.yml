@@ -1,0 +1,14 @@
+# SiYuan (installed from the UGREEN App Center, image ugreen/siyuan)
+# Reference only: reinstall from App Center rather than deploying this file.
+
+services:
+  siyuan:
+    container_name: siyuan-app-1
+    image: ugreen/siyuan:v3.8.4
+    ports:
+      - '6806:6806'
+    environment:
+      TZ: America/New_York   # container currently uses America/Manaus
+    volumes:
+      - /volume1/@appstore/com.ugreen.docker.siyuan/config:/home/siyuan/sy
+    restart: unless-stopped

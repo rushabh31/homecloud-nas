@@ -1,0 +1,24 @@
+# Nginx Proxy Manager: routes *.example.com to apps (Pattern B)
+# Project folder on the NAS: Shared folder/docker/npm
+# Reconstructed from the container (11 Nov 2026). Currently stopped.
+# restart: observed policy TO_BE_VERIFIED
+
+services:
+  npm:
+    container_name: Nginx-Proxy-Manager
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - '80:80'    # HTTP proxy (target of the Cloudflare wildcard route)
+      - '81:81'    # Admin UI, home network only
+      - '443:443'  # HTTPS proxy (LAN use with DNS-challenge certificates)
+    environment:
+      TZ: America/New_York
+      INITIAL_ADMIN_EMAIL: ${NPM_ADMIN_EMAIL}
+      INITIAL_ADMIN_PASSWORD: ${NPM_ADMIN_PASSWORD}
+    volumes:
+      - /volume1/docker/npm/data:/data
+      - /volume1/docker/npm/letsencrypt:/etc/letsencrypt
+      # Optional DB config used on this NAS; remove the line to use the
+      # built-in SQLite database on a fresh install
+      - /volume1/docker/npm/config.json:/app/config/production.json
+    restart: unless-stopped

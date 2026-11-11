@@ -1,0 +1,41 @@
+# Mattermost Team Edition + PostgreSQL 18
+# Project folder on the NAS: Shared folder/docker/mattermost
+# Reconstructed from the containers (11 Nov 2026). Currently stopped.
+# restart: observed auto-restart DISABLED in UGOS; unless-stopped is the recommendation
+# Secrets come from .env (see .env.example).
+
+services:
+  db:
+    container_name: Mattermost-DB
+    image: postgres:18
+    environment:
+      TZ: America/New_York
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # Postgres 18 keeps data under /var/lib/postgresql
+      - /volume1/docker/mattermost/db:/var/lib/postgresql
+    restart: unless-stopped
+
+  mattermost:
+    container_name: Mattermost
+    image: mattermost/mattermost-team-edition:latest
+    depends_on:
+      - db
+    ports:
+      - '8401:8065'
+    environment:
+      TZ: America/New_York
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable&connect_timeout=10
+      MM_BLEVESETTINGS_INDEXDIR: /mattermost/bleve-indexes
+      MM_SERVICESETTINGS_SITEURL: https://mattermost.example.com
+    volumes:
+      - /volume1/docker/mattermost/config:/mattermost/config
+      - /volume1/docker/mattermost/data:/mattermost/data
+      - /volume1/docker/mattermost/logs:/mattermost/logs
+      - /volume1/docker/mattermost/plugins:/mattermost/plugins
+      - /volume1/docker/mattermost/client:/mattermost/client/plugins
+      - /volume1/docker/mattermost/indexes:/mattermost/bleve-indexes
+    restart: unless-stopped

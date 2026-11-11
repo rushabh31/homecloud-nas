@@ -1,0 +1,30 @@
+name: documentation-check
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Links, inventory, env names, secret scan
+        run: python3 scripts/check_docs.py
+      - name: Docs updated with service changes
+        if: github.event_name == 'pull_request'
+        run: |
+          base=${{ github.event.pull_request.base.sha }}
+          changed=$(git diff --name-only "$base"...HEAD)
+          echo "$changed"
+          if echo "$changed" | grep -qE '^services/.*(docker-compose\.yml|\.env\.example)$'; then
+            echo "$changed" | grep -qE '^(services/.*/README\.md|inventory/|CHANGELOG\.md)' \
+              || { echo "::error::Compose changed without README, inventory or CHANGELOG update (see AGENTS.md)"; exit 1; }
+          fi

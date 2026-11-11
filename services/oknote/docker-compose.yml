@@ -1,0 +1,17 @@
+# OKNote (installed from the UGREEN App Center)
+# Reference only: reinstall from App Center rather than deploying this file.
+# Reconstructed from the running container (11 Nov 2026).
+
+services:
+  oknote:
+    container_name: oknote
+    image: oknote/oknote:3.2.7
+    ports:
+      - '38080:38080'
+    environment:
+      TZ: America/New_York   # container currently uses America/Manaus
+    volumes:
+      - /volume1/@appstore/com.magicforest.oknote/config:/app/config
+      - /volume1/Documents:/app/data                     # notes are stored in the Documents share
+      - /volume1/@appstore/com.magicforest.oknote/data:/app/legacy
+    restart: unless-stopped

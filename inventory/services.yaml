@@ -1,0 +1,109 @@
+# Machine-readable service inventory. Source of truth for scripts/check_docs.py
+# and scripts/detect-drift.py. Update in the same commit as any change.
+# status_of_facts: VERIFIED | USER-PROVIDED | TO_BE_VERIFIED | EXAMPLE
+schema_version: 1
+host:
+  name: HomeCloud
+  lan_ip: 192.168.0.119
+  os: UGOS Pro 1.21.0.0190
+services:
+  - name: immich
+    kind: docker-compose
+    deploy_method: UGREEN Docker Project "immich"
+    project_dir: /volume1/docker/immich
+    state: running
+    containers:
+      - {name: immich_server, image: "ghcr.io/immich-app/immich-server:v3", ports: ["2283:2283"]}
+      - {name: immich_machine_learning, image: "ghcr.io/immich-app/immich-machine-learning:v3", ports: []}
+      - {name: immich_redis, image: "docker.io/valkey/valkey:9", ports: []}
+      - {name: immich_postgres, image: "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0", ports: []}
+    networks: [immich_default]
+    depends_on: []
+    routing: {public_hostname: null, via: null}
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED
+  - name: cloudflare-tunnel
+    kind: docker-compose
+    deploy_method: compose project "cloudflared" (not listed in UGREEN Projects)
+    project_dir: TO_BE_VERIFIED
+    state: running
+    containers:
+      - {name: cloudflare-tunnel, image: "cloudflare/cloudflared:latest", ports: []}
+    networks: [cloudflared_default]
+    depends_on: []
+    routing: {public_hostname: "*.example.com (routes TO_BE_VERIFIED)", via: cloudflare}
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED
+  - name: nginx-proxy-manager
+    kind: docker-compose
+    deploy_method: compose project "npm"
+    project_dir: /volume1/docker/npm
+    state: stopped
+    containers:
+      - {name: Nginx-Proxy-Manager, image: "jc21/nginx-proxy-manager:latest", ports: ["80:80", "81:81", "443:443"]}
+    networks: [npm_default]
+    depends_on: []
+    routing: {public_hostname: null, via: null}
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED
+  - name: portainer
+    kind: docker-compose
+    deploy_method: UGREEN Docker Project "portainer"
+    project_dir: /volume1/docker/portainer
+    state: running
+    containers:
+      - {name: Portainer, image: "portainer/portainer-ce:latest", ports: ["9000:9000", "8000:8000"]}
+    networks: [portainer_default]
+    depends_on: []
+    routing: {public_hostname: null, via: null}
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED
+  - name: mattermost
+    kind: docker-compose
+    deploy_method: compose project "mattermost" (not listed in UGREEN Projects)
+    project_dir: /volume1/docker/mattermost
+    state: stopped
+    containers:
+      - {name: Mattermost, image: "mattermost/mattermost-team-edition:latest", ports: ["8401:8065"]}
+      - {name: Mattermost-DB, image: "postgres:18", ports: []}
+    networks: [mattermost_default]
+    depends_on: [cloudflare-tunnel]
+    routing: {public_hostname: mattermost.example.com, via: cloudflare-tunnel}
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED
+  - name: oknote
+    kind: appcenter-app
+    deploy_method: UGREEN App Center (container project "oknote")
+    project_dir: /volume1/@appstore/com.magicforest.oknote
+    state: running
+    containers:
+      - {name: oknote, image: "oknote/oknote:3.2.7", ports: ["38080:38080"]}
+    networks: [bridge]
+    depends_on: [cloudflare-tunnel]
+    routing: {public_hostname: oknote.example.com, via: "TO_BE_VERIFIED (USER-PROVIDED hostname)"}
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED
+  - name: siyuan
+    kind: appcenter-app
+    deploy_method: UGREEN App Center (container project "siyuan")
+    project_dir: /volume1/@appstore/com.ugreen.docker.siyuan
+    state: running
+    containers:
+      - {name: siyuan-app-1, image: "ugreen/siyuan:v3.8.4", ports: ["6806:6806"]}
+    networks: [bridge]
+    depends_on: []
+    routing: {public_hostname: null, via: null}
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED
+  - name: home-assistant
+    kind: vm
+    deploy_method: UGOS Virtual Machine app (KVM), VM "HAOS"
+    project_dir: Volume 1 (VM disk, 128 GB)
+    state: stopped
+    containers: []
+    networks: [bridge0]
+    depends_on: []
+    routing: {public_hostname: null, via: null}
+    notes: A separate "homeassistant" device is also on the LAN (UniFi topology). Migration in progress.
+    last_verified: 2026-11-11
+    status_of_facts: VERIFIED

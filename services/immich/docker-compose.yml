@@ -1,0 +1,79 @@
+# Immich photo server for the UGREEN DXP6800 Pro (HomeCloud)
+# Based on the official Immich v3 docker-compose.yml, with settings inlined
+# so it runs as a UGREEN Docker "Project" without a separate .env file.
+#
+# BEFORE DEPLOYING: replace ChangeThisDbPassword below with your own
+# password (letters and digits only, no spaces or symbols).
+#
+# Existing photos are mounted READ-WRITE (changed 11 Nov 2026 at the owner's
+# request): edits and deletes in Immich change the real files on the NAS.
+# Deletes go to Immich's trash first (30 days).
+
+x-db-password: &db_password ChangeThisDbPassword
+
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:v3
+    volumes:
+      # New uploads from the Immich apps, thumbnails and encoded videos
+      - ./library:/data
+      - /etc/localtime:/etc/localtime:ro
+      # Existing photos, read-write: edits and deletes in Immich change the real files
+      - /volume1/@home/Rushabh/Photos:/external/Rushabh
+      - /volume1/@home/user2/Photos:/external/user2
+      - /volume1/@home/user3/Photos:/external/user3
+    environment:
+      TZ: America/New_York
+      DB_HOSTNAME: database
+      DB_USERNAME: postgres
+      DB_PASSWORD: *db_password
+      DB_DATABASE_NAME: immich
+      REDIS_HOSTNAME: redis
+    ports:
+      - '2283:2283'
+    depends_on:
+      - redis
+      - database
+    restart: always
+    healthcheck:
+      disable: false
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:v3
+    volumes:
+      - model-cache:/cache
+    environment:
+      TZ: America/New_York
+      MACHINE_LEARNING_MODEL_REVISION: v2
+    restart: always
+    healthcheck:
+      disable: false
+
+  redis:
+    container_name: immich_redis
+    image: docker.io/valkey/valkey:9@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
+    healthcheck:
+      test: redis-cli ping | grep -q PONG || exit 1
+    restart: always
+
+  database:
+    container_name: immich_postgres
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    environment:
+      POSTGRES_PASSWORD: *db_password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: immich
+      POSTGRES_INITDB_ARGS: '--data-checksums'
+      # Volume 1 is a hard drive (with SSD cache), so use HDD tuning
+      DB_STORAGE_TYPE: 'HDD'
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    shm_size: 128mb
+    restart: always
+    healthcheck:
+      disable: false
+
+volumes:
+  model-cache:

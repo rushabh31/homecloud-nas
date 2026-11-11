@@ -1,0 +1,86 @@
+# home-nas-infrastructure
+
+> **Public edition.** Family member names, the real domain (shown as `example.com`) and some security settings are replaced with placeholders. The full version is kept privately.
+
+Operational memory for the family home lab: the UGREEN NAS **HomeCloud**,
+its Docker services and VM, the UniFi network, and the domain
+**example.com** published through Cloudflare Tunnel and Nginx Proxy Manager.
+
+This repository is the **source of truth**. Humans and AI agents read it before
+changing anything, and update it in the same task as any change.
+AI agents: start with **[AGENTS.md](AGENTS.md)**.
+
+## Verification labels
+
+Every fact in this repo carries one of these labels. Never treat a fact as
+current without checking its label and date.
+
+| Label | Meaning |
+| --- | --- |
+| `VERIFIED <date>` | Inspected directly on the system on that date |
+| `USER-PROVIDED` | Stated by the owner, not inspected |
+| `TO_BE_VERIFIED` | Unknown or unconfirmed; a discovery step is linked |
+| `EXAMPLE` | Illustrative only, not the real configuration |
+
+The first baseline was taken on **2026-11-11** from the UGOS Pro web UI, the
+Immich API and the UniFi topology page. No shell (SSH) access was used.
+
+## The environment at a glance
+
+```mermaid
+flowchart LR
+  U[Internet users] --> CF[Cloudflare edge<br/>DNS + TLS + Access]
+  CF -- outbound tunnel --> CFD[cloudflared<br/>container]
+  subgraph LAN[Home LAN - UniFi Dream Machine Pro]
+    subgraph NAS[HomeCloud - UGREEN DXP6800 Pro]
+      CFD --> NPM[Nginx Proxy Manager<br/>stopped]
+      CFD --> APPS
+      NPM --> APPS[Docker services<br/>Immich, OKNote, SiYuan,<br/>Portainer, Mattermost]
+      VM[HAOS VM<br/>stopped]
+    end
+    HA[homeassistant device<br/>separate host]
+  end
+```
+
+| Area | Where to look |
+| --- | --- |
+| What exists right now | [inventory/](inventory/) (start with [docker-services.md](inventory/docker-services.md)) |
+| How it fits together | [architecture/](architecture/) |
+| One folder per service | [services/](services/) |
+| Network, Cloudflare, Nginx, DNS, SSL, firewall | [networking/](networking/) |
+| Domains and adding a subdomain | [domains/](domains/) ([add-new-subdomain.md](domains/add-new-subdomain.md)) |
+| Folders, mounts, permissions | [storage/](storage/) |
+| Backup, restore, disaster recovery | [backups/](backups/) |
+| Step-by-step procedures | [runbooks/](runbooks/) |
+| Discovery, drift detection, validation | [scripts/](scripts/) |
+| Templates for new services | [templates/](templates/) and [services/_template/](services/_template/) |
+| History of changes | [CHANGELOG.md](CHANGELOG.md) |
+
+## Services
+
+Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
+
+| Service | Kind | Host port | State | Public hostname | Status of facts |
+| --- | --- | --- | --- | --- | --- |
+| [immich](services/immich/) | Docker project (4 containers) | 2283 | Running | none | VERIFIED 2026-11-11 |
+| [cloudflare-tunnel](services/cloudflare-tunnel/) | Docker | none | Running | is the entry point | VERIFIED 2026-11-11 (routes TO_BE_VERIFIED) |
+| [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Stopped | wildcard target (TO_BE_VERIFIED) | VERIFIED 2026-11-11 |
+| [portainer](services/portainer/) | Docker | 9000, 8000 | Running | none | VERIFIED 2026-11-11 |
+| [mattermost](services/mattermost/) | Docker project (2 containers) | 8401 | Stopped | mattermost.example.com | VERIFIED 2026-11-11 |
+| [oknote](services/oknote/) | App Center app (Docker) | 38080 | Running | oknote.example.com (USER-PROVIDED) | VERIFIED 2026-11-11 |
+| [siyuan](services/siyuan/) | App Center app (Docker) | 6806 | Running | none known | VERIFIED 2026-11-11 |
+| [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | VM stopped | none known | VERIFIED 2026-11-11 |
+
+## The one rule
+
+> **No infrastructure change is complete until this repository is updated,
+> validated (`make check` or `python3 scripts/check_docs.py`) and committed.**
+
+Details in [AGENTS.md](AGENTS.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+- The repository must stay **private**. It describes the home network.
+- No secrets in git: passwords, tokens, keys and tunnel credentials live only on
+  the NAS (`.env` files next to compose files) and in the owner's password manager.
+- `scripts/check_docs.py` and the GitHub `validate` workflow scan for secrets on every push.

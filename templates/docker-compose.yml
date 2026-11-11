@@ -1,0 +1,21 @@
+# <Service name>
+# Project folder on the NAS: /volume1/docker/<name>
+# Source: EXAMPLE template. Replace every <...> before use.
+# Secrets come from .env (copy .env.example); never put real values here.
+
+services:
+  app:
+    container_name: <name>
+    image: <image>:<pinned-version>   # avoid :latest for anything stateful
+    restart: unless-stopped
+    environment:
+      TZ: America/New_York
+      APP_SECRET: ${APP_SECRET}
+    ports:
+      - '<nas-port>:<container-port>'  # check the port is free: inventory/network-inventory.md
+    volumes:
+      - /volume1/docker/<name>/data:/data
+    # healthcheck:
+    #   test: ["CMD", "wget", "-qO-", "http://localhost:<container-port>/health"]
+    #   interval: 30s
+    #   retries: 3
