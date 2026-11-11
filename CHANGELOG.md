@@ -13,6 +13,13 @@ Newest first. Infrastructure changes and documentation baselines.
   Mattermost site URL now `https://mattermost.example.com`. `cloudflare-tunnel` already used `unless-stopped`.
 - **review**: full NAS settings review (kept in the private edition).
 
+## 2026-11-11 (dashboard look)
+- **dashboard**: replaced the plain theme with an animated cartoon landscape that follows the season, the real
+  sunrise and sunset, and the live local weather (Open-Meteo, no key). Added a weather chip to the top
+  bar and tidied the top bar and tiles to one set of spacing, radius and type rules. Notes now uses three columns
+  like Admin. The project is now a single container: its entrypoint writes the config, then starts Homepage
+  (the separate `dashboard-config` helper container is gone).
+
 ## 2026-11-11 (dashboard)
 - **dashboard**: new Homepage start page "Patel Home Cloud" (UGOS project `dashboard`, port 3010) with a tile for every
   service. Published at `dashboard.example.com` through the tunnel, behind a new Cloudflare Access app using the "Owner only" policy.

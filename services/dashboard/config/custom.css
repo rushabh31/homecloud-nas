@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+/* Patel Home Cloud theme. One spacing step is 8px; radii are 12 (small) and 16 (cards, bars). */
+:root {
+  --ink: #33304a; --ink-soft: #5d5873; --line: rgba(51, 48, 74, .12);
+  --glass: rgba(255, 255, 255, .62); --glass-hover: rgba(255, 255, 255, .78); --glass-edge: rgba(255, 255, 255, .75);
+  --shadow: 0 1px 2px rgba(40, 44, 80, .06), 0 8px 24px rgba(40, 44, 80, .12);
+  --shadow-lift: 0 2px 4px rgba(40, 44, 80, .08), 0 16px 36px rgba(40, 44, 80, .18);
+  --focus: #5b7fd6; --ok: #4cb07a; --down: #e06b6b;
+}
+html.phc-night {
+  --ink: #f7f5ff; --ink-soft: #d6d1ea; --line: rgba(255, 255, 255, .16);
+  --glass: rgba(34, 34, 66, .55); --glass-hover: rgba(44, 44, 80, .68); --glass-edge: rgba(255, 255, 255, .16);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 8px 24px rgba(0, 0, 0, .28);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, .25), 0 16px 36px rgba(0, 0, 0, .35);
+  --focus: #a9bfff;
+}
+html, body, #page_wrapper, #page_container, button, input { font-family: 'Nunito', ui-rounded, system-ui, sans-serif !important; }
+html, body, #page_wrapper, #page_container { background: transparent !important; }
+body { background-color: #dfeef5 !important; }
+#phc-scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+#phc-scene svg { display: block; width: 100%; height: 100%; }
+#page_wrapper { position: relative; z-index: 1; }
+#page_container { max-width: 1200px; margin: 0 auto; }
+
+/* ---------- Top bar: one glass bar, title left, chips right ---------- */
+#information-widgets {
+  background: var(--glass); border: 1px solid var(--glass-edge); border-radius: 16px;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: var(--shadow); margin: 16px 16px 8px !important; padding: 12px 16px !important;
+}
+#widgets-wrap { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 !important; }
+#widgets-wrap > .widget-container { margin: 0 !important; padding: 0 !important; flex: 0 0 auto; }
+#information-widgets, #information-widgets * { color: var(--ink) !important; }
+.information-widget-greeting { margin-right: auto !important; }
+.information-widget-greeting span { font-size: 26px !important; line-height: 32px !important; font-weight: 800 !important; letter-spacing: .2px; }
+.information-widget-datetime span { font-size: 15px !important; line-height: 20px !important; font-weight: 700 !important; color: var(--ink-soft) !important; }
+
+/* Stat chips: CPU, memory and storage, all the same height and shape */
+.information-widget-resource {
+  display: flex !important; align-items: center; gap: 8px; height: 44px; padding: 0 12px !important; margin: 0 !important;
+  background: rgba(255, 255, 255, .45); border: 1px solid var(--line); border-radius: 12px; min-width: 112px;
+}
+html.phc-night .information-widget-resource { background: rgba(255, 255, 255, .08); }
+.information-widget-resource svg { width: 18px !important; height: 18px !important; flex: none; opacity: .85; }
+.information-widget-resource .flex-col { gap: 2px; padding: 0 !important; }
+.information-widget-resource .resource-value, .information-widget-resource .resource-value * { font-size: 13px !important; line-height: 16px !important; font-weight: 800 !important; }
+.information-widget-resource .resource-value + div, .information-widget-resource .resource-label { font-size: 11px !important; line-height: 14px !important; font-weight: 700 !important; color: var(--ink-soft) !important; text-transform: uppercase; letter-spacing: .5px; }
+.resource-usage { background: var(--line) !important; height: 4px !important; border-radius: 4px; width: 100% !important; margin-top: 2px; }
+.resource-usage > div { background: linear-gradient(90deg, #7fc7b4, #9d97e6) !important; height: 4px !important; border-radius: 4px; }
+/* The "NAS" and "Storage" captions repeat what the chips already say */
+#information-widgets .ml-6.pt-1.text-center.text-xs { display: none !important; }
+#information-widgets .widget-container > div:has(> .information-widget-resource) { display: flex; gap: 8px; margin: 0 !important; }
+
+/* Weather chip */
+#widgets-wrap > .phc-weather {
+  display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px 0 10px !important;
+  background: rgba(255, 255, 255, .55); border: 1px solid var(--line); border-radius: 12px; order: 99;
+}
+html.phc-night #widgets-wrap > .phc-weather { background: rgba(255, 255, 255, .1); }
+.phc-weather svg { flex: none; }
+.phc-weather-text { display: flex; flex-direction: column; }
+.phc-weather-temp { font-size: 15px; line-height: 18px; font-weight: 800; }
+.phc-weather-label { font-size: 12px; line-height: 14px; font-weight: 700; color: var(--ink-soft) !important; }
+
+/* ---------- Groups ---------- */
+#services { padding: 0 10px !important; }
+.services-group { margin-bottom: 16px !important; padding: 0 6px !important; }
+.services-group > div:first-child, .services-group button { margin-bottom: 8px; }
+.services-group h2.service-group-name {
+  color: var(--ink) !important; font-size: 13px !important; line-height: 16px !important; font-weight: 800 !important;
+  text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 1px 6px rgba(255, 255, 255, .7);
+}
+html.phc-night .services-group h2.service-group-name { text-shadow: 0 1px 6px rgba(0, 0, 0, .5); }
+.service-group-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 8px; background: var(--glass); margin-right: 8px; }
+.service-group-icon div { background: var(--ink) !important; width: 16px !important; height: 16px !important; }
+ul.services-list { gap: 12px !important; }
+li.service { margin: 0 !important; }
+
+/* ---------- Tiles ---------- */
+.service-card {
+  position: relative; min-height: 68px; margin: 0 !important; padding: 12px !important;
+  display: flex; align-items: center;
+  background: var(--glass) !important; border: 1px solid var(--glass-edge) !important; border-radius: 16px !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: var(--shadow) !important;
+  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease !important;
+}
+.service-card:hover { transform: translateY(-2px); background: var(--glass-hover) !important; box-shadow: var(--shadow-lift) !important; }
+.service-card:has(a:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+.service-card a:focus-visible { outline: none; }
+.service-title { display: flex !important; align-items: center; gap: 12px; width: 100%; padding: 0 !important; }
+a.service-icon {
+  flex: none; display: flex !important; align-items: center; justify-content: center;
+  width: 44px !important; height: 44px !important; margin: 0 !important; padding: 8px !important;
+  background: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(40, 44, 80, .14);
+}
+a.service-icon img { width: 28px !important; height: 28px !important; object-fit: contain; }
+a.service-icon > div { width: 26px !important; height: 26px !important; }
+li.service[data-name="OKNote"] a.service-icon > div { background: #e7a53c !important; }
+li.service[data-name="NAS admin"] a.service-icon > div { background: #2f9e8f !important; }
+a.service-title-text { padding: 0 24px 0 0 !important; min-width: 0; }
+.service-card .service-name { color: var(--ink) !important; font-size: 15px !important; line-height: 20px !important; font-weight: 800 !important; }
+.service-card p.service-description, .service-card .service-description { color: var(--ink-soft) !important; font-size: 13px !important; line-height: 18px !important; font-weight: 600 !important; margin-top: 2px; }
+/* Status dot sits in the top-right corner of every tile */
+.service-card .site-monitor-status { position: absolute !important; top: 10px; right: 10px; margin: 0 !important; padding: 0 !important; }
+.site-monitor-status > div, .site-monitor-status span { width: 8px !important; height: 8px !important; }
+.site-monitor-status .bg-emerald-500 { background: var(--ok) !important; box-shadow: 0 0 0 3px rgba(76, 176, 122, .22); }
+.site-monitor-status .bg-rose-500, .site-monitor-status [class*=bg-red], .site-monitor-status [class*=bg-rose] { background: var(--down) !important; box-shadow: 0 0 0 3px rgba(224, 107, 107, .22); }
+
+@media (max-width: 640px) {
+  #information-widgets { margin: 8px 8px 8px !important; }
+  #services { padding: 0 2px !important; }
+  .information-widget-greeting { flex-basis: 100%; }
+  .information-widget-greeting span { font-size: 22px !important; line-height: 28px !important; }
+}
+
+/* ---------- Scene motion: slow and gentle ---------- */
+.phc-cloud { animation: phc-drift linear infinite; transition: opacity 3s ease; }
+@keyframes phc-drift { from { transform: translateX(-360px); } to { transform: translateX(1960px); } }
+.phc-deck { transition: opacity 3s ease; animation: phc-deck 90s ease-in-out infinite alternate; }
+@keyframes phc-deck { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
+.phc-tree { transform-box: fill-box; transform-origin: 50% 100%; animation: phc-sway 7s ease-in-out infinite; }
+@keyframes phc-sway { 0%, 100% { transform: rotate(calc(var(--sway, 1.4deg) * -1)); } 50% { transform: rotate(var(--sway, 1.4deg)); } }
+.phc-halo { transform-box: fill-box; transform-origin: center; animation: phc-breathe 8s ease-in-out infinite; }
+@keyframes phc-breathe { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.12); opacity: 1; } }
+.phc-rays { animation: phc-spin 160s linear infinite; transition: opacity 3s ease; }
+@keyframes phc-spin { to { transform: rotate(360deg); } }
+.phc-sun, .phc-moon, .phc-stars, .phc-warmth { transition: opacity 3s ease; }
+.phc-stars circle { animation: phc-twinkle 6s ease-in-out infinite; }
+@keyframes phc-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.phc-mist { animation: phc-mist 40s ease-in-out infinite alternate; }
+@keyframes phc-mist { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
+.phc-ripple { animation: phc-ripple 5s ease-in-out infinite; }
+@keyframes phc-ripple { 0%, 100% { opacity: .2; } 50% { opacity: .7; } }
+.phc-birds { animation: phc-birds 70s linear infinite; }
+@keyframes phc-birds { from { transform: translate(-120px, 230px); } 50% { transform: translate(800px, 180px); } to { transform: translate(1760px, 220px); } }
+.phc-cap { opacity: var(--capop, 1); }
+.phc-snowcover { opacity: var(--snowcover, 0); transition: opacity 4s ease; }
+
+/* Rain, drizzle and storms */
+.phc-rain { display: none; }
+#phc-scene.phc-raining .phc-rain { display: block; }
+.phc-rain line { animation: phc-rain linear infinite; }
+#phc-scene.phc-drizzle .phc-rain line:nth-child(2n) { display: none; }
+#phc-scene:not(.phc-heavy) .phc-rain line:nth-child(3n) { display: none; }
+@keyframes phc-rain { from { transform: translate(0, -60px); } to { transform: translate(var(--drift, -40px), 960px); } }
+.phc-flash { opacity: 0; }
+#phc-scene.phc-thunder .phc-flash { animation: phc-flash 11s linear infinite; }
+@keyframes phc-flash { 0%, 91%, 93.5%, 100% { opacity: 0; } 91.6% { opacity: .55; } 92.2% { opacity: .08; } 92.8% { opacity: .4; } }
+.phc-fog { opacity: 0; transition: opacity 4s ease; animation: phc-mist 50s ease-in-out infinite alternate; }
+#phc-scene.phc-foggy .phc-fog { opacity: 1; }
+
+/* Snow, spring petals and autumn leaves share one set of falling shapes */
+.phc-flakes { display: none; }
+.phc-flakes ellipse { animation: phc-fall linear infinite; opacity: .9; }
+@keyframes phc-fall { 0% { transform: translate(0, -20px) rotate(0); } 50% { transform: translate(28px, 450px) rotate(180deg); } 100% { transform: translate(-12px, 920px) rotate(360deg); } }
+#phc-scene.phc-snowing .phc-flakes, #phc-scene.phc-petals .phc-flakes, #phc-scene.phc-leaves .phc-flakes { display: block; }
+#phc-scene.phc-petals .phc-flakes g:nth-child(2n), #phc-scene.phc-leaves .phc-flakes g:nth-child(2n) { display: none; }
+#phc-scene.phc-petals .phc-flakes ellipse, #phc-scene.phc-leaves .phc-flakes ellipse { opacity: .8; }
+#phc-scene:not(.phc-blossom) .phc-dot { display: none; }
+
+/* Summer-night fireflies */
+.phc-flies { display: none; }
+#phc-scene.phc-fireflies .phc-flies { display: block; }
+.phc-flies circle { animation: phc-fly ease-in-out infinite; filter: drop-shadow(0 0 4px #fff3a0); }
+@keyframes phc-fly { 0%, 100% { transform: translate(0, 0); opacity: 0; } 25% { opacity: 1; } 50% { transform: translate(30px, -24px); opacity: .3; } 75% { transform: translate(-16px, -10px); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  #phc-scene * { animation: none !important; }
+  .phc-rain, .phc-flakes, .phc-flies, .phc-flash { display: none !important; }
+}
