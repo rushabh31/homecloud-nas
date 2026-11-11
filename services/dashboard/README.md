@@ -8,23 +8,38 @@ opens that service's own sign-in page. Built with [Homepage](https://gethomepage
 A green dot on a tile means the NAS can reach that service right now; red means it can't.
 
 ### Look and background
-Behind the tiles is an animated cartoon landscape (mountains, a plateau, a lake, hills and
-trees) drawn by [config/custom.js](config/custom.js) and styled by [config/custom.css](config/custom.css).
+Behind the tiles is an animated valley in the style of a warm 3D cartoon film, drawn by
+[config/custom.js](config/custom.js) and styled by [config/custom.css](config/custom.css).
+The characters are original (no film characters or artwork are copied).
+- **Scene**: rounded snow-capped peaks, a mesa, rolling hills, a pond, a cottage with a
+  chimney, and soft light, haze and depth blur so it reads like a film still.
+- **Characters**: a fox cub in the front corner (breathes, looks around, blinks, wags; holds a
+  leaf umbrella in rain, wears a scarf in winter, sleeps at night), a bunny that hops, a duck
+  family that swims around the pond (gone when it freezes), an owl on a branch at night, a
+  snowman in winter, birds by day and butterflies on calm spring and summer days. The cottage
+  windows light up at dusk and smoke rises from the chimney when it is cold.
 - **Season**: colours blend day by day. Peaks (tune to your climate): spring mid-April, summer
   mid-July, fall colour early November, winter mid-January. Spring has blossom and petals,
-  fall has falling leaves, summer nights have fireflies, deep winter has snow on the ground.
+  fall has falling leaves, summer nights have fireflies, deep winter has snow.
 - **Time of day**: the sun and moon follow the real sunrise and sunset, with a warm golden
   hour, twilight and stars. Tiles switch to a dark glass look at night.
 - **Live weather**: every 15 minutes the browser asks [Open-Meteo](https://open-meteo.com)
-  (free, no key, no account) for the current weather at the home town (coordinates
-  rounded to the town, set as `LAT`/`LON` at the top of `custom.js`). Cloud cover sets how many clouds there are, rain, drizzle, snow, fog and
-  thunderstorms each have their own effect, and wind speed moves the clouds, rain and trees.
-  If the lookup fails the scene keeps a calm partly cloudy sky.
+  (free, no key, no account) for the current weather at the home town (coordinates rounded to
+  the town, set as `LAT`/`LON` at the top of `custom.js`). Cloud cover sets the clouds; rain, drizzle, snow, fog and thunderstorms
+  each have their own effect; wind moves clouds, rain and trees. If the lookup fails the scene
+  keeps a calm partly cloudy sky.
 - **Weather chip**: the top bar's right end shows the temperature (°F) and the condition.
 - Motion is slow, and switches off for anyone whose device asks for reduced motion.
-- Design rules: 8 px spacing steps, 16 px radius for cards and the top bar, 12 px for chips
-  and icon boxes, Nunito type (title 26/800, tile name 15/800, tile text 13/600), status
-  dot 8 px in each tile's top-right corner, visible keyboard focus ring.
+- **Tile layout**: one grid of four columns in two rows: Photos, Communication and Notes (two
+  tiles) on top; Smart home and Admin (three tiles) below. Two columns on a tablet, one on a phone.
+- **Design rules**: 4/8/12/16/24 px spacing, 20 px radius for cards and the top bar, 12 px for
+  chips and icon boxes, Nunito type (title 26/900, tile name 16/800, tile text 13/600, group
+  labels 12/800 capitals), status dot in each tile's top-right corner (an arrow replaces it on
+  hover), visible keyboard focus ring.
+- **Cache**: Cloudflare caches `/api/config/custom.js` and `custom.css` for 4 hours. The script
+  reloads both with a time stamp that changes every 5 minutes, so a new look shows within about
+  5 minutes. To see it at once, purge the cache for the dashboard hostname in Cloudflare
+  (Caching > Configuration > Custom Purge > Hostname).
 
 ## Deployment
 | Item | Value |
@@ -120,6 +135,7 @@ Redeploy from this folder (steps above).
 | A tile has a red dot | The NAS can't reach that service: check the container, or the VLAN path for Home Assistant |
 | Dashboard container not starting | Look at the `dashboard` log: a heredoc may be broken, or a `$` crept into the compose file |
 | No weather chip, scene stays partly cloudy | The browser could not reach `api.open-meteo.com` (blocked by an ad blocker or offline); the rest of the page still works |
+| Public address still shows an old look | Hard refresh; if it persists, purge the Cloudflare cache for the dashboard hostname |
 | Public address shows Cloudflare 502 | Container stopped, or the tunnel route points at the wrong port |
 
 ## Security notes

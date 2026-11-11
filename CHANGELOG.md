@@ -2,6 +2,12 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-11 (dashboard film look)
+- **dashboard**: new animated valley in a warm 3D cartoon-film style with original characters (fox cub,
+  bunny, ducks, owl, snowman, cottage) that react to the season, time of day and live weather. Tiles are now
+  one four-column, two-row grid (Notes moved before Smart home, two columns). The script reloads its CSS and JS
+  with a 5-minute time stamp so Cloudflare's 4-hour cache can't keep an old look.
+
 ## 2026-11-11 (old domain removed, NAS review)
 - **domains**: all six `example.net` tunnel routes and their DNS records removed at the owner's
   request (zone and registration untouched). The tunnel now has only `example.com` routes.

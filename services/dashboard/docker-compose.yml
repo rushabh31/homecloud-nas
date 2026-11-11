@@ -44,12 +44,12 @@ services:
             icon: mdi-image-multiple
           Communication:
             icon: mdi-chat
-          Smart home:
-            icon: mdi-home-automation
           Notes:
             icon: mdi-notebook
             style: row
-            columns: 3
+            columns: 2
+          Smart home:
+            icon: mdi-home-automation
           Admin:
             icon: mdi-shield-lock
             style: row
@@ -86,12 +86,6 @@ services:
                 icon: mattermost.png
                 description: Family chat
                 siteMonitor: http://192.168.0.119:8401
-        - Smart home:
-            - Home Assistant:
-                href: https://ha.example.com
-                icon: home-assistant.png
-                description: Lights, cameras and automations
-                siteMonitor: http://192.168.30.99:8123
         - Notes:
             - OKNote:
                 href: https://oknote.example.com
@@ -103,6 +97,12 @@ services:
                 icon: siyuan.png
                 description: Knowledge base
                 siteMonitor: http://192.168.0.119:6806
+        - Smart home:
+            - Home Assistant:
+                href: https://ha.example.com
+                icon: home-assistant.png
+                description: Lights, cameras and automations
+                siteMonitor: http://192.168.30.99:8123
         - Admin:
             - NAS admin:
                 href: https://mynas.example.com
@@ -123,243 +123,344 @@ services:
         printf '[]\n' > /app/config/bookmarks.yaml
         printf '{}\n' > /app/config/docker.yaml
         cat > /app/config/custom.css <<'PHC_EOF'
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-        /* Patel Home Cloud theme. One spacing step is 8px; radii are 12 (small) and 16 (cards, bars). */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap');
+        /* Patel Home Cloud theme.
+           Spacing steps: 4, 8, 12, 16, 24. Radii: 12 (chips, icons), 20 (cards and the top bar).
+           Type: title 26/900, tile name 16/800, body 13/600, labels 12/800 uppercase. */
         :root {
-          --ink: #33304a; --ink-soft: #5d5873; --line: rgba(51, 48, 74, .12);
-          --glass: rgba(255, 255, 255, .62); --glass-hover: rgba(255, 255, 255, .78); --glass-edge: rgba(255, 255, 255, .75);
-          --shadow: 0 1px 2px rgba(40, 44, 80, .06), 0 8px 24px rgba(40, 44, 80, .12);
-          --shadow-lift: 0 2px 4px rgba(40, 44, 80, .08), 0 16px 36px rgba(40, 44, 80, .18);
-          --focus: #5b7fd6; --ok: #4cb07a; --down: #e06b6b;
+          --ink: #2d2a45; --ink-soft: #5b5672; --line: rgba(45, 42, 69, .10);
+          --glass-top: rgba(255, 255, 255, .80); --glass-bot: rgba(255, 255, 255, .62); --glass-edge: rgba(255, 255, 255, .85);
+          --glass-hi: inset 0 1px 0 rgba(255, 255, 255, .95);
+          --shadow: 0 1px 2px rgba(36, 32, 70, .06), 0 10px 30px -6px rgba(36, 32, 70, .22);
+          --shadow-lift: 0 2px 4px rgba(36, 32, 70, .08), 0 22px 44px -10px rgba(36, 32, 70, .32);
+          --chip: rgba(255, 255, 255, .55);
+          --focus: #5b7fd6; --ok: #3fb27a; --down: #e0626b; --gap: 16px;
         }
         html.phc-night {
-          --ink: #f7f5ff; --ink-soft: #d6d1ea; --line: rgba(255, 255, 255, .16);
-          --glass: rgba(34, 34, 66, .55); --glass-hover: rgba(44, 44, 80, .68); --glass-edge: rgba(255, 255, 255, .16);
-          --shadow: 0 1px 2px rgba(0, 0, 0, .2), 0 8px 24px rgba(0, 0, 0, .28);
-          --shadow-lift: 0 2px 4px rgba(0, 0, 0, .25), 0 16px 36px rgba(0, 0, 0, .35);
-          --focus: #a9bfff;
+          --ink: #f6f4ff; --ink-soft: #cdc7e6; --line: rgba(255, 255, 255, .14);
+          --glass-top: rgba(40, 40, 78, .70); --glass-bot: rgba(26, 26, 56, .62); --glass-edge: rgba(255, 255, 255, .14);
+          --glass-hi: inset 0 1px 0 rgba(255, 255, 255, .12);
+          --shadow: 0 1px 2px rgba(0, 0, 0, .25), 0 10px 30px -6px rgba(0, 0, 0, .45);
+          --shadow-lift: 0 2px 4px rgba(0, 0, 0, .3), 0 22px 44px -10px rgba(0, 0, 0, .55);
+          --chip: rgba(255, 255, 255, .08); --focus: #a9bfff;
         }
         html, body, #page_wrapper, #page_container, button, input { font-family: 'Nunito', ui-rounded, system-ui, sans-serif !important; }
         html, body, #page_wrapper, #page_container { background: transparent !important; }
-        body { background-color: #dfeef5 !important; }
+        body { background-color: #cfe6f5 !important; }
         #phc-scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         #phc-scene svg { display: block; width: 100%; height: 100%; }
         #page_wrapper { position: relative; z-index: 1; }
-        #page_container { max-width: 1200px; margin: 0 auto; }
+        #page_container { max-width: 1240px; margin: 0 auto; }
 
-        /* ---------- Top bar: one glass bar, title left, chips right ---------- */
-        #information-widgets {
-          background: var(--glass); border: 1px solid var(--glass-edge); border-radius: 16px;
-          -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
-          box-shadow: var(--shadow); margin: 16px 16px 8px !important; padding: 12px 16px !important;
+        /* ---------- Glass surface shared by the top bar and the tiles ---------- */
+        #information-widgets, .service-card {
+          background: linear-gradient(180deg, var(--glass-top), var(--glass-bot)) !important;
+          border: 1px solid var(--glass-edge) !important;
+          -webkit-backdrop-filter: blur(20px) saturate(1.6); backdrop-filter: blur(20px) saturate(1.6);
+          box-shadow: var(--glass-hi), var(--shadow) !important;
         }
-        #widgets-wrap { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 !important; }
+
+        /* ---------- Top bar ---------- */
+        #information-widgets { border-radius: 20px; margin: 24px 24px 8px !important; padding: 12px 12px 12px 24px !important; }
+        #widgets-wrap { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 !important; }
         #widgets-wrap > .widget-container { margin: 0 !important; padding: 0 !important; flex: 0 0 auto; }
         #information-widgets, #information-widgets * { color: var(--ink) !important; }
         .information-widget-greeting { margin-right: auto !important; }
-        .information-widget-greeting span { font-size: 26px !important; line-height: 32px !important; font-weight: 800 !important; letter-spacing: .2px; }
-        .information-widget-datetime span { font-size: 15px !important; line-height: 20px !important; font-weight: 700 !important; color: var(--ink-soft) !important; }
-
-        /* Stat chips: CPU, memory and storage, all the same height and shape */
+        .information-widget-greeting span { font-size: 26px !important; line-height: 32px !important; font-weight: 900 !important; letter-spacing: -.2px; }
+        .information-widget-datetime { padding: 0 12px !important; }
+        .information-widget-datetime span { font-size: 14px !important; line-height: 20px !important; font-weight: 700 !important; color: var(--ink-soft) !important; }
         .information-widget-resource {
-          display: flex !important; align-items: center; gap: 8px; height: 44px; padding: 0 12px !important; margin: 0 !important;
-          background: rgba(255, 255, 255, .45); border: 1px solid var(--line); border-radius: 12px; min-width: 112px;
+          display: flex !important; align-items: center; gap: 8px; height: 48px; padding: 0 12px !important; margin: 0 !important;
+          background: var(--chip); border: 1px solid var(--line); border-radius: 12px; min-width: 116px;
         }
-        html.phc-night .information-widget-resource { background: rgba(255, 255, 255, .08); }
-        .information-widget-resource svg { width: 18px !important; height: 18px !important; flex: none; opacity: .85; }
-        .information-widget-resource .flex-col { gap: 2px; padding: 0 !important; }
+        .information-widget-resource svg { width: 18px !important; height: 18px !important; flex: none; opacity: .8; }
+        .information-widget-resource .flex-col { gap: 3px; padding: 0 !important; }
         .information-widget-resource .resource-value, .information-widget-resource .resource-value * { font-size: 13px !important; line-height: 16px !important; font-weight: 800 !important; }
-        .information-widget-resource .resource-value + div, .information-widget-resource .resource-label { font-size: 11px !important; line-height: 14px !important; font-weight: 700 !important; color: var(--ink-soft) !important; text-transform: uppercase; letter-spacing: .5px; }
+        .information-widget-resource .resource-value + div, .information-widget-resource .resource-label { font-size: 11px !important; line-height: 14px !important; font-weight: 800 !important; color: var(--ink-soft) !important; text-transform: uppercase; letter-spacing: .6px; }
         .resource-usage { background: var(--line) !important; height: 4px !important; border-radius: 4px; width: 100% !important; margin-top: 2px; }
-        .resource-usage > div { background: linear-gradient(90deg, #7fc7b4, #9d97e6) !important; height: 4px !important; border-radius: 4px; }
-        /* The "NAS" and "Storage" captions repeat what the chips already say */
+        .resource-usage > div { background: linear-gradient(90deg, #6cc6b0, #8f8cf0) !important; height: 4px !important; border-radius: 4px; }
         #information-widgets .ml-6.pt-1.text-center.text-xs { display: none !important; }
         #information-widgets .widget-container > div:has(> .information-widget-resource) { display: flex; gap: 8px; margin: 0 !important; }
-
-        /* Weather chip */
         #widgets-wrap > .phc-weather {
-          display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px 0 10px !important;
-          background: rgba(255, 255, 255, .55); border: 1px solid var(--line); border-radius: 12px; order: 99;
+          display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px 0 12px !important;
+          background: var(--chip); border: 1px solid var(--line); border-radius: 12px; order: 99;
         }
-        html.phc-night #widgets-wrap > .phc-weather { background: rgba(255, 255, 255, .1); }
         .phc-weather svg { flex: none; }
         .phc-weather-text { display: flex; flex-direction: column; }
-        .phc-weather-temp { font-size: 15px; line-height: 18px; font-weight: 800; }
-        .phc-weather-label { font-size: 12px; line-height: 14px; font-weight: 700; color: var(--ink-soft) !important; }
+        .phc-weather-temp { font-size: 15px; line-height: 18px; font-weight: 900; }
+        .phc-weather-label { font-size: 12px; line-height: 15px; font-weight: 700; color: var(--ink-soft) !important; white-space: nowrap; }
 
-        /* ---------- Groups ---------- */
-        #services { padding: 0 10px !important; }
-        .services-group { margin-bottom: 16px !important; padding: 0 6px !important; }
-        .services-group > div:first-child, .services-group button { margin-bottom: 8px; }
-        .services-group h2.service-group-name {
-          color: var(--ink) !important; font-size: 13px !important; line-height: 16px !important; font-weight: 800 !important;
-          text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 1px 6px rgba(255, 255, 255, .7);
+        /* ---------- Groups: one 4-column grid, so every tile is the same size ---------- */
+        #layout-groups {
+          display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 20px;
+          margin: 16px 24px 24px !important; align-items: start;
         }
-        html.phc-night .services-group h2.service-group-name { text-shadow: 0 1px 6px rgba(0, 0, 0, .5); }
-        .service-group-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 8px; background: var(--glass); margin-right: 8px; }
+        #layout-groups > .services-group { padding: 0 !important; margin: 0 !important; min-width: 0; flex: none !important; }
+        #layout-groups > .services-group:nth-child(3) { grid-column: span 2; }
+        #layout-groups > .services-group:nth-child(5) { grid-column: span 3; }
+        .services-group > button { margin: 0 0 10px !important; padding: 0 !important; width: auto !important; }
+        .services-group h2.service-group-name {
+          display: inline-flex; align-items: center; height: 26px; padding: 0 12px 0 0;
+          color: var(--ink) !important; font-size: 12px !important; line-height: 16px !important; font-weight: 800 !important;
+          text-transform: uppercase; letter-spacing: 1.2px;
+        }
+        .services-group > button > div:first-child, .services-group > button { gap: 0; }
+        .services-group > button {
+          display: inline-flex !important; align-items: center; border-radius: 999px; padding: 0 2px 0 3px !important;
+          background: var(--chip); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--glass-edge);
+        }
+        .services-group > button svg:last-child { display: none; }
+        .service-group-icon { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin: 0 8px 0 4px; }
         .service-group-icon div { background: var(--ink) !important; width: 16px !important; height: 16px !important; }
-        ul.services-list { gap: 12px !important; }
+        ul.services-list { gap: var(--gap) !important; margin-top: 0 !important; }
         li.service { margin: 0 !important; }
 
         /* ---------- Tiles ---------- */
         .service-card {
-          position: relative; min-height: 68px; margin: 0 !important; padding: 12px !important;
-          display: flex; align-items: center;
-          background: var(--glass) !important; border: 1px solid var(--glass-edge) !important; border-radius: 16px !important;
-          -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
-          box-shadow: var(--shadow) !important;
-          transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease !important;
+          position: relative; min-height: 76px; margin: 0 !important; padding: 14px 16px !important;
+          display: flex; align-items: center; border-radius: 20px !important;
+          transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease !important;
         }
-        .service-card:hover { transform: translateY(-2px); background: var(--glass-hover) !important; box-shadow: var(--shadow-lift) !important; }
-        .service-card:has(a:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+        .service-card:hover { transform: translateY(-3px); box-shadow: var(--glass-hi), var(--shadow-lift) !important; }
+        .service-card:active { transform: translateY(-1px) scale(.99); }
+        .service-card:has(a:focus-visible) { outline: 3px solid var(--focus); outline-offset: 3px; }
         .service-card a:focus-visible { outline: none; }
-        .service-title { display: flex !important; align-items: center; gap: 12px; width: 100%; padding: 0 !important; }
+        .service-card::after {
+          content: ""; position: absolute; right: 16px; top: 50%; width: 20px; height: 20px; margin-top: -10px; opacity: 0; transform: translateX(-4px);
+          background: no-repeat center/14px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b5672' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M9 7h8v8'/%3E%3C/svg%3E");
+          transition: opacity .2s ease, transform .2s ease; pointer-events: none;
+        }
+        html.phc-night .service-card::after { filter: invert(1); }
+        .service-card:hover::after { opacity: 1; transform: none; }
+        .service-title { display: flex !important; align-items: center; gap: 14px; width: 100%; padding: 0 !important; }
         a.service-icon {
           flex: none; display: flex !important; align-items: center; justify-content: center;
-          width: 44px !important; height: 44px !important; margin: 0 !important; padding: 8px !important;
-          background: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(40, 44, 80, .14);
+          width: 48px !important; height: 48px !important; margin: 0 !important; padding: 9px !important;
+          background: linear-gradient(180deg, #ffffff, #f4f3fa); border-radius: 14px;
+          box-shadow: 0 1px 2px rgba(36, 32, 70, .10), 0 4px 10px -2px rgba(36, 32, 70, .14), inset 0 -1px 0 rgba(36, 32, 70, .06);
         }
-        a.service-icon img { width: 28px !important; height: 28px !important; object-fit: contain; }
-        a.service-icon > div { width: 26px !important; height: 26px !important; }
+        a.service-icon img { width: 30px !important; height: 30px !important; object-fit: contain; }
+        a.service-icon > div { width: 28px !important; height: 28px !important; }
         li.service[data-name="OKNote"] a.service-icon > div { background: #e7a53c !important; }
         li.service[data-name="NAS admin"] a.service-icon > div { background: #2f9e8f !important; }
-        a.service-title-text { padding: 0 24px 0 0 !important; min-width: 0; }
-        .service-card .service-name { color: var(--ink) !important; font-size: 15px !important; line-height: 20px !important; font-weight: 800 !important; }
-        .service-card p.service-description, .service-card .service-description { color: var(--ink-soft) !important; font-size: 13px !important; line-height: 18px !important; font-weight: 600 !important; margin-top: 2px; }
-        /* Status dot sits in the top-right corner of every tile */
-        .service-card .site-monitor-status { position: absolute !important; top: 10px; right: 10px; margin: 0 !important; padding: 0 !important; }
+        a.service-title-text { padding: 0 28px 0 0 !important; min-width: 0; }
+        .service-card .service-name { color: var(--ink) !important; font-size: 16px !important; line-height: 20px !important; font-weight: 800 !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .service-card p.service-description, .service-card .service-description { color: var(--ink-soft) !important; font-size: 13px !important; line-height: 18px !important; font-weight: 600 !important; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .service-card .site-monitor-status { position: absolute !important; top: 12px; right: 12px; margin: 0 !important; padding: 0 !important; transition: opacity .2s ease; }
+        .service-card:hover .site-monitor-status { opacity: 0; }
         .site-monitor-status > div, .site-monitor-status span { width: 8px !important; height: 8px !important; }
-        .site-monitor-status .bg-emerald-500 { background: var(--ok) !important; box-shadow: 0 0 0 3px rgba(76, 176, 122, .22); }
-        .site-monitor-status .bg-rose-500, .site-monitor-status [class*=bg-red], .site-monitor-status [class*=bg-rose] { background: var(--down) !important; box-shadow: 0 0 0 3px rgba(224, 107, 107, .22); }
+        .site-monitor-status .bg-emerald-500 { background: var(--ok) !important; box-shadow: 0 0 0 3px rgba(63, 178, 122, .2); }
+        .site-monitor-status .bg-rose-500, .site-monitor-status [class*=bg-red], .site-monitor-status [class*=bg-rose] { background: var(--down) !important; box-shadow: 0 0 0 3px rgba(224, 98, 107, .2); }
 
+        @media (max-width: 1100px) {
+          #layout-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          #layout-groups > .services-group:nth-child(3), #layout-groups > .services-group:nth-child(4), #layout-groups > .services-group:nth-child(5) { grid-column: span 2; }
+          #layout-groups > .services-group:nth-child(4) ul.services-list { max-width: calc(50% - var(--gap) / 2); }
+          #layout-groups > .services-group:nth-child(5) ul.services-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+        }
         @media (max-width: 640px) {
-          #information-widgets { margin: 8px 8px 8px !important; }
-          #services { padding: 0 2px !important; }
+          #information-widgets { margin: 12px 12px 8px !important; padding: 12px !important; }
           .information-widget-greeting { flex-basis: 100%; }
           .information-widget-greeting span { font-size: 22px !important; line-height: 28px !important; }
+          #layout-groups { grid-template-columns: minmax(0, 1fr); margin: 12px !important; }
+          #layout-groups > .services-group { grid-column: auto !important; }
+          #layout-groups ul.services-list { grid-template-columns: minmax(0, 1fr) !important; max-width: none !important; }
         }
 
-        /* ---------- Scene motion: slow and gentle ---------- */
-        .phc-cloud { animation: phc-drift linear infinite; transition: opacity 3s ease; }
-        @keyframes phc-drift { from { transform: translateX(-360px); } to { transform: translateX(1960px); } }
-        .phc-deck { transition: opacity 3s ease; animation: phc-deck 90s ease-in-out infinite alternate; }
+        /* ---------- Scene ---------- */
+        .phc-char { filter: brightness(var(--cb, 1)) saturate(var(--cs, 1)) sepia(var(--cg, 0)); }
+        .phc-cap { opacity: var(--capop, 1); }
+        .phc-snowcap { opacity: var(--snow, 0); transition: opacity 4s ease; }
+        .phc-lit { opacity: var(--lamp, 0); transition: opacity 3s ease; }
+        .phc-glow, .phc-goldwash, .phc-sun, .phc-moon, .phc-stars, .phc-deck, .phc-cloud { transition: opacity 3s ease; }
+        .phc-goldwash { mix-blend-mode: soft-light; pointer-events: none; }
+        #phc-scene:not(.s-autumn) .phc-autumn-only, #phc-scene:not(.s-summer) .phc-summer-only, #phc-scene:not(.s-winter) .phc-winter-only { display: none; }
+        #phc-scene:not(.phc-blossom) .phc-dots { display: none; }
+        #phc-scene.s-winter .phc-flowers, #phc-scene.s-autumn .phc-flowers circle:nth-child(3n) { display: none; }
+        #phc-scene:not(.phc-is-night) .phc-night-only { display: none; }
+        #phc-scene:not(.phc-frozen) .phc-ice, #phc-scene.phc-frozen .phc-ducks, #phc-scene.phc-frozen .phc-shimmer { display: none; }
+
+        /* motion: slow and gentle */
+        .phc-cloud { animation: phc-drift linear infinite; }
+        @keyframes phc-drift { from { transform: translateX(-380px); } to { transform: translateX(1980px); } }
+        .phc-deck { animation: phc-deck 90s ease-in-out infinite alternate; }
         @keyframes phc-deck { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
         .phc-tree { transform-box: fill-box; transform-origin: 50% 100%; animation: phc-sway 7s ease-in-out infinite; }
         @keyframes phc-sway { 0%, 100% { transform: rotate(calc(var(--sway, 1.4deg) * -1)); } 50% { transform: rotate(var(--sway, 1.4deg)); } }
         .phc-halo { transform-box: fill-box; transform-origin: center; animation: phc-breathe 8s ease-in-out infinite; }
-        @keyframes phc-breathe { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.12); opacity: 1; } }
-        .phc-rays { animation: phc-spin 160s linear infinite; transition: opacity 3s ease; }
+        @keyframes phc-breathe { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.08); opacity: 1; } }
+        .phc-rays { animation: phc-spin 200s linear infinite; }
         @keyframes phc-spin { to { transform: rotate(360deg); } }
-        .phc-sun, .phc-moon, .phc-stars, .phc-warmth { transition: opacity 3s ease; }
-        .phc-stars circle { animation: phc-twinkle 6s ease-in-out infinite; }
+        .phc-stars > * { animation: phc-twinkle 6s ease-in-out infinite; }
         @keyframes phc-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
         .phc-mist { animation: phc-mist 40s ease-in-out infinite alternate; }
         @keyframes phc-mist { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
-        .phc-ripple { animation: phc-ripple 5s ease-in-out infinite; }
-        @keyframes phc-ripple { 0%, 100% { opacity: .2; } 50% { opacity: .7; } }
-        .phc-birds { animation: phc-birds 70s linear infinite; }
-        @keyframes phc-birds { from { transform: translate(-120px, 230px); } 50% { transform: translate(800px, 180px); } to { transform: translate(1760px, 220px); } }
-        .phc-cap { opacity: var(--capop, 1); }
-        .phc-snowcover { opacity: var(--snowcover, 0); transition: opacity 4s ease; }
+        .phc-shimmer { animation: phc-shimmer 5s ease-in-out infinite; }
+        @keyframes phc-shimmer { 0%, 100% { opacity: .25; transform: translateX(-6px); } 50% { opacity: 1; transform: translateX(6px); } }
 
-        /* Rain, drizzle and storms */
-        .phc-rain { display: none; }
-        #phc-scene.phc-raining .phc-rain { display: block; }
+        /* the fox: breathing, blinking, a swishing tail and twitching ears */
+        .phc-fox-body, .phc-fox-head { transform-box: fill-box; transform-origin: 50% 100%; }
+        .phc-fox-body { animation: phc-breath 4s ease-in-out infinite; }
+        @keyframes phc-breath { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.015, 1.035); } }
+        .phc-fox-head { animation: phc-look 14s ease-in-out infinite; }
+        @keyframes phc-look { 0%, 30%, 100% { transform: rotate(0) translateY(0); } 38%, 52% { transform: rotate(-6deg) translateY(-2px); } 60%, 72% { transform: rotate(5deg) translateY(-1px); } }
+        .phc-fox-tail { transform-box: fill-box; transform-origin: 0% 90%; animation: phc-tail 3.2s ease-in-out infinite; }
+        @keyframes phc-tail { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(7deg); } }
+        .phc-eyes, .phc-owl-eyes { transform-box: fill-box; transform-origin: center; animation: phc-blink 5s infinite; }
+        @keyframes phc-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
+        .phc-ear-l, .phc-ear-r { transform-box: fill-box; transform-origin: 50% 100%; }
+        .phc-ear-r { animation: phc-ear 9s ease-in-out infinite; }
+        @keyframes phc-ear { 0%, 88%, 100% { transform: rotate(0); } 91% { transform: rotate(14deg); } 94% { transform: rotate(-4deg); } }
+        .phc-sleepy, .phc-zz, .phc-umbrella, .phc-fox-scarf { display: none; }
+        #phc-scene.phc-is-night .phc-fox .phc-eyes { display: none; }
+        #phc-scene.phc-is-night .phc-fox .phc-sleepy, #phc-scene.phc-is-night .phc-zz { display: block; }
+        #phc-scene.phc-is-night .phc-fox-head { animation: phc-doze 5s ease-in-out infinite; }
+        @keyframes phc-doze { 0%, 100% { transform: rotate(4deg) translateY(4px); } 50% { transform: rotate(6deg) translateY(6px); } }
+        .phc-zz text { animation: phc-zz 4s ease-in-out infinite; }
+        .phc-zz text:nth-child(2) { animation-delay: -2s; }
+        @keyframes phc-zz { 0% { opacity: 0; transform: translate(0, 10px); } 30%, 70% { opacity: .9; } 100% { opacity: 0; transform: translate(10px, -16px); } }
+        #phc-scene.phc-raining .phc-umbrella { display: block; }
+        #phc-scene.s-winter .phc-fox-scarf { display: block; }
+
+        /* bunny: nose twitch, ear flicks and a little hop */
+        .phc-nose { transform-box: fill-box; transform-origin: center; animation: phc-nose 1.4s ease-in-out infinite; }
+        @keyframes phc-nose { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35, .8); } }
+        .phc-bun-ears { transform-box: fill-box; transform-origin: 50% 100%; animation: phc-bun-ears 6s ease-in-out infinite; }
+        @keyframes phc-bun-ears { 0%, 80%, 100% { transform: rotate(0); } 85% { transform: rotate(-10deg); } 90% { transform: rotate(6deg); } }
+        .phc-hop { animation: phc-hop 9s ease-in-out infinite; }
+        @keyframes phc-hop { 0%, 82%, 100% { transform: translateY(0); } 86% { transform: translateY(-18px) rotate(-4deg); } 90% { transform: translateY(0); } 93% { transform: translateY(-8px); } 96% { transform: translateY(0); } }
+        #phc-scene.phc-is-night .phc-bunny, #phc-scene:not(.phc-calm) .phc-bunny { display: none; }
+
+        /* ducks glide across the pond and turn around */
+        .phc-bob { animation: phc-bob 3s ease-in-out infinite; }
+        @keyframes phc-bob { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(2px) rotate(-1.5deg); } }
+        .phc-swim { animation: phc-swim 70s ease-in-out infinite; }
+        @keyframes phc-swim { 0%, 100% { transform: translateX(820px); } 48%, 52% { transform: translateX(640px); } }
+        .phc-turn { transform-box: fill-box; transform-origin: center; animation: phc-turn 70s steps(1) infinite; }
+        @keyframes phc-turn { 0%, 49.9% { transform: scaleX(1); } 50%, 100% { transform: scaleX(-1); } }
+
+        /* owl: head tilt */
+        .phc-owl-head { transform-box: fill-box; transform-origin: 50% 100%; animation: phc-owl 8s ease-in-out infinite; }
+        @keyframes phc-owl { 0%, 40%, 100% { transform: rotate(0); } 50%, 60% { transform: rotate(-14deg); } 70% { transform: rotate(8deg); } }
+        .phc-owl-glow { mix-blend-mode: screen; opacity: .55; filter: blur(3px); }
+
+        /* cottage chimney smoke */
+        .phc-smoke circle { opacity: 0; animation: phc-smoke 8s ease-out infinite; }
+        #phc-scene:not(.phc-smoky) .phc-smoke { display: none; }
+        @keyframes phc-smoke { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 15% { opacity: .75; } 100% { opacity: 0; transform: translate(calc(var(--drift, -40px) * .4 + 20px), -110px) scale(2.2); } }
+
+        /* birds and butterflies */
+        .phc-birds { animation: phc-birds 60s linear infinite; }
+        @keyframes phc-birds { from { transform: translate(-160px, 300px); } 50% { transform: translate(800px, 230px); } to { transform: translate(1800px, 280px); } }
+        .phc-bird { animation: phc-flap-body .5s ease-in-out infinite; }
+        .phc-wing { transform-box: fill-box; transform-origin: 0% 100%; animation: phc-flap .25s ease-in-out infinite alternate; }
+        @keyframes phc-flap { from { transform: scaleY(1); } to { transform: scaleY(-.7); } }
+        @keyframes phc-flap-body { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+        #phc-scene.phc-is-night .phc-birds, #phc-scene:not(.phc-calm) .phc-birds, #phc-scene.s-winter .phc-birds { display: none; }
+        .phc-fly-path { animation: phc-flutter 16s ease-in-out infinite; }
+        @keyframes phc-flutter { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(60px, -40px); } 50% { transform: translate(120px, -10px); } 75% { transform: translate(50px, -60px); } }
+        .phc-wing-l, .phc-wing-r { transform-box: fill-box; }
+        .phc-wing-l { transform-origin: 100% 50%; animation: phc-wingl .18s ease-in-out infinite alternate; }
+        .phc-wing-r > * { transform-box: fill-box; transform-origin: 100% 50%; animation: phc-wingl .18s ease-in-out infinite alternate; }
+        @keyframes phc-wingl { from { transform: scaleX(1); } to { transform: scaleX(.25); } }
+        .phc-butterflies { display: none; }
+        #phc-scene.phc-is-day.phc-calm.s-spring .phc-butterflies, #phc-scene.phc-is-day.phc-calm.s-summer .phc-butterflies { display: block; }
+
+        /* rain, drizzle and storms */
+        .phc-rain, .phc-splashes { display: none; }
+        #phc-scene.phc-raining .phc-rain, #phc-scene.phc-raining .phc-splashes { display: block; }
         .phc-rain line { animation: phc-rain linear infinite; }
         #phc-scene.phc-drizzle .phc-rain line:nth-child(2n) { display: none; }
         #phc-scene:not(.phc-heavy) .phc-rain line:nth-child(3n) { display: none; }
         @keyframes phc-rain { from { transform: translate(0, -60px); } to { transform: translate(var(--drift, -40px), 960px); } }
-        .phc-flash { opacity: 0; }
+        .phc-splashes ellipse { transform-box: fill-box; transform-origin: center; animation: phc-splash 1.6s ease-out infinite; }
+        @keyframes phc-splash { 0% { transform: scale(.2); opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
+        .phc-flash, .phc-bolt { opacity: 0; pointer-events: none; }
         #phc-scene.phc-thunder .phc-flash { animation: phc-flash 11s linear infinite; }
-        @keyframes phc-flash { 0%, 91%, 93.5%, 100% { opacity: 0; } 91.6% { opacity: .55; } 92.2% { opacity: .08; } 92.8% { opacity: .4; } }
+        #phc-scene.phc-thunder .phc-bolt { animation: phc-bolt 11s linear infinite; }
+        @keyframes phc-flash { 0%, 91%, 93.5%, 100% { opacity: 0; } 91.6% { opacity: .5; } 92.2% { opacity: .08; } 92.8% { opacity: .35; } }
+        @keyframes phc-bolt { 0%, 91.4%, 93%, 100% { opacity: 0; } 91.6%, 92.8% { opacity: 1; } }
         .phc-fog { opacity: 0; transition: opacity 4s ease; animation: phc-mist 50s ease-in-out infinite alternate; }
         #phc-scene.phc-foggy .phc-fog { opacity: 1; }
 
-        /* Snow, spring petals and autumn leaves share one set of falling shapes */
+        /* snow, spring petals and autumn leaves */
         .phc-flakes { display: none; }
-        .phc-flakes ellipse { animation: phc-fall linear infinite; opacity: .9; }
+        .phc-flakes ellipse { animation: phc-fall linear infinite; opacity: .92; }
         @keyframes phc-fall { 0% { transform: translate(0, -20px) rotate(0); } 50% { transform: translate(28px, 450px) rotate(180deg); } 100% { transform: translate(-12px, 920px) rotate(360deg); } }
         #phc-scene.phc-snowing .phc-flakes, #phc-scene.phc-petals .phc-flakes, #phc-scene.phc-leaves .phc-flakes { display: block; }
-        #phc-scene.phc-petals .phc-flakes g:nth-child(2n), #phc-scene.phc-leaves .phc-flakes g:nth-child(2n) { display: none; }
-        #phc-scene.phc-petals .phc-flakes ellipse, #phc-scene.phc-leaves .phc-flakes ellipse { opacity: .8; }
-        #phc-scene:not(.phc-blossom) .phc-dot { display: none; }
+        #phc-scene.phc-petals .phc-flakes g:nth-child(3n), #phc-scene.phc-leaves .phc-flakes g:nth-child(3n),
+        #phc-scene.phc-petals .phc-flakes g:nth-child(3n+1), #phc-scene.phc-leaves .phc-flakes g:nth-child(3n+1) { display: none; }
 
-        /* Summer-night fireflies */
+        /* summer-night fireflies */
         .phc-flies { display: none; }
         #phc-scene.phc-fireflies .phc-flies { display: block; }
-        .phc-flies circle { animation: phc-fly ease-in-out infinite; filter: drop-shadow(0 0 4px #fff3a0); }
+        .phc-flies circle { animation: phc-fly ease-in-out infinite; filter: drop-shadow(0 0 5px #fff3a0); }
         @keyframes phc-fly { 0%, 100% { transform: translate(0, 0); opacity: 0; } 25% { opacity: 1; } 50% { transform: translate(30px, -24px); opacity: .3; } 75% { transform: translate(-16px, -10px); opacity: 1; } }
 
         @media (prefers-reduced-motion: reduce) {
           #phc-scene * { animation: none !important; }
-          .phc-rain, .phc-flakes, .phc-flies, .phc-flash { display: none !important; }
+          .phc-rain, .phc-flakes, .phc-flies, .phc-flash, .phc-bolt { display: none !important; }
         }
         PHC_EOF
         cat > /app/config/custom.js <<'PHC_EOF'
-        /* Patel Home Cloud: a calm, cartoon nature scene behind the dashboard.
-           - Season: colors blend day by day through spring, summer, autumn and winter.
-           - Time: sun and moon follow the real sunrise and sunset, with golden hour and stars.
-           - Weather: live from Open-Meteo (free, no key) every 15 minutes: clear, clouds,
-             fog, drizzle, rain, thunder or snow, with wind moving clouds, rain and trees.
-           - Also adds a small weather chip to the top bar.
+        /* Patel Home Cloud: an animated storybook valley behind the dashboard.
+           - Season: colors and props blend through spring, summer, autumn and winter.
+           - Time: sun and moon follow the real sunrise and sunset; lamps glow at dusk.
+           - Weather: live from Open-Meteo (free, no key) every 15 minutes.
+           - Characters: a fox cub, a bunny, a duck family, an owl at night, birds and butterflies.
+           - Also adds a weather chip to the top bar.
            Only the browser talks to Open-Meteo; no key or account is involved. */
         (function () {
+          /* Cloudflare and the browser cache this file for hours. The first copy that runs
+             loads a fresh copy (and a fresh stylesheet) with a 5-minute cache-busting tag. */
+          var cs = document.currentScript, busted = cs && cs.src && cs.src.indexOf("b=") > -1;
+          if (!busted && !window.__phcBoot) {
+            window.__phcBoot = 1;
+            var tag = Math.floor(Date.now() / 300000);
+            var fresh = document.createElement("script");
+            fresh.src = "/api/config/custom.js?b=" + tag;
+            fresh.onerror = function () { main(); };
+            document.head.appendChild(fresh);
+            var css = document.createElement("link");
+            css.rel = "stylesheet"; css.href = "/api/config/custom.css?b=" + tag;
+            document.head.appendChild(css);
+            return;
+          }
+          main();
+
+          function main() {
           if (document.getElementById("phc-scene")) return;
 
           /* Weather location (rounded to the town). */
           var LAT = 0.00, LON = 0.00; /* set to your own town, two decimals is enough */
-
-          var NS = "http://www.w3.org/2000/svg";
           var W = 1600, H = 900;
 
+          /* Base colors per season. Lit and shaded tones are derived from these. */
           var P = {
-            spring: { skyTop: "#9fd2f0", skyMid: "#cfe8f6", skyBot: "#fdeef2", sun: "#fff1b8", cloud: "#ffffff", cloudShade: "#d9e4f2", far: "#c4c6ea", farShade: "#a9acd8", mid: "#9db5d9", midShade: "#8199c4", cap: "#ffffff", mesa: "#efc3a1", mesaShade: "#d6a07f", hill1: "#c9eab8", hill1b: "#a9d99c", hill2: "#a6dc98", hill2b: "#86c682", hill3: "#8fd08c", hill3b: "#6cb977", treeD: "#ef9fb8", treeL: "#ffd3e0", pineD: "#4f9a6c", pineL: "#7fc493", trunk: "#9b7a5f", accent: "#ffffff", water: "#a9daf0", particle: "#ffc4d6" },
-            summer: { skyTop: "#7cc4ef", skyMid: "#bfe3f7", skyBot: "#fff4d8", sun: "#ffe08a", cloud: "#ffffff", cloudShade: "#d3e2f1", far: "#b2c0e6", farShade: "#95a6d6", mid: "#86a7d3", midShade: "#6c8dc0", cap: "#f4f7fb", mesa: "#f0b484", mesaShade: "#d49466", hill1: "#bfe49c", hill1b: "#9cd283", hill2: "#97d184", hill2b: "#76bd6d", hill3: "#7cc375", hill3b: "#5aa85f", treeD: "#5fae6c", treeL: "#9ad696", pineD: "#3f8d58", pineL: "#6cb87a", trunk: "#8f6d52", accent: "#fff1a8", water: "#93d1ee", particle: "#fff3a0" },
-            autumn: { skyTop: "#94c2e6", skyMid: "#d3e1ee", skyBot: "#fbe2c8", sun: "#ffc98f", cloud: "#fff8f0", cloudShade: "#ead6cc", far: "#d3c1dc", farShade: "#b9a5c8", mid: "#b6a2c8", midShade: "#9a86b1", cap: "#fbf7f2", mesa: "#e8a77d", mesaShade: "#c9875e", hill1: "#f4d49a", hill1b: "#eabc7f", hill2: "#ecbb80", hill2b: "#dc9e66", hill3: "#e0a374", hill3b: "#c9865b", treeD: "#e5864f", treeL: "#f8c06a", pineD: "#4f8f70", pineL: "#79b394", trunk: "#8a6650", accent: "#f7c56b", water: "#c2d7e6", particle: "#e98a4a" },
-            winter: { skyTop: "#bcd3f0", skyMid: "#dbe6f6", skyBot: "#f6eef8", sun: "#fff2d6", cloud: "#ffffff", cloudShade: "#dbe2ee", far: "#c6d0e6", farShade: "#a9b6d4", mid: "#a9bcda", midShade: "#8ea3c6", cap: "#ffffff", mesa: "#e8dfdb", mesaShade: "#cbbfba", hill1: "#f1f4fb", hill1b: "#dfe6f4", hill2: "#e6ebf6", hill2b: "#d0daee", hill3: "#d9e1f1", hill3b: "#c0cde6", treeD: "#aebbd0", treeL: "#eef2f8", pineD: "#4f8780", pineL: "#86b8b0", trunk: "#8d7a6c", accent: "#ffffff", water: "#cfe0ee", particle: "#ffffff" }
+            spring: { skyTop: "#6fb8ee", skyMid: "#b5ddf7", skyBot: "#fde8ee", sun: "#fff1c4", cloud: "#ffffff", far: "#b3bfe9", mid: "#8fb6dd", mesa: "#f0b48e", hill1: "#a8de8c", hill2: "#86cf73", hill3: "#6cc063", canopy: "#f6a3c2", canopy2: "#86cf6c", pine: "#3a9563", trunk: "#8a5f45", water: "#7fcbef", path: "#f6deb0", flower1: "#ff8fb8", flower2: "#ffe070", particle: "#ffc3d8" },
+            summer: { skyTop: "#4eaaf0", skyMid: "#9fd7f8", skyBot: "#fff0cc", sun: "#ffe59c", cloud: "#ffffff", far: "#a3b9e6", mid: "#76a6d6", mesa: "#f3a874", hill1: "#9dd874", hill2: "#7cc75b", hill3: "#5fb64d", canopy: "#4fae4f", canopy2: "#76c757", pine: "#2c8650", trunk: "#835b3c", water: "#5ebde9", path: "#f4d9a4", flower1: "#ffd23a", flower2: "#ff8aa0", particle: "#fff3a0" },
+            autumn: { skyTop: "#7cb8ea", skyMid: "#c8ddf0", skyBot: "#fee0c0", sun: "#ffcf92", cloud: "#fff8f0", far: "#c6b7da", mid: "#a597c8", mesa: "#ea9a6c", hill1: "#e6cb86", hill2: "#dcaf66", hill3: "#cf9655", canopy: "#f07636", canopy2: "#f7b23f", pine: "#3a8063", trunk: "#7a563f", water: "#9fcae8", path: "#f1d39c", flower1: "#f39b3a", flower2: "#d9503a", particle: "#ee8740" },
+            winter: { skyTop: "#9fc3ee", skyMid: "#d3e3f7", skyBot: "#f5eef9", sun: "#fff3dc", cloud: "#ffffff", far: "#c0cde9", mid: "#9fb6dc", mesa: "#e2d3cd", hill1: "#eef3fb", hill2: "#e2e9f6", hill3: "#d4dff1", canopy: "#c9b7ab", canopy2: "#a7bdb0", pine: "#2f7468", trunk: "#7a6658", water: "#cde1f2", path: "#e6e9f2", flower1: "#e0474f", flower2: "#ffffff", particle: "#ffffff" }
           };
-          var NIGHT = { skyTop: "#1f2547", skyMid: "#3a3a68", skyBot: "#6b5c8c" };
-          var STORM = { skyTop: "#8e9bb0", skyMid: "#aab4c4", skyBot: "#c7ccd6" };
-          var GOLD = { skyMid: "#ffcfa8", skyBot: "#ffb98c" };
+          var NIGHT = { skyTop: "#141a3d", skyMid: "#283066", skyBot: "#5a4f8e" };
+          var STORM = { skyTop: "#4f5a72", skyMid: "#6b7790", skyBot: "#8f99ab" };
+          var GOLD = { skyTop: "#7aa6dc", skyMid: "#ffc9a0", skyBot: "#ffa47a" };
 
           /* ---------- color helpers ---------- */
           function hex(c) { return [parseInt(c.substr(1, 2), 16), parseInt(c.substr(3, 2), 16), parseInt(c.substr(5, 2), 16)]; }
-          function toHsl(c) {
-            var r = hex(c), R = r[0] / 255, G = r[1] / 255, B = r[2] / 255;
-            var mx = Math.max(R, G, B), mn = Math.min(R, G, B), l = (mx + mn) / 2, h = 0, sat = 0, d = mx - mn;
-            if (d) {
-              sat = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
-              h = mx === R ? (G - B) / d + (G < B ? 6 : 0) : mx === G ? (B - R) / d + 2 : (R - G) / d + 4;
-              h *= 60;
-            }
-            return [h, sat, l];
-          }
-          function fromHsl(h, sat, l) {
-            function f(n) { var k = (n + h / 30) % 12, a = sat * Math.min(l, 1 - l); return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); }
-            var o = "#";
-            [f(0), f(8), f(4)].forEach(function (v) { var x = Math.round(Math.max(0, Math.min(1, v)) * 255).toString(16); o += x.length < 2 ? "0" + x : x; });
-            return o;
-          }
           function mixRgb(a, b, t) {
             var x = hex(a), y = hex(b), o = "#";
-            for (var i = 0; i < 3; i++) { var v = Math.round(x[i] + (y[i] - x[i]) * t).toString(16); o += v.length < 2 ? "0" + v : v; }
+            for (var i = 0; i < 3; i++) { var n = Math.round(x[i] + (y[i] - x[i]) * t).toString(16); o += n.length < 2 ? "0" + n : n; }
             return o;
           }
-          /* RGB hue, but keep the pastel saturation so in-between seasons don't go grey. */
-          function mix(a, b, t, keep) {
-            var o = mixRgb(a, b, t), hx = toHsl(a), hy = toHsl(b), hm = toHsl(o);
-            var sat = hx[1] + (hy[1] - hx[1]) * t;
-            if (keep !== undefined) sat = hm[1] + (sat - hm[1]) * keep;
-            return fromHsl(hm[0], sat, hx[2] + (hy[2] - hx[2]) * t);
-          }
-          function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+          function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
           function smooth(t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
 
           /* ---------- time and season ---------- */
           function dayOfYear(d) { return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000); }
           function seasonBlend(d) {
             var n = dayOfYear(d);
-            /* Peaks (tune to your climate): spring mid-April, summer mid-July, fall color early November, winter mid-January. */
+            /* Peaks (tuned to the local climate): spring mid-April, summer mid-July, fall color early November, winter mid-January. */
             var A = [["autumn", -59], ["winter", 15], ["spring", 105], ["summer", 196], ["autumn", 305], ["winter", 380], ["spring", 470]];
             for (var i = 0; i < A.length - 1; i++) {
               if (n >= A[i][1] && n < A[i + 1][1]) return { a: A[i][0], b: A[i + 1][0], t: smooth((n - A[i][1]) / (A[i + 1][1] - A[i][1])) };
@@ -400,229 +501,435 @@ services:
             }).catch(function () { /* keep the last known weather, or the gentle default */ });
           }
 
-          /* ---------- SVG building ---------- */
-          function el(name, attrs, parent) {
-            var e = document.createElementNS(NS, name);
-            for (var k in attrs) e.setAttribute(k, attrs[k]);
-            if (parent) parent.appendChild(e);
-            return e;
+          /* ---------- tiny SVG string helpers ---------- */
+          var seed = 7;
+          function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+          function f1(n) { return Math.round(n * 10) / 10; }
+          function a(o) { var s = ""; for (var k in o) s += " " + k + '="' + o[k] + '"'; return s; }
+          function tag(name, o, inner) { return "<" + name + a(o) + (inner === undefined ? "/>" : ">" + inner + "</" + name + ">"); }
+          function V(k) { return "var(--" + k + ")"; }
+          function stop(off, col, op) { return '<stop offset="' + off + '" style="stop-color:' + col + (op === undefined ? "" : ";stop-opacity:" + op) + '"/>'; }
+          /* A lit-to-shaded sphere, the core of the soft 3D look */
+          function sph(id, key, cx, cy) {
+            return '<radialGradient id="' + id + '" cx="' + (cx || 0.36) + '" cy="' + (cy || 0.3) + '" r="0.78">' + stop(0, V(key + "-l")) + stop(0.5, V(key)) + stop(1, V(key + "-s")) + "</radialGradient>";
           }
-          function v(name) { return "var(--" + name + ")"; }
-          function grad(defs, id, x1, y1, x2, y2, stops, user) {
-            var g = el("linearGradient", { id: id, x1: x1, y1: y1, x2: x2, y2: y2 }, defs);
-            if (user) g.setAttribute("gradientUnits", "userSpaceOnUse");
-            stops.forEach(function (s) { el("stop", { offset: s[0], style: "stop-color:" + s[1] + ";stop-opacity:" + (s[2] === undefined ? 1 : s[2]) }, g); });
+          function vlin(id, key, y1, y2) {
+            return '<linearGradient id="' + id + '" x1="0" y1="' + y1 + '" x2="0" y2="' + y2 + '" gradientUnits="userSpaceOnUse">' + stop(0, V(key + "-l")) + stop(0.35, V(key)) + stop(1, V(key + "-s")) + "</linearGradient>";
+          }
+          function fixedSph(id, c0, c1, c2, cx, cy) {
+            return '<radialGradient id="' + id + '" cx="' + (cx || 0.36) + '" cy="' + (cy || 0.28) + '" r="0.8">' + stop(0, c0) + stop(0.55, c1) + stop(1, c2) + "</radialGradient>";
+          }
+
+          /* ---------- defs ---------- */
+          var D = [];
+          D.push('<linearGradient id="g-sky" x1="0" y1="0" x2="0" y2="1">' + stop(0, V("skyTop")) + stop(0.55, V("skyMid")) + stop(1, V("skyBot")) + "</linearGradient>");
+          D.push('<radialGradient id="g-glow">' + stop(0, V("sun"), 0.9) + stop(0.25, V("sun"), 0.45) + stop(1, V("sun"), 0) + "</radialGradient>");
+          D.push('<radialGradient id="g-suncore" cx=".4" cy=".38" r=".7">' + stop(0, "#ffffff") + stop(0.45, V("sun")) + stop(1, V("sun-s")) + "</radialGradient>");
+          D.push('<linearGradient id="g-ray" x1="0" y1="0" x2="1" y2="0">' + stop(0, V("sun"), 0.5) + stop(0.5, V("sun"), 0.12) + stop(1, V("sun"), 0) + "</linearGradient>");
+          D.push('<radialGradient id="g-moonglow">' + stop(0, "#f3f0ff", 0.35) + stop(0.3, "#cfd6ff", 0.12) + stop(1, "#cfd6ff", 0) + "</radialGradient>");
+          D.push('<radialGradient id="g-moon" cx=".38" cy=".35" r=".75">' + stop(0, "#ffffff") + stop(0.6, "#fbf3dc") + stop(1, "#d9cdb4") + "</radialGradient>");
+          D.push(sph("g-cloud", "cloud", 0.42, 0.22));
+          D.push(vlin("g-far", "far", 320, 660));
+          D.push(vlin("g-mid", "mid", 530, 700));
+          D.push(vlin("g-mesa", "mesa", 520, 650));
+          D.push(vlin("g-h1", "hill1", 640, 800));
+          D.push(vlin("g-h2", "hill2", 735, 880));
+          D.push(vlin("g-h3", "hill3", 800, 900));
+          D.push(vlin("g-path", "path", 650, 900));
+          D.push('<linearGradient id="g-water" x1="0" y1="705" x2="0" y2="768" gradientUnits="userSpaceOnUse">' + stop(0, V("water-s")) + stop(0.45, V("water")) + stop(1, V("water-l")) + "</linearGradient>");
+          D.push('<linearGradient id="g-haze" x1="0" y1="0" x2="0" y2="1">' + stop(0, V("skyBot"), 0) + stop(1, V("skyBot"), 0.85) + "</linearGradient>");
+          D.push('<linearGradient id="g-fog" x1="0" y1="0" x2="0" y2="1">' + stop(0, "#ffffff", 0) + stop(0.5, "#eef1f6", 0.8) + stop(1, "#ffffff", 0.9) + "</linearGradient>");
+          D.push('<radialGradient id="g-gold" cx=".5" cy=".6" r=".6">' + stop(0, "#ffb070", 0.55) + stop(1, "#ff8a5c", 0) + "</radialGradient>");
+          D.push('<radialGradient id="g-vignette" cx=".5" cy=".45" r=".75">' + stop(0.6, "#1d1838", 0) + stop(1, "#1d1838", 0.32) + "</radialGradient>");
+          D.push('<radialGradient id="g-lamp">' + stop(0, "#ffd88a", 0.95) + stop(0.35, "#ffb85c", 0.45) + stop(1, "#ff9a3c", 0) + "</radialGradient>");
+          D.push('<radialGradient id="g-ao">' + stop(0, "#2a2246", 0.42) + stop(1, "#2a2246", 0) + "</radialGradient>");
+          D.push(sph("g-canopy", "canopy"));
+          D.push(sph("g-canopy2", "canopy2"));
+          D.push('<linearGradient id="g-pine" x1="0" y1="0" x2="1" y2="0">' + stop(0, V("pine-l")) + stop(0.45, V("pine")) + stop(1, V("pine-s")) + "</linearGradient>");
+          D.push('<linearGradient id="g-trunk" x1="0" y1="0" x2="1" y2="0">' + stop(0, V("trunk-l")) + stop(1, V("trunk-s")) + "</linearGradient>");
+          /* Characters and the cottage keep their own colors; a light filter grades them for time of day. */
+          D.push(fixedSph("g-fur", "#ffbe7d", "#f3812f", "#c4521d"));
+          D.push(fixedSph("g-cream", "#fffaf2", "#f8e9d6", "#e2c7a8", 0.4, 0.2));
+          D.push(fixedSph("g-bun", "#ffffff", "#efe6df", "#c9bbb1"));
+          D.push(fixedSph("g-duck", "#ffffff", "#f2f4f8", "#c9d1de"));
+          D.push(fixedSph("g-duckling", "#fff6b0", "#ffd84a", "#e2a91f"));
+          D.push(fixedSph("g-owl", "#c9a27a", "#94704f", "#5e4430"));
+          D.push(fixedSph("g-wall", "#fffaf0", "#f6e6cc", "#d8bd98", 0.3, 0.25));
+          D.push(fixedSph("g-roof", "#ff9f73", "#e2704a", "#a8452f", 0.3, 0.2));
+          D.push(fixedSph("g-wood", "#c88c5c", "#99613c", "#6c4127"));
+          D.push(fixedSph("g-leaf", "#a6e07a", "#5fae48", "#2f7a35", 0.3, 0.3));
+          D.push(fixedSph("g-pumpkin", "#ffc06a", "#f38a2c", "#c25a17"));
+          D.push(fixedSph("g-snowball", "#ffffff", "#eef3fb", "#c4d0e6"));
+          D.push(fixedSph("g-bird", "#9fd4ff", "#4f9fe6", "#2f6db5"));
+          D.push('<filter id="f-far" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="2.6"/></filter>');
+          D.push('<filter id="f-mid" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="1.2"/></filter>');
+          D.push('<filter id="f-soft" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>');
+          D.push('<filter id="f-mist" x="-20%" y="-300%" width="140%" height="700%"><feGaussianBlur stdDeviation="16"/></filter>');
+          D.push('<filter id="f-bokeh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>');
+          D.push('<filter id="f-rays" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="10"/></filter>');
+
+          /* ---------- scene pieces ---------- */
+          var S = [];
+          function ao(x, y, rx, op) { return tag("ellipse", { cx: x, cy: y, rx: rx, ry: f1(rx * 0.2), fill: "url(#g-ao)", opacity: op || 1 }); }
+
+          /* Rounded mountain: a soft bell with a shaded right flank and a snow cap */
+          function peak(x, y, w, base) {
+            var h = base - y;
+            var body = "M" + (x - w) + " " + base + " C" + f1(x - w * 0.55) + " " + base + " " + f1(x - w * 0.32) + " " + y + " " + x + " " + y +
+              " C" + f1(x + w * 0.32) + " " + y + " " + f1(x + w * 0.55) + " " + base + " " + (x + w) + " " + base + " Z";
+            var shade = "M" + x + " " + y + " C" + f1(x + w * 0.32) + " " + y + " " + f1(x + w * 0.55) + " " + base + " " + (x + w) + " " + base +
+              " L" + f1(x + w * 0.12) + " " + base + " C" + f1(x + w * 0.16) + " " + f1(y + h * 0.5) + " " + f1(x + w * 0.1) + " " + f1(y + h * 0.15) + " " + x + " " + y + " Z";
+            var cw = w * 0.3, cy = y + h * 0.2;
+            var cap = "M" + f1(x - cw) + " " + f1(cy + 6) + " C" + f1(x - cw * 0.6) + " " + f1(y + 4) + " " + f1(x - cw * 0.3) + " " + y + " " + x + " " + y +
+              " C" + f1(x + cw * 0.3) + " " + y + " " + f1(x + cw * 0.6) + " " + f1(y + 4) + " " + f1(x + cw) + " " + f1(cy + 6) +
+              " Q" + f1(x + cw * 0.6) + " " + f1(cy - 2) + " " + f1(x + cw * 0.35) + " " + f1(cy + 8) + " Q" + f1(x + cw * 0.1) + " " + f1(cy - 4) + " " + f1(x - cw * 0.15) + " " + f1(cy + 10) +
+              " Q" + f1(x - cw * 0.45) + " " + f1(cy - 2) + " " + f1(x - cw) + " " + f1(cy + 6) + " Z";
+            return tag("path", { d: body, fill: "url(#g-far)" }) + tag("path", { d: shade, style: "fill:var(--far-s)", opacity: ".55" }) +
+              tag("path", { d: cap, fill: "#ffffff", "class": "phc-cap" });
+          }
+
+          /* Puffy volumetric cloud */
+          function cloudShape(sc) {
+            var puffs = [[-62, 4, 26], [-34, -14, 34], [4, -30, 44], [44, -12, 34], [72, 6, 24], [0, 6, 52]];
+            var s = tag("ellipse", { cx: 6, cy: 30, rx: 96, ry: 12, style: "fill:var(--cloud-s)", opacity: ".35" });
+            puffs.forEach(function (p) { s += tag("circle", { cx: p[0], cy: p[1], r: p[2], fill: "url(#g-cloud)" }); });
+            s += tag("ellipse", { cx: 4, cy: 18, rx: 84, ry: 16, style: "fill:var(--cloud-s)", opacity: ".45" });
+            return '<g transform="scale(' + sc + ')">' + s + "</g>";
+          }
+
+          /* Trees: clustered spheres for leafy trees, stacked rounded tiers for pines */
+          function roundTree(x, y, sc, kind, extra) {
+            var g = ao(x + 6 * sc, y + 2, 46 * sc);
+            var fill = "url(#g-" + kind + ")";
+            var crown = "";
+            [[-26, -62, 26], [24, -64, 28], [0, -92, 34], [-30, -96, 22], [30, -100, 22], [2, -122, 24], [0, -60, 30]].forEach(function (p) {
+              crown += tag("circle", { cx: p[0], cy: p[1], r: p[2], fill: fill });
+            });
+            crown += tag("ellipse", { cx: -14, cy: -124, rx: 13, ry: 8, fill: "#ffffff", opacity: ".28" });
+            crown += tag("path", { d: "M-40 -104 Q-30 -132 -2 -142 Q26 -140 42 -110 Q28 -122 0 -126 Q-24 -124 -40 -104 Z", fill: "#ffffff", "class": "phc-snowcap" });
+            crown += '<g class="phc-dots">' + tag("circle", { cx: -18, cy: -74, r: 4.5, style: "fill:var(--flower1)" }) + tag("circle", { cx: 20, cy: -96, r: 4, style: "fill:var(--flower2)" }) + tag("circle", { cx: 4, cy: -64, r: 4, style: "fill:var(--flower1)" }) + "</g>";
+            var trunk = tag("path", { d: "M-7 0 C-6 -16 -6 -34 -4 -52 L4 -52 C6 -34 6 -16 7 0 Z", fill: "url(#g-trunk)" }) +
+              tag("path", { d: "M-3 -40 Q-14 -50 -20 -62 M3 -44 Q14 -54 18 -66", style: "stroke:var(--trunk-s)", "stroke-width": "4", "stroke-linecap": "round", fill: "none" });
+            g += '<g transform="translate(' + x + "," + y + ") scale(" + sc + ')"><g class="phc-tree" style="animation-delay:-' + f1(rnd() * 8) + 's">' + trunk + crown + (extra || "") + "</g></g>";
             return g;
           }
-          var seed = 11;
-          function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+          function pine(x, y, sc) {
+            var g = ao(x + 5 * sc, y + 2, 32 * sc);
+            var tiers = "";
+            [[-118, 20, 34], [-92, 28, 40], [-62, 36, 46], [-30, 42, 44]].forEach(function (t) {
+              var top = t[0], w = t[1], hh = t[2];
+              tiers += tag("path", { d: "M0 " + top + " C" + f1(w * 0.3) + " " + (top + hh * 0.4) + " " + w + " " + (top + hh * 0.8) + " " + w + " " + (top + hh) +
+                " Q0 " + (top + hh + 9) + " " + (-w) + " " + (top + hh) + " C" + (-w) + " " + (top + hh * 0.8) + " " + f1(-w * 0.3) + " " + (top + hh * 0.4) + " 0 " + top + " Z", fill: "url(#g-pine)" });
+            });
+            tiers += tag("path", { d: "M0 -118 C4 -110 10 -100 14 -92 Q2 -96 -10 -92 C-6 -100 -3 -110 0 -118 Z M-20 -58 Q0 -64 22 -58 Q0 -52 -20 -58 Z", fill: "#ffffff", "class": "phc-snowcap" });
+            g += '<g transform="translate(' + x + "," + y + ") scale(" + sc + ')"><g class="phc-tree" style="animation-delay:-' + f1(rnd() * 8) + 's">' +
+              tag("rect", { x: -5, y: -14, width: 10, height: 16, rx: 3, fill: "url(#g-trunk)" }) + tiers + "</g></g>";
+            return g;
+          }
+          function bush(x, y, sc, kind) {
+            var fill = "url(#g-" + kind + ")";
+            return ao(x, y + 1, 30 * sc, 0.8) + '<g transform="translate(' + x + "," + y + ") scale(" + sc + ')">' +
+              tag("circle", { cx: -14, cy: -12, r: 15, fill: fill }) + tag("circle", { cx: 12, cy: -14, r: 17, fill: fill }) + tag("circle", { cx: -1, cy: -24, r: 16, fill: fill }) +
+              '<g class="phc-dots">' + tag("circle", { cx: -8, cy: -22, r: 3.2, style: "fill:var(--flower1)" }) + tag("circle", { cx: 10, cy: -12, r: 3, style: "fill:var(--flower2)" }) + "</g>" +
+              tag("path", { d: "M-24 -22 Q-4 -46 22 -26 Q0 -34 -24 -22 Z", fill: "#ffffff", "class": "phc-snowcap" }) + "</g>";
+          }
+          function flowers(x, y, n, spread) {
+            var s = "";
+            for (var i = 0; i < n; i++) {
+              var fx = f1(x + (rnd() - 0.5) * spread), fy = f1(y + rnd() * 20), col = rnd() > 0.5 ? "flower1" : "flower2";
+              s += tag("path", { d: "M" + fx + " " + fy + " q-1 -8 0 -14", style: "stroke:var(--hill3-s)", "stroke-width": "2", fill: "none" });
+              s += tag("circle", { cx: fx, cy: f1(fy - 15), r: f1(3 + rnd() * 1.6), style: "fill:var(--" + col + ")" });
+              s += tag("circle", { cx: fx, cy: f1(fy - 15), r: 1.2, fill: "#fff6c8" });
+            }
+            return '<g class="phc-flowers">' + s + "</g>";
+          }
+          function tufts(y0, y1, n, key) {
+            var s = "";
+            for (var i = 0; i < n; i++) {
+              var tx = f1(rnd() * W), ty = f1(y0 + rnd() * (y1 - y0));
+              s += "M" + tx + " " + ty + " q-3 -10 -8 -14 M" + tx + " " + ty + " q0 -12 2 -18 M" + tx + " " + ty + " q4 -9 9 -12 ";
+            }
+            return tag("path", { d: s, style: "stroke:var(--" + key + "-s)", "stroke-width": "2.4", "stroke-linecap": "round", fill: "none", opacity: ".7" });
+          }
+
+          /* ---------- characters ---------- */
+          var INK = "#2b1c1a";
+          function eye(x, y, rx, ry) {
+            return tag("ellipse", { cx: x, cy: y, rx: rx, ry: ry, fill: INK }) + tag("circle", { cx: f1(x + rx * 0.3), cy: f1(y - ry * 0.4), r: f1(rx * 0.42), fill: "#ffffff" }) +
+              tag("circle", { cx: f1(x - rx * 0.35), cy: f1(y + ry * 0.35), r: f1(rx * 0.18), fill: "#ffffff", opacity: ".9" });
+          }
+          function fox() {
+            var tail = '<g class="phc-fox-tail">' +
+              tag("path", { d: "M18 -12 C64 -6 104 -30 98 -78 C94 -104 70 -112 60 -96 C70 -70 60 -40 20 -36 Z", fill: "url(#g-fur)" }) +
+              tag("path", { d: "M98 -78 C94 -104 70 -112 60 -96 C66 -86 80 -78 98 -78 Z", fill: "url(#g-cream)" }) + "</g>";
+            var body = '<g class="phc-fox-body">' +
+              tag("path", { d: "M-38 0 C-50 -34 -36 -78 0 -84 C36 -78 50 -34 38 0 Z", fill: "url(#g-fur)" }) +
+              tag("path", { d: "M-20 0 C-26 -26 -18 -58 0 -62 C18 -58 26 -26 20 0 Z", fill: "url(#g-cream)" }) +
+              tag("ellipse", { cx: -40, cy: -8, rx: 15, ry: 10, fill: "url(#g-fur)" }) +
+              tag("ellipse", { cx: -15, cy: -5, rx: 12, ry: 7.5, fill: "#4a2c24" }) + tag("ellipse", { cx: 15, cy: -5, rx: 12, ry: 7.5, fill: "#4a2c24" }) +
+              tag("ellipse", { cx: -18, cy: -8, rx: 5, ry: 2.4, fill: "#ffffff", opacity: ".25" }) + "</g>";
+            var scarf = '<g class="phc-fox-scarf">' +
+              tag("path", { d: "M-34 -86 C-12 -74 12 -74 34 -86 L36 -72 C12 -60 -12 -60 -36 -72 Z", fill: "#e2475a" }) +
+              tag("path", { d: "M-34 -82 C-12 -70 12 -70 34 -82", stroke: "#ffffff", "stroke-width": "3", fill: "none", opacity: ".7", "stroke-dasharray": "6 6" }) +
+              tag("path", { d: "M12 -70 L26 -36 Q18 -32 10 -34 L2 -66 Z", fill: "#cf3a4e" }) +
+              tag("path", { d: "M12 -40 l-3 8 M18 -40 l0 9 M24 -40 l2 8", stroke: "#cf3a4e", "stroke-width": "2.5", "stroke-linecap": "round" }) + "</g>";
+            var ears = tag("path", { d: "M-36 -20 C-44 -40 -46 -58 -42 -66 C-36 -66 -22 -50 -12 -34 Z", fill: "url(#g-fur)", "class": "phc-ear-l" }) +
+              tag("path", { d: "M36 -20 C44 -40 46 -58 42 -66 C36 -66 22 -50 12 -34 Z", fill: "url(#g-fur)", "class": "phc-ear-r" }) +
+              tag("path", { d: "M-33 -26 C-38 -40 -40 -52 -38 -58 C-32 -56 -24 -44 -18 -34 Z M33 -26 C38 -40 40 -52 38 -58 C32 -56 24 -44 18 -34 Z", fill: "#5a3127" });
+            var face = tag("path", { d: "M-50 4 C-52 -30 -28 -48 0 -48 C28 -48 52 -30 50 4 C44 28 20 38 0 38 C-20 38 -44 28 -50 4 Z", fill: "url(#g-fur)" }) +
+              tag("path", { d: "M-50 4 C-42 12 -30 14 -20 10 C-12 28 12 28 20 10 C30 14 42 12 50 4 C44 28 20 40 0 40 C-20 40 -44 28 -50 4 Z", fill: "url(#g-cream)" }) +
+              tag("ellipse", { cx: -30, cy: 12, rx: 8, ry: 4.5, fill: "#ff7d7d", opacity: ".35" }) + tag("ellipse", { cx: 30, cy: 12, rx: 8, ry: 4.5, fill: "#ff7d7d", opacity: ".35" }) +
+              '<g class="phc-eyes">' + eye(-17, -6, 8, 10) + eye(17, -6, 8, 10) + "</g>" +
+              '<g class="phc-sleepy">' + tag("path", { d: "M-25 -4 Q-17 3 -9 -4 M9 -4 Q17 3 25 -4", stroke: INK, "stroke-width": "3", "stroke-linecap": "round", fill: "none" }) + "</g>" +
+              tag("path", { d: "M-7 13 Q0 8 7 13 Q4 19 0 19 Q-4 19 -7 13 Z", fill: INK }) + tag("ellipse", { cx: -2, cy: 12, rx: 2.4, ry: 1.2, fill: "#ffffff", opacity: ".7" }) +
+              tag("path", { d: "M-6 23 Q-2 27 0 22 Q2 27 6 23", stroke: INK, "stroke-width": "2", "stroke-linecap": "round", fill: "none" }) +
+              tag("ellipse", { cx: -16, cy: -40, rx: 14, ry: 6, fill: "#ffffff", opacity: ".22" });
+            var head = '<g class="phc-fox-head" transform="translate(0,-104)">' + ears + face + "</g>";
+            var umbrella = '<g class="phc-umbrella">' +
+              tag("path", { d: "M30 -24 Q44 -120 14 -196", stroke: "#4f7d34", "stroke-width": "5", "stroke-linecap": "round", fill: "none" }) +
+              tag("path", { d: "M-96 -176 C-60 -250 70 -262 120 -184 C70 -206 -40 -204 -96 -176 Z", fill: "url(#g-leaf)" }) +
+              tag("path", { d: "M-80 -182 Q14 -240 110 -188 M-40 -196 L-20 -224 M10 -204 L20 -236 M56 -200 L74 -228", stroke: "#2f7a35", "stroke-width": "2.5", fill: "none", opacity: ".55" }) +
+              tag("ellipse", { cx: 20, cy: -36, rx: 9, ry: 7, fill: "url(#g-fur)" }) + "</g>";
+            var zz = '<g class="phc-zz">' + tag("text", { x: 46, y: -150, "font-size": "20", "font-weight": "800", fill: "#ffffff", "font-family": "Nunito, sans-serif" }, "z") +
+              tag("text", { x: 60, y: -172, "font-size": "15", "font-weight": "800", fill: "#ffffff", "font-family": "Nunito, sans-serif" }, "z") + "</g>";
+            return '<g class="phc-char phc-fox" transform="translate(300,846) scale(1.12)">' + ao(10, 2, 74) + tail + body + scarf + head + umbrella + zz + "</g>";
+          }
+          function bunny() {
+            return '<g class="phc-char phc-bunny" transform="translate(930,808) scale(1.05)">' + ao(4, 1, 30) + '<g class="phc-hop">' +
+              tag("circle", { cx: 26, cy: -16, r: 8, fill: "#ffffff" }) +
+              tag("ellipse", { cx: 8, cy: -17, rx: 22, ry: 17, fill: "url(#g-bun)" }) +
+              tag("ellipse", { cx: 18, cy: -4, rx: 12, ry: 5, fill: "#e5d9d0" }) +
+              '<g class="phc-bun-ears">' + tag("ellipse", { cx: -16, cy: -56, rx: 5.5, ry: 16, fill: "url(#g-bun)", transform: "rotate(-12 -16 -44)" }) + tag("ellipse", { cx: -16, cy: -56, rx: 2.6, ry: 11, fill: "#ffb3c3", transform: "rotate(-12 -16 -44)" }) +
+              tag("ellipse", { cx: -5, cy: -57, rx: 5.5, ry: 16, fill: "url(#g-bun)", transform: "rotate(10 -5 -44)" }) + tag("ellipse", { cx: -5, cy: -57, rx: 2.6, ry: 11, fill: "#ffb3c3", transform: "rotate(10 -5 -44)" }) + "</g>" +
+              tag("circle", { cx: -12, cy: -32, r: 14, fill: "url(#g-bun)" }) +
+              eye(-17, -34, 3, 3.6) + tag("ellipse", { cx: -10, cy: -26, rx: 4, ry: 2.4, fill: "#ff9aa9", opacity: ".45" }) +
+              tag("circle", { cx: -25, cy: -29, r: 2, fill: "#ff8fa3", "class": "phc-nose" }) +
+              tag("ellipse", { cx: -4, cy: -2, rx: 9, ry: 4, fill: "#f4ece6" }) + "</g></g>";
+          }
+          function duck(x, sc, kid, delay) {
+            var body = kid ? "url(#g-duckling)" : "url(#g-duck)";
+            var d = '<g class="phc-bob" style="animation-delay:-' + delay + 's">' +
+              tag("ellipse", { cx: 0, cy: 4, rx: 36, ry: 5, fill: "#ffffff", opacity: ".35" }) +
+              tag("path", { d: "M-30 0 C-30 -18 -10 -24 8 -20 C24 -18 36 -10 34 2 C22 10 -20 10 -30 0 Z", fill: body }) +
+              tag("path", { d: "M28 -8 L42 -20 L36 0 Z", fill: body }) +
+              tag("path", { d: "M-4 -10 C8 -18 22 -14 24 -6 C14 -1 2 -1 -4 -10 Z", fill: kid ? "#f2c23a" : "#e3e8f0" }) +
+              tag("path", { d: "M-22 -12 C-26 -22 -24 -30 -20 -34", stroke: kid ? "#ffd84a" : "#f2f4f8", "stroke-width": "12", "stroke-linecap": "round", fill: "none" }) +
+              tag("circle", { cx: -22, cy: -38, r: 13, fill: body }) +
+              tag("path", { d: "M-34 -38 Q-48 -37 -45 -32 Q-39 -30 -33 -33 Z", fill: "#ff9f2e" }) +
+              eye(-26, -41, 2.4, 2.8) + "</g>";
+            return '<g transform="translate(' + x + ',0) scale(' + sc + ')">' + d + "</g>";
+          }
+          function ducks() {
+            return '<g class="phc-ducks"><g class="phc-swim"><g class="phc-turn"><g transform="translate(0,742)">' +
+              duck(0, 0.8, false, 0) + duck(56, 0.46, true, 0.7) + duck(92, 0.42, true, 1.4) + duck(124, 0.44, true, 2.1) + "</g></g></g></g>";
+          }
+          function owl() {
+            var eyes = function (glow) {
+              return '<g class="phc-owl-eyes">' + tag("circle", { cx: -9, cy: -30, r: 8, fill: glow ? "#ffe27a" : "#f6e7c4" }) + tag("circle", { cx: 9, cy: -30, r: 8, fill: glow ? "#ffe27a" : "#f6e7c4" }) +
+                (glow ? "" : tag("circle", { cx: -9, cy: -30, r: 5.2, fill: "#ffcf3a" }) + tag("circle", { cx: 9, cy: -30, r: 5.2, fill: "#ffcf3a" }) +
+                  tag("circle", { cx: -9, cy: -30, r: 3, fill: INK }) + tag("circle", { cx: 9, cy: -30, r: 3, fill: INK }) +
+                  tag("circle", { cx: -7.6, cy: -31.6, r: 1.2, fill: "#ffffff" }) + tag("circle", { cx: 10.4, cy: -31.6, r: 1.2, fill: "#ffffff" })) + "</g>";
+            };
+            var o = '<g class="phc-owl-head">' + tag("path", { d: "M-18 -40 L-16 -54 L-8 -44 Z M18 -40 L16 -54 L8 -44 Z", fill: "#7a5a3f" }) +
+              tag("ellipse", { cx: 0, cy: -32, rx: 20, ry: 17, fill: "url(#g-owl)" }) + eyes(false) + tag("path", { d: "M-3 -24 L0 -18 L3 -24 Z", fill: "#e8a43a" }) + "</g>";
+            var bodyO = tag("ellipse", { cx: 0, cy: -8, rx: 18, ry: 20, fill: "url(#g-owl)" }) + tag("ellipse", { cx: 0, cy: -4, rx: 11, ry: 14, fill: "#e9d3b4" }) +
+              tag("path", { d: "M-6 -10 l3 3 l3 -3 l3 3 l3 -3 M-6 -2 l3 3 l3 -3 l3 3 l3 -3", stroke: "#b8946c", "stroke-width": "1.6", fill: "none" }) +
+              tag("path", { d: "M-8 12 l-3 4 M-4 12 l0 5 M4 12 l0 5 M8 12 l3 4", stroke: "#e8a43a", "stroke-width": "2.4", "stroke-linecap": "round" });
+            return { body: '<g class="phc-char phc-owl" transform="translate(1394,764)">' + bodyO + o + "</g>",
+              glow: '<g class="phc-owl-glow" transform="translate(1394,764)"><g class="phc-owl-head">' + eyes(true) + "</g></g>" };
+          }
+          function bird(delay, sc) {
+            return '<g transform="scale(' + sc + ')"><g class="phc-bird" style="animation-delay:-' + delay + 's">' +
+              tag("ellipse", { cx: 0, cy: 0, rx: 11, ry: 9, fill: "url(#g-bird)" }) + tag("ellipse", { cx: -2, cy: 4, rx: 7, ry: 4.5, fill: "#ffb36b" }) +
+              tag("circle", { cx: -9, cy: -4, r: 6, fill: "url(#g-bird)" }) + tag("path", { d: "M-15 -4 L-20 -2 L-15 -1 Z", fill: "#f2a23a" }) +
+              tag("circle", { cx: -11, cy: -5, r: 1.4, fill: INK }) + tag("path", { d: "M10 -2 L18 -6 L16 2 Z", fill: "#2f6db5" }) +
+              '<g class="phc-wing">' + tag("path", { d: "M-2 -4 C2 -18 12 -22 16 -16 C10 -12 6 -6 -2 -4 Z", fill: "#3a82d0" }) + "</g></g></g>";
+          }
+          function butterfly(c1, c2, delay) {
+            var wing = tag("path", { d: "M0 0 C-6 -14 -18 -16 -16 -4 C-15 2 -6 2 0 0 Z", fill: c1 }) + tag("path", { d: "M0 0 C-4 6 -12 10 -12 4 C-12 0 -6 0 0 0 Z", fill: c2 });
+            return '<g class="phc-fly-path" style="animation-delay:-' + delay + 's"><g class="phc-butterfly">' +
+              '<g class="phc-wing-l">' + wing + "</g>" + '<g class="phc-wing-r" transform="scale(-1,1)">' + wing + "</g>" +
+              tag("ellipse", { cx: 0, cy: 0, rx: 1.6, ry: 6, fill: "#4a3a4a" }) + "</g></g>";
+          }
+          function cottage() {
+            var winGlass = function (x, y, w, h) { return tag("rect", { x: x, y: y, width: w, height: h, rx: 6, fill: "#5a6c8f" }) + tag("rect", { x: x, y: y, width: w, height: h, rx: 6, fill: "#ffd47e", "class": "phc-lit" }); };
+            var house = ao(0, 2, 120, 1) +
+              tag("path", { d: "M34 -128 L34 -170 Q34 -176 40 -176 L58 -176 Q64 -176 64 -170 L64 -118 Z", fill: "#b85c44" }) +
+              tag("rect", { x: 30, y: -182, width: 38, height: 10, rx: 4, fill: "#8f4535" }) +
+              tag("path", { d: "M-76 0 L-76 -84 Q-76 -94 -66 -94 L66 -94 Q76 -94 76 -84 L76 0 Z", fill: "url(#g-wall)" }) +
+              tag("path", { d: "M40 -94 L76 -94 L76 0 L52 0 Z", fill: "#b8957a", opacity: ".25" }) +
+              tag("path", { d: "M-102 -86 Q-96 -104 -78 -112 L-8 -164 Q0 -170 8 -164 L78 -112 Q96 -104 102 -86 Q0 -70 -102 -86 Z", fill: "url(#g-roof)" }) +
+              tag("path", { d: "M-102 -86 Q-96 -104 -78 -112 L-8 -164", stroke: "#ffd0b0", "stroke-width": "4", fill: "none", opacity: ".6", "stroke-linecap": "round" }) +
+              tag("path", { d: "M-70 -100 Q-40 -92 -10 -98 M-50 -122 Q-20 -114 14 -120 M20 -102 Q50 -94 80 -100 M-30 -142 Q-4 -136 20 -140", stroke: "#a8452f", "stroke-width": "2.5", fill: "none", opacity: ".45" }) +
+              tag("path", { d: "M-104 -88 Q-98 -110 -78 -118 L-8 -170 Q0 -176 8 -170 L78 -118 Q98 -110 104 -88 Q90 -100 76 -106 L8 -156 Q0 -160 -8 -156 L-76 -106 Q-92 -100 -104 -88 Z", fill: "#ffffff", "class": "phc-snowcap" }) +
+              tag("circle", { cx: 0, cy: -126, r: 11, fill: "#7a4a32" }) + tag("circle", { cx: 0, cy: -126, r: 8, fill: "#5a6c8f" }) + tag("circle", { cx: 0, cy: -126, r: 8, fill: "#ffd47e", "class": "phc-lit" }) +
+              tag("path", { d: "M-15 0 L-15 -44 Q0 -62 15 -44 L15 0 Z", fill: "url(#g-wood)" }) + tag("circle", { cx: 9, cy: -22, r: 2.2, fill: "#ffd36e" }) +
+              tag("rect", { x: -62, y: -72, width: 32, height: 30, rx: 7, fill: "#8a5a3c" }) + winGlass(-58, -68, 24, 22) +
+              tag("rect", { x: 30, y: -72, width: 32, height: 30, rx: 7, fill: "#8a5a3c" }) + winGlass(34, -68, 24, 22) +
+              tag("path", { d: "M-46 -68 v22 M-58 -57 h24 M46 -68 v22 M34 -57 h24", stroke: "#8a5a3c", "stroke-width": "3" }) +
+              tag("rect", { x: -64, y: -42, width: 36, height: 9, rx: 3, fill: "#9c6a46" }) + tag("rect", { x: 28, y: -42, width: 36, height: 9, rx: 3, fill: "#9c6a46" }) +
+              '<g class="phc-flowers">' + [-58, -50, -42, -34, 34, 42, 50, 58].map(function (fx, i) { return tag("circle", { cx: fx, cy: -45, r: 4, style: "fill:var(--flower" + (i % 2 ? 2 : 1) + ")" }); }).join("") + "</g>" +
+              tag("path", { d: "M26 0 L26 -36", stroke: "#5a4032", "stroke-width": "3" }) + tag("rect", { x: 20, y: -46, width: 12, height: 12, rx: 3, fill: "#3d2c24" }) +
+              tag("rect", { x: 22.5, y: -43.5, width: 7, height: 7, rx: 2, fill: "#ffd47e", "class": "phc-lit" });
+            var smoke = '<g class="phc-smoke">' + [0, 1, 2, 3, 4].map(function (i) {
+              return tag("circle", { cx: 49, cy: -186, r: 9 + i, fill: "#f4f1f6", style: "animation-delay:-" + (i * 1.6) + "s" });
+            }).join("") + "</g>";
+            var props = '<g class="phc-autumn-only">' + tag("ellipse", { cx: 32, cy: -8, rx: 14, ry: 11, fill: "url(#g-pumpkin)" }) + tag("ellipse", { cx: 50, cy: -6, rx: 10, ry: 8, fill: "url(#g-pumpkin)" }) +
+              tag("path", { d: "M32 -18 q2 -5 5 -6 M50 -13 q1 -4 4 -5", stroke: "#4f7d34", "stroke-width": "3", "stroke-linecap": "round", fill: "none" }) + "</g>" +
+              '<g class="phc-summer-only">' + [[-96, -54], [-112, -44], [-84, -40]].map(function (p) {
+                return tag("path", { d: "M" + p[0] + " 0 L" + p[0] + " " + p[1], stroke: "#4f8a34", "stroke-width": "3.5" }) +
+                  tag("circle", { cx: p[0], cy: p[1], r: 10, fill: "#ffc93c" }) + tag("circle", { cx: p[0], cy: p[1], r: 4.6, fill: "#7a4a22" });
+              }).join("") + "</g>";
+            return '<g class="phc-char phc-cottage" transform="translate(1200,658) scale(.9)">' + house + props + "</g>" + '<g transform="translate(1200,658) scale(.9)">' + smoke + "</g>";
+          }
+          function cottageGlow() {
+            return '<g class="phc-glow" transform="translate(1200,658) scale(.9)">' +
+              tag("circle", { cx: -46, cy: -57, r: 46, fill: "url(#g-lamp)" }) + tag("circle", { cx: 46, cy: -57, r: 46, fill: "url(#g-lamp)" }) +
+              tag("circle", { cx: 0, cy: -126, r: 26, fill: "url(#g-lamp)" }) + tag("circle", { cx: 26, cy: -40, r: 30, fill: "url(#g-lamp)" }) +
+              tag("ellipse", { cx: 0, cy: 18, rx: 90, ry: 16, fill: "url(#g-lamp)", opacity: ".6" }) + "</g>";
+          }
+          function snowman() {
+            return '<g class="phc-char phc-winter-only" transform="translate(1316,672) scale(.62)">' + ao(0, 2, 34) +
+              tag("circle", { cx: 0, cy: -24, r: 26, fill: "url(#g-snowball)" }) + tag("circle", { cx: 0, cy: -64, r: 19, fill: "url(#g-snowball)" }) +
+              tag("circle", { cx: 0, cy: -94, r: 14, fill: "url(#g-snowball)" }) + tag("path", { d: "M2 -93 L18 -90 L2 -88 Z", fill: "#f38a2c" }) +
+              tag("circle", { cx: -5, cy: -98, r: 2, fill: INK }) + tag("circle", { cx: 6, cy: -98, r: 2, fill: INK }) +
+              tag("path", { d: "M-14 -80 Q0 -72 14 -80 L14 -74 Q0 -66 -14 -74 Z M6 -76 L12 -56 L4 -56 Z", fill: "#3f8fd6" }) +
+              tag("path", { d: "M-18 -66 L-40 -80 M18 -66 L38 -84", stroke: "#7a5a3f", "stroke-width": "3", "stroke-linecap": "round" }) +
+              tag("rect", { x: -11, y: -118, width: 22, height: 14, rx: 2, fill: "#3a3550" }) + tag("rect", { x: -16, y: -106, width: 32, height: 4, rx: 2, fill: "#3a3550" }) + "</g>";
+          }
+
+          /* ---------- assemble ---------- */
+          S.push('<rect width="' + W + '" height="' + H + '" fill="url(#g-sky)"/>');
+          var st = "";
+          for (var i = 0; i < 120; i++) {
+            var sx = f1(rnd() * W), sy = f1(rnd() * 420), sr = f1(0.6 + rnd() * 1.6);
+            st += tag("circle", { cx: sx, cy: sy, r: sr, fill: "#fff8e7", style: "animation-delay:-" + f1(rnd() * 6) + "s" });
+            if (i % 12 === 0) st += tag("path", { d: "M" + sx + " " + f1(sy - 7) + " Q" + sx + " " + sy + " " + f1(sx + 7) + " " + sy + " Q" + sx + " " + sy + " " + sx + " " + f1(sy + 7) + " Q" + sx + " " + sy + " " + f1(sx - 7) + " " + sy + " Q" + sx + " " + sy + " " + sx + " " + f1(sy - 7) + " Z", fill: "#ffffff", style: "animation-delay:-" + f1(rnd() * 6) + "s" });
+          }
+          S.push('<g class="phc-stars">' + st + "</g>");
+          var rays = "";
+          for (var r = 0; r < 9; r++) rays += tag("path", { d: "M0 -14 L1100 -90 L1100 90 L0 14 Z", fill: "url(#g-ray)", transform: "rotate(" + f1(10 + r * 20 + rnd() * 8) + ")" });
+          S.push('<g class="phc-sun"><g class="phc-rays" filter="url(#f-rays)">' + rays + "</g>" + tag("circle", { r: 300, fill: "url(#g-glow)", "class": "phc-halo" }) +
+            tag("circle", { r: 48, fill: "url(#g-suncore)" }) + "</g>");
+          S.push('<g class="phc-moon">' + tag("circle", { r: 200, fill: "url(#g-moonglow)" }) + tag("circle", { r: 36, fill: "url(#g-moon)" }) +
+            tag("circle", { cx: -10, cy: -8, r: 6, fill: "#e6dcc2", opacity: ".7" }) + tag("circle", { cx: 12, cy: 8, r: 4.5, fill: "#e6dcc2", opacity: ".7" }) + tag("circle", { cx: 6, cy: -16, r: 3, fill: "#e6dcc2", opacity: ".6" }) + "</g>");
+
+          var cl = "", cdefs = [[140, 1.15, 260, 20], [250, 0.8, 320, 150], [100, 0.65, 230, 80], [320, 1.3, 360, 260], [190, 0.95, 290, 200], [70, 0.85, 250, 10], [280, 1.05, 340, 110], [150, 1.4, 380, 300], [220, 0.75, 280, 60], [50, 1.2, 320, 230]];
+          cdefs.forEach(function (c, i) {
+            cl += '<g class="phc-cloud" data-dur="' + c[2] + '" style="animation-duration:' + c[2] + "s;animation-delay:-" + c[3] + 's"><g transform="translate(0,' + c[0] + ')">' + cloudShape(c[1]) + "</g></g>";
+          });
+          S.push('<g class="phc-layer" data-depth=".15">' + cl + "</g>");
+          var deck = "";
+          for (var di = 0; di < 9; di++) deck += tag("ellipse", { cx: di * 200 - 60, cy: 200 + (di % 3) * 26, rx: 200, ry: 70, fill: "url(#g-cloud)" });
+          S.push('<g class="phc-layer" data-depth=".2"><g class="phc-deck">' + tag("rect", { x: -100, y: -40, width: 1800, height: 240, style: "fill:var(--cloud-s)" }) + deck + "</g></g>");
+
+          /* far mountains */
+          var far = "";
+          [[90, 410, 190], [340, 330, 230], [610, 390, 200], [870, 318, 250], [1140, 370, 210], [1390, 326, 240], [1600, 400, 190]].forEach(function (p) { far += peak(p[0], p[1], p[2], 660); });
+          S.push('<g class="phc-layer" data-depth=".3"><g filter="url(#f-far)">' + far + "</g>" + tag("rect", { x: 0, y: 470, width: W, height: 200, fill: "url(#g-haze)" }) + "</g>");
+
+          /* mid hills and the plateau */
+          var mid = tag("path", { d: "M0 612 C110 548 230 544 330 586 C420 624 520 566 640 562 C760 558 830 618 940 610 C1050 602 1110 548 1240 552 C1360 556 1440 610 1600 592 L1600 900 L0 900 Z", fill: "url(#g-mid)" });
+          mid += tag("path", { d: "M0 612 C110 548 230 544 330 586 C420 624 520 566 640 562 C760 558 830 618 940 610 C1050 602 1110 548 1240 552 C1360 556 1440 610 1600 592", style: "stroke:var(--mid-l)", "stroke-width": "4", fill: "none", opacity: ".8" });
+          var mesa = tag("path", { d: "M150 648 L196 556 Q204 538 224 537 L476 532 Q496 532 504 548 L556 648 Z", fill: "url(#g-mesa)" }) +
+            tag("path", { d: "M504 548 L556 648 L500 648 L470 562 Z", style: "fill:var(--mesa-s)", opacity: ".7" }) +
+            tag("path", { d: "M224 537 L476 532 Q496 532 504 548 L470 556 Q350 562 214 556 Q200 552 206 544 Z", style: "fill:var(--mesa-l)" }) +
+            tag("path", { d: "M190 584 Q350 576 516 580 M174 612 Q350 604 532 610", style: "stroke:var(--mesa-s)", "stroke-width": "5", "stroke-linecap": "round", fill: "none", opacity: ".5" }) +
+            tag("path", { d: "M224 537 L476 532 Q496 532 504 548 L470 552 Q350 556 214 552 Q204 546 224 537 Z", fill: "#ffffff", "class": "phc-snowcap" });
+          S.push('<g class="phc-layer" data-depth=".45"><g filter="url(#f-mid)">' + mid + mesa + "</g></g>");
+          S.push('<g class="phc-layer" data-depth=".5"><g class="phc-mist" filter="url(#f-mist)">' + tag("ellipse", { cx: 500, cy: 646, rx: 560, ry: 26, fill: "#ffffff", opacity: ".42" }) + tag("ellipse", { cx: 1260, cy: 640, rx: 480, ry: 22, fill: "#ffffff", opacity: ".36" }) + "</g></g>");
+
+          /* hill 1: cottage, pond and the back trees */
+          var h1d = "M0 700 C180 640 380 650 560 682 C700 704 820 692 960 668 C1080 650 1150 642 1240 646 C1360 652 1460 680 1600 670";
+          var h1 = tag("path", { d: h1d + " L1600 900 L0 900 Z", fill: "url(#g-h1)" }) + tag("path", { d: h1d, style: "stroke:var(--hill1-l)", "stroke-width": "5", fill: "none", opacity: ".9" });
+          h1 += tufts(690, 760, 18, "hill1");
+          h1 += pine(40, 708, 0.52) + pine(112, 698, 0.6) + pine(470, 676, 0.48) + roundTree(890, 682, 0.5, "canopy2") + roundTree(975, 670, 0.56, "canopy") + pine(1460, 676, 0.52) + pine(1540, 680, 0.6);
+          h1 += roundTree(1082, 656, 0.78, "canopy") + pine(1338, 664, 0.62) + bush(1270, 662, 0.6, "canopy2") + bush(1130, 660, 0.5, "canopy2");
+          /* path from the cottage door */
+          h1 += tag("path", { d: "M1192 657 L1208 657 C1206 690 1150 720 1118 790 L1050 790 C1090 724 1176 690 1192 657 Z", fill: "url(#g-path)" });
+          /* pond */
+          h1 += tag("ellipse", { cx: 762, cy: 738, rx: 214, ry: 32, style: "fill:var(--hill1-s)", opacity: ".5" }) +
+            tag("ellipse", { cx: 762, cy: 736, rx: 206, ry: 28, fill: "url(#g-water)" }) +
+            tag("ellipse", { cx: 720, cy: 728, rx: 120, ry: 8, fill: "#ffffff", opacity: ".25" }) +
+            '<g class="phc-shimmer">' + tag("path", { d: "M610 738 h70 M740 746 h90 M680 728 h40 M850 734 h40 M790 754 h50", stroke: "#ffffff", "stroke-width": "3", "stroke-linecap": "round", opacity: ".7" }) + "</g>" +
+            '<g class="phc-ice">' + tag("ellipse", { cx: 762, cy: 736, rx: 206, ry: 28, fill: "#f4f9ff", opacity: ".55" }) + tag("path", { d: "M640 732 l60 6 M780 742 l70 -8 M700 748 l40 -4", stroke: "#ffffff", "stroke-width": "3", "stroke-linecap": "round" }) + "</g>" +
+            '<g class="phc-splashes">' + [0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { return tag("ellipse", { cx: f1(600 + rnd() * 320), cy: f1(724 + rnd() * 24), rx: 9, ry: 2.4, fill: "none", stroke: "#ffffff", "stroke-width": "1.6", style: "animation-delay:-" + f1(rnd() * 1.6) + "s" }); }).join("") + "</g>";
+          h1 += ducks();
+          h1 += cottage() + snowman();
+          S.push('<g class="phc-layer" data-depth=".6">' + h1 + "</g>");
+
+          /* hill 2: bunny, flowers */
+          var h2d = "M0 782 C200 732 420 742 600 776 C720 798 880 802 1000 782 C1150 756 1300 738 1440 746 C1520 750 1570 760 1600 762";
+          var h2 = tag("path", { d: h2d + " L1600 900 L0 900 Z", fill: "url(#g-h2)" }) + tag("path", { d: h2d, style: "stroke:var(--hill2-l)", "stroke-width": "5", fill: "none", opacity: ".9" });
+          h2 += tufts(775, 840, 22, "hill2");
+          h2 += tag("path", { d: "M1056 780 L1116 772 C1100 806 1070 830 1060 856 L960 856 C990 826 1040 806 1056 780 Z", fill: "url(#g-path)" });
+          h2 += roundTree(200, 760, 0.86, "canopy") + pine(388, 748, 0.82) + roundTree(570, 786, 0.66, "canopy2") + pine(1360, 750, 0.86) + roundTree(1530, 758, 0.9, "canopy");
+          h2 += bush(470, 770, 0.8, "canopy2") + bush(1230, 762, 0.75, "canopy");
+          h2 += flowers(860, 790, 10, 150) + flowers(1180, 780, 8, 120) + flowers(640, 786, 8, 110);
+          h2 += bunny();
+          S.push('<g class="phc-layer" data-depth=".75">' + h2 + "</g>");
+
+          /* hill 3: the fox and big framing trees */
+          var h3d = "M0 842 C160 806 360 800 520 822 C700 844 860 852 1040 840 C1220 828 1380 814 1600 828";
+          var h3 = tag("path", { d: h3d + " L1600 900 L0 900 Z", fill: "url(#g-h3)" }) + tag("path", { d: h3d, style: "stroke:var(--hill3-l)", "stroke-width": "5", fill: "none", opacity: ".9" });
+          h3 += tag("path", { d: "M955 846 L1062 840 C1050 866 1046 884 1048 900 L880 900 C910 880 940 864 955 846 Z", fill: "url(#g-path)" });
+          h3 += tufts(845, 895, 30, "hill3");
+          var owlArt = owl();
+          var branch = tag("path", { d: "M1440 772 Q1410 770 1372 768", stroke: "url(#g-trunk)", "stroke-width": "9", "stroke-linecap": "round", fill: "none" });
+          h3 += roundTree(84, 856, 1.28, "canopy") + roundTree(1462, 846, 1.38, "canopy2");
+          h3 += '<g class="phc-night-only">' + branch + owlArt.body + "</g>";
+          h3 += flowers(470, 846, 12, 160) + flowers(140, 870, 8, 120) + flowers(1270, 846, 12, 180);
+          h3 += fox();
+          S.push('<g class="phc-layer" data-depth=".95">' + h3 + "</g>");
+
+          /* golden-hour wash and the emissive layer (lamps, fireflies, owl eyes) */
+          S.push(tag("rect", { width: W, height: H, fill: "url(#g-gold)", "class": "phc-goldwash" }));
+          var flies = "";
+          for (var fl = 0; fl < 30; fl++) {
+            flies += tag("circle", { cx: f1(rnd() * W), cy: f1(640 + rnd() * 240), r: 2.6, fill: "#fff3a0", style: "animation-delay:-" + f1(rnd() * 9) + "s;animation-duration:" + f1(6 + rnd() * 6) + "s" });
+          }
+          S.push('<g class="phc-layer" data-depth=".6">' + cottageGlow() + "</g>");
+          S.push('<g class="phc-layer" data-depth=".95"><g class="phc-night-only">' + owlArt.glow + "</g></g>");
+          S.push('<g class="phc-flies">' + flies + "</g>");
+
+          /* birds and butterflies */
+          S.push('<g class="phc-birds"><g transform="translate(0,0)">' + bird(0, 1) + '</g><g transform="translate(34,16)">' + bird(0.2, 0.8) + '</g><g transform="translate(64,-6)">' + bird(0.4, 0.9) + "</g></g>");
+          S.push('<g class="phc-butterflies"><g transform="translate(500,742)">' + butterfly("#ffb3d1", "#ff8ab8", 0) + '</g><g transform="translate(1150,708)">' + butterfly("#fff08a", "#ffc94a", 4) + '</g><g transform="translate(220,770)">' + butterfly("#bfe3ff", "#8ec8ff", 8) + "</g></g>");
+
+          /* foreground bokeh for depth of field */
+          var bk = "";
+          [[-30, 900, 70, -20], [30, 910, 60, 12], [90, 905, 50, -8], [1540, 905, 70, 18], [1600, 900, 60, -10], [1480, 912, 50, 6]].forEach(function (b) {
+            bk += tag("path", { d: "M" + b[0] + " " + b[1] + " q" + b[3] + " -" + f1(b[2] * 1.6) + " " + f1(b[3] * 2.2) + " -" + f1(b[2] * 2.4) + " q-" + f1(b[2] * 0.2) + " " + f1(b[2] * 1.2) + " -" + f1(b[3] * 1.6 - 18) + " " + f1(b[2] * 2.4) + " Z", style: "fill:var(--hill3-s)" });
+          });
+          bk += tag("ellipse", { cx: 40, cy: 900, rx: 120, ry: 40, style: "fill:var(--hill3-s)" }) + tag("ellipse", { cx: 1560, cy: 900, rx: 120, ry: 40, style: "fill:var(--hill3-s)" });
+          S.push('<g class="phc-layer phc-bokeh" data-depth="1.3"><g filter="url(#f-bokeh)">' + bk + "</g></g>");
+
+          /* weather */
+          var rain = "";
+          for (var rr = 0; rr < 150; rr++) {
+            var rx = f1(rnd() * (W + 300) - 150);
+            rain += tag("line", { x1: rx, y1: 0, x2: rx, y2: f1(26 + rnd() * 18), stroke: "#eef4ff", "stroke-width": f1(1.4 + rnd()), "stroke-linecap": "round", opacity: f1(0.45 + rnd() * 0.35), style: "animation-duration:" + f1(0.8 + rnd() * 0.6) + "s;animation-delay:-" + f1(rnd() * 3) + "s" });
+          }
+          S.push('<g class="phc-rain">' + rain + "</g>");
+          var fl2 = "";
+          for (var fk = 0; fk < 90; fk++) {
+            fl2 += '<g transform="translate(' + f1(rnd() * W) + ',0)">' + tag("ellipse", { rx: f1(1.8 + rnd() * 3), ry: f1(1.6 + rnd() * 2.4), style: "fill:var(--particle);animation-duration:" + f1(9 + rnd() * 9) + "s;animation-delay:-" + f1(rnd() * 16) + "s" }) + "</g>";
+          }
+          S.push('<g class="phc-flakes">' + fl2 + "</g>");
+          S.push('<g class="phc-fog">' + tag("rect", { x: -200, y: 420, width: 2000, height: 480, fill: "url(#g-fog)" }) + "</g>");
+          S.push(tag("path", { d: "M1040 60 L1010 150 L1036 150 L1000 250 L1080 130 L1050 130 L1080 60 Z", fill: "#fffbe0", "class": "phc-bolt" }));
+          S.push(tag("rect", { width: W, height: H, fill: "#ffffff", "class": "phc-flash" }));
+          S.push(tag("rect", { width: W, height: H, fill: "url(#g-vignette)", "pointer-events": "none" }));
 
           var host = document.createElement("div");
           host.id = "phc-scene";
           host.setAttribute("aria-hidden", "true");
-          var svg = el("svg", { viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "xMidYMax slice", width: "100%", height: "100%" });
-          host.appendChild(svg);
-          var defs = el("defs", {}, svg);
-
-          grad(defs, "phc-sky", "0", "0", "0", "1", [["0", v("skyTop")], ["0.55", v("skyMid")], ["1", v("skyBot")]]);
-          var glow = el("radialGradient", { id: "phc-glow" }, defs);
-          el("stop", { offset: "0", style: "stop-color:var(--sun);stop-opacity:.95" }, glow);
-          el("stop", { offset: "0.35", style: "stop-color:var(--sun);stop-opacity:.35" }, glow);
-          el("stop", { offset: "1", style: "stop-color:var(--sun);stop-opacity:0" }, glow);
-          grad(defs, "phc-ray", "0", "0", "1", "0", [["0", v("sun"), 0.28], ["0.6", v("sun"), 0.06], ["1", v("sun"), 0]]);
-          grad(defs, "phc-cloud", "0", "-64", "0", "28", [["0", "#ffffff"], ["0.45", v("cloud")], ["1", v("cloudShade")]], true);
-          grad(defs, "phc-far", "0", "340", "0", "640", [["0", v("far")], ["1", v("skyBot")]], true);
-          grad(defs, "phc-farS", "0", "340", "0", "640", [["0", v("farShade")], ["1", v("skyBot")]], true);
-          grad(defs, "phc-mid", "0", "460", "0", "700", [["0", v("mid")], ["1", v("far")]], true);
-          grad(defs, "phc-midS", "0", "460", "0", "700", [["0", v("midShade")], ["1", v("far")]], true);
-          grad(defs, "phc-mesa", "0", "530", "0", "650", [["0", v("mesa")], ["1", v("mesaShade")]], true);
-          grad(defs, "phc-h1", "0", "610", "0", "760", [["0", v("hill1")], ["1", v("hill1b")]], true);
-          grad(defs, "phc-h2", "0", "700", "0", "860", [["0", v("hill2")], ["1", v("hill2b")]], true);
-          grad(defs, "phc-h3", "0", "790", "0", "900", [["0", v("hill3")], ["1", v("hill3b")]], true);
-          grad(defs, "phc-water", "0", "713", "0", "757", [["0", v("skyMid")], ["0.5", v("water")], ["1", v("hill1b")]], true);
-          grad(defs, "phc-haze", "0", "0", "0", "1", [["0", v("skyBot"), 0], ["1", v("skyBot"), 0.85]]);
-          grad(defs, "phc-fog", "0", "0", "0", "1", [["0", "#ffffff", 0], ["0.5", "#f4f6fa", 0.75], ["1", "#ffffff", 0.9]]);
-          var rg = el("radialGradient", { id: "phc-leaf", cx: "-8", cy: "-70", r: "46", gradientUnits: "userSpaceOnUse" }, defs);
-          el("stop", { offset: "0", style: "stop-color:var(--treeL)" }, rg);
-          el("stop", { offset: "1", style: "stop-color:var(--treeD)" }, rg);
-          grad(defs, "phc-pine", "-34", "0", "34", "0", [["0", v("pineL")], ["0.5", v("pineL")], ["0.5", v("pineD")], ["1", v("pineD")]], true);
-          var soft = el("filter", { id: "phc-soft", x: "-10%", y: "-10%", width: "120%", height: "120%" }, defs);
-          el("feGaussianBlur", { stdDeviation: "1.4" }, soft);
-          var blur = el("filter", { id: "phc-blur", x: "-20%", y: "-200%", width: "140%", height: "500%" }, defs);
-          el("feGaussianBlur", { stdDeviation: "14" }, blur);
-          var warm = el("radialGradient", { id: "phc-warm", cx: "0.5", cy: "0.5", r: "0.5" }, defs);
-          el("stop", { offset: "0", style: "stop-color:#ffb27a;stop-opacity:.55" }, warm);
-          el("stop", { offset: "1", style: "stop-color:#ffb27a;stop-opacity:0" }, warm);
-
-          function layer(depth) { var g = el("g", { "class": "phc-layer" }, svg); g.dataset.depth = depth; return g; }
-
-          /* Sky */
-          el("rect", { width: W, height: H, fill: "url(#phc-sky)" }, svg);
-          var stars = el("g", { "class": "phc-stars" }, svg);
-          for (var s = 0; s < 90; s++) {
-            el("circle", { cx: (rnd() * W).toFixed(0), cy: (rnd() * 420).toFixed(0), r: (0.7 + rnd() * 1.7).toFixed(1), fill: "#fff8e7", style: "animation-delay:-" + (rnd() * 6).toFixed(1) + "s" }, stars);
-          }
-          var sunG = el("g", { "class": "phc-sun" }, svg);
-          var rays = el("g", { "class": "phc-rays" }, sunG);
-          for (var ri = 0; ri < 12; ri++) {
-            el("path", { d: "M0 -10 L900 -46 L900 46 L0 10 Z", fill: "url(#phc-ray)", transform: "rotate(" + (ri * 30 + rnd() * 10) + ")" }, rays);
-          }
-          el("circle", { r: "190", fill: "url(#phc-glow)", "class": "phc-halo" }, sunG);
-          el("circle", { r: "50", style: "fill:var(--sun)" }, sunG);
-          el("circle", { cx: "-14", cy: "-14", r: "30", fill: "#ffffff", opacity: ".35" }, sunG);
-          var moonG = el("g", { "class": "phc-moon" }, svg);
-          el("circle", { r: "120", fill: "#fff6dc", opacity: ".10" }, moonG);
-          el("circle", { r: "42", fill: "#fff6dc" }, moonG);
-          el("circle", { cx: "-12", cy: "-8", r: "7", fill: "#e9dfc4", opacity: ".8" }, moonG);
-          el("circle", { cx: "14", cy: "10", r: "5", fill: "#e9dfc4", opacity: ".8" }, moonG);
-          el("circle", { cx: "6", cy: "-18", r: "4", fill: "#e9dfc4", opacity: ".7" }, moonG);
-
-          /* Clouds: puffy, lit from above, shaded underneath */
-          var cloudList = [];
-          function cloud(y, sc, dur, delay, parent) {
-            var wrap = el("g", { "class": "phc-cloud" }, parent);
-            wrap.dataset.dur = dur;
-            wrap.style.animationDuration = dur + "s";
-            wrap.style.animationDelay = "-" + delay + "s";
-            var c = el("g", { transform: "translate(0," + y + ") scale(" + sc + ")" }, wrap);
-            el("ellipse", { cx: "4", cy: "24", rx: "84", ry: "10", fill: "#5a6a8a", opacity: ".08" }, c);
-            [["ellipse", { cx: "0", cy: "6", rx: "86", ry: "24" }], ["circle", { cx: "-40", cy: "-8", r: "30" }], ["circle", { cx: "0", cy: "-26", r: "40" }],
-             ["circle", { cx: "40", cy: "-12", r: "30" }], ["circle", { cx: "66", cy: "4", r: "20" }], ["circle", { cx: "-66", cy: "6", r: "18" }]].forEach(function (p) {
-              p[1].fill = "url(#phc-cloud)"; el(p[0], p[1], c);
-            });
-            cloudList.push(wrap);
-          }
-          var cloudsFar = el("g", { "class": "phc-clouds" }, layer(0.15));
-          var cloudsNear = el("g", { "class": "phc-clouds" }, layer(0.3));
-          var cdefs = [[150, 1.1, 240, 30], [250, 0.75, 300, 160], [110, 0.6, 210, 90], [310, 1.3, 340, 250], [190, 0.9, 270, 200], [80, 0.8, 230, 10], [270, 1.0, 320, 120], [140, 1.4, 360, 300], [220, 0.7, 260, 60], [60, 1.2, 300, 220]];
-          cdefs.forEach(function (c, i) { cloud(c[0], c[1], c[2], c[3], i % 2 ? cloudsFar : cloudsNear); });
-          var deck = el("g", { "class": "phc-deck" }, layer(0.2));
-          for (var di = 0; di < 9; di++) {
-            var dx = di * 200 - 60;
-            el("ellipse", { cx: dx, cy: (190 + (di % 3) * 24).toFixed(0), rx: "190", ry: "64", fill: "url(#phc-cloud)" }, deck);
-          }
-          el("rect", { x: "-100", y: "-40", width: "1800", height: "230", style: "fill:var(--cloudShade)" }, deck);
-
-          /* Far mountains: lit faces, shadow faces, snow caps, soft focus */
-          var farL = layer(0.35);
-          var farPts = [[0, 560], [120, 430], [210, 500], [330, 360], [450, 480], [560, 400], [690, 520], [820, 380], [940, 470], [1060, 350], [1190, 470], [1300, 400], [1420, 500], [1520, 420], [1600, 470]];
-          function range(pts, base) { return "M" + pts.map(function (p) { return p[0] + " " + p[1]; }).join(" L") + " L1600 " + base + " L0 " + base + " Z"; }
-          var farG = el("g", { filter: "url(#phc-soft)" }, farL);
-          el("path", { d: range(farPts, 900), fill: "url(#phc-far)" }, farG);
-          for (var fi = 1; fi < farPts.length - 1; fi++) {
-            var pk = farPts[fi], nx = farPts[fi + 1], pv = farPts[fi - 1];
-            if (pk[1] < pv[1] && pk[1] < nx[1]) {
-              el("path", { d: "M" + pk[0] + " " + pk[1] + " L" + nx[0] + " " + nx[1] + " L" + (pk[0] + (nx[0] - pk[0]) * 0.35) + " 640 L" + pk[0] + " 640 Z", fill: "url(#phc-farS)" }, farG);
-              var w2 = 34;
-              el("path", { d: "M" + (pk[0] - w2) + " " + (pk[1] + 40) + " L" + pk[0] + " " + pk[1] + " L" + (pk[0] + w2) + " " + (pk[1] + 40) + " L" + (pk[0] + 14) + " " + (pk[1] + 32) + " L" + (pk[0] - 2) + " " + (pk[1] + 46) + " L" + (pk[0] - 16) + " " + (pk[1] + 32) + " Z", style: "fill:var(--cap)", "class": "phc-cap" }, farG);
-            }
-          }
-          el("rect", { x: "0", y: "470", width: W, height: "190", fill: "url(#phc-haze)" }, farL);
-
-          /* Mid mountains and the plateau */
-          var midL = layer(0.5);
-          var midPts = [[0, 600], [160, 500], [280, 570], [400, 470], [540, 580], [700, 480], [860, 590], [1000, 500], [1150, 590], [1600, 560]];
-          el("path", { d: range(midPts, 900), fill: "url(#phc-mid)" }, midL);
-          for (var mi = 1; mi < midPts.length - 1; mi++) {
-            var a1 = midPts[mi], b1 = midPts[mi + 1], c1 = midPts[mi - 1];
-            if (a1[1] < c1[1] && a1[1] < b1[1]) el("path", { d: "M" + a1[0] + " " + a1[1] + " L" + b1[0] + " " + b1[1] + " L" + (a1[0] + 30) + " 700 Z", fill: "url(#phc-midS)" }, midL);
-          }
-          el("path", { d: "M960 640 L1010 548 Q1020 538 1036 537 L1268 532 Q1286 532 1294 546 L1360 640 Z", fill: "url(#phc-mesa)" }, midL);
-          el("path", { d: "M1294 546 L1360 640 L1300 640 L1262 560 Z", style: "fill:var(--mesaShade)" }, midL);
-          el("path", { d: "M1036 537 L1268 532 Q1286 532 1294 546", fill: "none", stroke: "#ffffff", "stroke-width": "3", opacity: ".45", "stroke-linecap": "round" }, midL);
-          el("path", { d: "M1000 572 L1300 566 M990 598 L1318 592", style: "stroke:var(--mesaShade)", "stroke-width": "4", "stroke-linecap": "round", opacity: ".55", fill: "none" }, midL);
-          el("path", { d: "M1036 537 L1268 532 L1270 540 Q1150 548 1034 545 Z", style: "fill:var(--cap)", "class": "phc-snowcover" }, midL);
-
-          var mist = el("g", { "class": "phc-mist", filter: "url(#phc-blur)" }, layer(0.55));
-          el("ellipse", { cx: "500", cy: "640", rx: "540", ry: "26", fill: "#ffffff", opacity: ".38" }, mist);
-          el("ellipse", { cx: "1250", cy: "665", rx: "480", ry: "22", fill: "#ffffff", opacity: ".32" }, mist);
-
-          /* Hills with a soft rim light along the crest */
-          function hill(L, d, crest, fill, snowD) {
-            el("path", { d: d, fill: fill }, L);
-            el("path", { d: crest, fill: "none", stroke: "#ffffff", "stroke-width": "4", opacity: ".35", "stroke-linecap": "round" }, L);
-            if (snowD) el("path", { d: snowD, style: "fill:var(--cap)", "class": "phc-snowcover" }, L);
-          }
-          function shadow(L, x, y, rx) { el("ellipse", { cx: x, cy: y + 2, rx: rx, ry: rx * 0.22, fill: "#2d3a4a", opacity: ".12" }, L); }
-          function pine(x, y, sc, L) {
-            shadow(L, x + 6 * sc, y, 30 * sc);
-            var g = el("g", { transform: "translate(" + x + "," + y + ") scale(" + sc + ")" }, L);
-            var sway = el("g", { "class": "phc-tree", style: "animation-delay:-" + (rnd() * 8).toFixed(1) + "s" }, g);
-            el("rect", { x: "-4", y: "-16", width: "8", height: "18", rx: "3", style: "fill:var(--trunk)" }, sway);
-            el("path", { d: "M0 -100 L22 -66 L-22 -66 Z M0 -82 L28 -42 L-28 -42 Z M0 -60 L34 -14 L-34 -14 Z", fill: "url(#phc-pine)" }, sway);
-            el("path", { d: "M-22 -66 L22 -66 M-28 -42 L28 -42", stroke: "#1f3b33", "stroke-width": "2", opacity: ".12" }, sway);
-            el("path", { d: "M0 -100 L10 -85 L-6 -84 Z M-6 -76 L8 -62 L-14 -60 Z", style: "fill:var(--cap)", "class": "phc-snowcover" }, sway);
-            el("circle", { cx: "-10", cy: "-30", r: "3.5", style: "fill:var(--accent)", "class": "phc-dot" }, sway);
-            el("circle", { cx: "9", cy: "-58", r: "3", style: "fill:var(--accent)", "class": "phc-dot" }, sway);
-          }
-          function roundTree(x, y, sc, L) {
-            shadow(L, x + 8 * sc, y, 34 * sc);
-            var g = el("g", { transform: "translate(" + x + "," + y + ") scale(" + sc + ")" }, L);
-            var sway = el("g", { "class": "phc-tree", style: "animation-delay:-" + (rnd() * 8).toFixed(1) + "s" }, g);
-            el("path", { d: "M-5 2 L-4 -34 Q0 -40 4 -34 L5 2 Z M-2 -30 L-14 -44 M2 -32 L12 -48", style: "fill:var(--trunk);stroke:var(--trunk)", "stroke-width": "4", "stroke-linecap": "round" }, sway);
-            var crown = el("g", { "class": "phc-crown" }, sway);
-            [[0, -60, 32], [-22, -44, 21], [22, -46, 23], [-6, -78, 20], [14, -70, 18]].forEach(function (p) { el("circle", { cx: p[0], cy: p[1], r: p[2], fill: "url(#phc-leaf)" }, crown); });
-            el("ellipse", { cx: "-10", cy: "-80", rx: "10", ry: "6", fill: "#ffffff", opacity: ".35" }, crown);
-            el("path", { d: "M-30 -72 Q-14 -96 8 -94 Q24 -92 30 -74 Q10 -84 -30 -72 Z", style: "fill:var(--cap)", "class": "phc-snowcover" }, sway);
-            el("circle", { cx: "-12", cy: "-58", r: "4", style: "fill:var(--accent)", "class": "phc-dot" }, sway);
-            el("circle", { cx: "16", cy: "-42", r: "4", style: "fill:var(--accent)", "class": "phc-dot" }, sway);
-            el("circle", { cx: "4", cy: "-80", r: "3.5", style: "fill:var(--accent)", "class": "phc-dot" }, sway);
-          }
-
-          var h1 = layer(0.62);
-          hill(h1, "M0 690 C 220 610, 420 640, 620 670 S 1000 620, 1220 660 S 1500 640, 1600 650 L1600 900 L0 900 Z",
-            "M0 690 C 220 610, 420 640, 620 670 S 1000 620, 1220 660 S 1500 640, 1600 650", "url(#phc-h1)",
-            "M0 690 C 220 610, 420 640, 620 670 S 1000 620, 1220 660 S 1500 640, 1600 650 L1600 662 C 1500 652, 1300 668, 1220 672 S 1000 634, 620 682 S 220 624, 0 702 Z");
-          el("ellipse", { cx: "760", cy: "735", rx: "196", ry: "23", fill: "url(#phc-water)" }, h1);
-          el("ellipse", { cx: "760", cy: "735", rx: "196", ry: "23", fill: "none", stroke: "#ffffff", "stroke-width": "2", opacity: ".5" }, h1);
-          el("path", { d: "M640 735 h60 M760 742 h80 M690 728 h40 M820 731 h30", stroke: "#ffffff", "stroke-width": "3", "stroke-linecap": "round", opacity: ".6", "class": "phc-ripple" }, h1);
-          [[60, 700, .7], [120, 712, .55], [300, 676, .6], [1180, 668, .6], [1240, 676, .5], [1460, 664, .7], [1530, 672, .55]].forEach(function (t) { pine(t[0], t[1], t[2], h1); });
-
-          var h2 = layer(0.75);
-          hill(h2, "M0 760 C 260 700, 520 730, 760 770 S 1220 720, 1600 750 L1600 900 L0 900 Z",
-            "M0 760 C 260 700, 520 730, 760 770 S 1220 720, 1600 750", "url(#phc-h2)",
-            "M0 760 C 260 700, 520 730, 760 770 S 1220 720, 1600 750 L1600 764 C 1220 734, 1100 790, 760 782 S 260 714, 0 772 Z");
-          [[200, 752, .8, 0], [420, 760, .9, 1], [560, 775, .7, 0], [990, 770, .85, 1], [1110, 762, .7, 0], [1380, 752, .9, 1], [1560, 760, .75, 0]].forEach(function (t) { (t[3] ? roundTree : pine)(t[0], t[1], t[2], h2); });
-
-          var h3 = layer(0.95);
-          hill(h3, "M0 830 C 300 790, 600 810, 900 840 S 1400 800, 1600 820 L1600 900 L0 900 Z",
-            "M0 830 C 300 790, 600 810, 900 840 S 1400 800, 1600 820", "url(#phc-h3)",
-            "M0 830 C 300 790, 600 810, 900 840 S 1400 800, 1600 820 L1600 834 C 1400 814, 1200 860, 900 852 S 300 804, 0 842 Z");
-          var tufts = el("g", { "class": "phc-tufts" }, h3);
-          for (var ti = 0; ti < 26; ti++) {
-            var tx = (rnd() * W).toFixed(0), ty = (848 + rnd() * 40).toFixed(0);
-            el("path", { d: "M" + tx + " " + ty + " q-3 -12 -8 -16 M" + tx + " " + ty + " q0 -14 2 -20 M" + tx + " " + ty + " q4 -10 9 -14", style: "stroke:var(--hill3b)", "stroke-width": "2.5", "stroke-linecap": "round", fill: "none" }, tufts);
-            if (ti % 3 === 0) el("circle", { cx: +tx + 2, cy: +ty - 20, r: "3", style: "fill:var(--particle)", "class": "phc-dot" }, tufts);
-          }
-          [[80, 850, 1.1, 1], [330, 862, 1.2, 0], [1250, 858, 1.15, 1], [1500, 850, 1.25, 0]].forEach(function (t) { (t[3] ? roundTree : pine)(t[0], t[1], t[2], h3); });
-
-          /* Golden-hour warmth, birds */
-          var warmth = el("ellipse", { cx: "800", cy: "620", rx: "1100", ry: "520", fill: "url(#phc-warm)", "class": "phc-warmth" }, svg);
-          var birds = el("g", { "class": "phc-birds" }, svg);
-          [[0, 0], [26, 10], [50, -4]].forEach(function (b) {
-            el("path", { d: "M" + b[0] + " " + b[1] + " q7 -7 14 0 q7 -7 14 0", fill: "none", stroke: "#5b4d63", "stroke-width": "2.5", "stroke-linecap": "round", opacity: ".5" }, birds);
-          });
-
-          /* Weather particles */
-          var rain = el("g", { "class": "phc-rain" }, svg);
-          var drops = [];
-          for (var r = 0; r < 140; r++) {
-            var rx = rnd() * (W + 300) - 150;
-            drops.push(el("line", { x1: rx.toFixed(0), y1: "0", x2: rx.toFixed(0), y2: (18 + rnd() * 12).toFixed(0), stroke: "#7f97bf", "stroke-width": (1.3 + rnd()).toFixed(1), "stroke-linecap": "round", opacity: (0.3 + rnd() * 0.3).toFixed(2), style: "animation-duration:" + (0.9 + rnd() * 0.7).toFixed(2) + "s;animation-delay:-" + (rnd() * 3).toFixed(2) + "s" }, rain));
-          }
-          var flakes = el("g", { "class": "phc-flakes" }, svg);
-          for (var f = 0; f < 90; f++) {
-            var fg = el("g", { transform: "translate(" + (rnd() * W).toFixed(0) + ",0)" }, flakes);
-            el("ellipse", { rx: (1.6 + rnd() * 3).toFixed(1), ry: (1.6 + rnd() * 2.4).toFixed(1), style: "fill:var(--particle);animation-duration:" + (8 + rnd() * 9).toFixed(1) + "s;animation-delay:-" + (rnd() * 16).toFixed(1) + "s" }, fg);
-          }
-          var flies = el("g", { "class": "phc-flies" }, svg);
-          for (var fl = 0; fl < 26; fl++) {
-            el("circle", { cx: (rnd() * W).toFixed(0), cy: (620 + rnd() * 240).toFixed(0), r: "2.6", fill: "#fff3a0", style: "animation-delay:-" + (rnd() * 9).toFixed(1) + "s;animation-duration:" + (6 + rnd() * 6).toFixed(1) + "s" }, flies);
-          }
-          var fog = el("rect", { x: "0", y: "380", width: W, height: "520", fill: "url(#phc-fog)", "class": "phc-fog" }, svg);
-          var flash = el("rect", { width: W, height: H, fill: "#ffffff", "class": "phc-flash" }, svg);
-
+          host.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="xMidYMax slice" width="100%" height="100%"><defs>' + D.join("") + "</defs>" + S.join("") + "</svg>";
           document.body.insertBefore(host, document.body.firstChild);
+          var svg = host.firstChild;
+          function q(sel) { return svg.querySelector(sel); }
+          var sunG = q(".phc-sun"), raysG = q(".phc-rays"), moonG = q(".phc-moon"), starsG = q(".phc-stars"), deckG = q(".phc-deck"), goldG = q(".phc-goldwash"), glowG = q(".phc-glow");
+          var cloudList = [].slice.call(svg.querySelectorAll(".phc-cloud"));
 
           /* Gentle parallax on desktop */
           var layers = [].slice.call(svg.querySelectorAll(".phc-layer"));
@@ -633,7 +940,7 @@ services:
             (function tick() {
               cx += (tx0 - cx) * 0.04; cy += (ty0 - cy) * 0.04;
               if (Math.abs(tx0 - cx) > 0.0005 || Math.abs(ty0 - cy) > 0.0005) {
-                layers.forEach(function (g) { var d = +g.dataset.depth; g.setAttribute("transform", "translate(" + (-cx * 26 * d).toFixed(1) + "," + (-cy * 10 * d).toFixed(1) + ")"); });
+                layers.forEach(function (g) { var d = +g.dataset.depth; g.setAttribute("transform", "translate(" + (-cx * 30 * d).toFixed(1) + "," + (-cy * 10 * d).toFixed(1) + ")"); });
               }
               requestAnimationFrame(tick);
             })();
@@ -657,7 +964,7 @@ services:
             var moonIcon = '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="#c9c3ef"/>';
             var cloudIcon = '<path d="M7 18h10a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6 1.5A3.3 3.3 0 0 0 7 18z" fill="#c4cfdf"/>';
             if (k === "clear") icon = night ? moonIcon : sunIcon;
-            else if (k === "partly") icon = (night ? '<g transform="translate(-3 -3) scale(.75)">' + moonIcon + "</g>" : '<g transform="translate(-3 -3) scale(.75)">' + sunIcon + "</g>") + cloudIcon;
+            else if (k === "partly") icon = '<g transform="translate(-3 -3) scale(.75)">' + (night ? moonIcon : sunIcon) + "</g>" + cloudIcon;
             else if (k === "snow") icon = cloudIcon + '<g fill="#9fb3d4"><circle cx="8" cy="21" r="1.3"/><circle cx="12" cy="22" r="1.3"/><circle cx="16" cy="21" r="1.3"/></g>';
             else if (k === "rain" || k === "drizzle") icon = cloudIcon + '<g stroke="#6f9bd8" stroke-width="2" stroke-linecap="round"><path d="M8 20l-1 2.5M12 20l-1 2.5M16 20l-1 2.5"/></g>';
             else if (k === "thunder") icon = cloudIcon + '<path d="M12 17l-2 4h3l-1.5 3.5" stroke="#f6b73c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
@@ -679,68 +986,87 @@ services:
             var gold = Math.max(0, 1 - Math.abs(h - sun.rise - 0.3) / 1.1, 1 - Math.abs(h - sun.set + 0.3) / 1.2) * (1 - nf * 0.7);
             var cloudy = { clear: 0.1, partly: 0.45, cloudy: 0.85, fog: 0.7, drizzle: 0.8, rain: 0.9, snow: 0.85, thunder: 1 }[kind];
             if (wx && wx.cloud !== undefined) cloudy = Math.max(cloudy * 0.6, Math.min(1, wx.cloud));
-            var gloom = { clear: 0, partly: 0, cloudy: 0.25, fog: 0.2, drizzle: 0.35, rain: 0.5, snow: 0.2, thunder: 0.75 }[kind];
+            var gloom = { clear: 0, partly: 0, cloudy: 0.22, fog: 0.2, drizzle: 0.32, rain: 0.48, snow: 0.18, thunder: 0.72 }[kind];
             gold *= 1 - cloudy * 0.8;
-            var winter = (sb.a === "winter" ? 1 - sb.t : 0) + (sb.b === "winter" ? sb.t : 0);
-            var spring = (sb.a === "spring" ? 1 - sb.t : 0) + (sb.b === "spring" ? sb.t : 0);
-            var summer = (sb.a === "summer" ? 1 - sb.t : 0) + (sb.b === "summer" ? sb.t : 0);
-            var autumn = (sb.a === "autumn" ? 1 - sb.t : 0) + (sb.b === "autumn" ? sb.t : 0);
+            function amt(name) { return (sb.a === name ? 1 - sb.t : 0) + (sb.b === name ? sb.t : 0); }
+            var winter = amt("winter"), spring = amt("spring"), summer = amt("summer"), autumn = amt("autumn");
+            var top = [["spring", spring], ["summer", summer], ["autumn", autumn], ["winter", winter]].sort(function (x, y) { return y[1] - x[1]; })[0][0];
 
-            var st = host.style;
+            /* light and shadow tints follow the time of day */
+            var lightTint = mixRgb(mixRgb("#fff6dc", "#ffb27a", gold), "#9db0ee", nf);
+            var shadowTint = mixRgb(mixRgb("#5d5296", "#6a3f86", gold * 0.6), "#0f1534", nf);
+            var stl = host.style;
             for (var k in A) {
               var isSky = k.indexOf("sky") === 0;
-              var c = mix(A[k], B[k], sb.t, isSky ? 0.35 : 1);
+              var c = mixRgb(A[k], B[k], sb.t);
               if (isSky) {
-                if (GOLD[k]) c = mixRgb(c, GOLD[k], gold * 0.75);
-                c = mixRgb(c, STORM[k], gloom * 0.8);
+                c = mixRgb(c, GOLD[k], gold * 0.7);
+                c = mixRgb(c, STORM[k], gloom * 0.85);
                 c = mixRgb(c, NIGHT[k], nf);
-              } else if (k === "cloud" || k === "cloudShade") {
-                c = mixRgb(c, k === "cloud" ? "#c9cfd9" : "#8f99aa", gloom);
-                c = mixRgb(c, k === "cloud" ? "#8b8fb5" : "#4b4f78", nf * 0.75);
-              } else if (k !== "sun" && k !== "accent" && k !== "particle") {
-                c = mixRgb(c, "#6f7890", gloom * 0.5);
-                c = mixRgb(c, "#3a3a5e", nf * 0.5);
+              } else if (k === "cloud") {
+                c = mixRgb(c, "#8d95a8", gloom);
+                c = mixRgb(c, "#ffd2b0", gold * 0.5);
+                c = mixRgb(c, "#6f74a6", nf * 0.8);
+              } else if (k === "far" || k === "mid") {
+                c = mixRgb(c, "#8a92a8", gloom * 0.5);
+                c = mixRgb(c, "#36386a", nf * 0.7);
+              } else if (k !== "sun" && k !== "particle") {
+                c = mixRgb(c, "#5f6880", gloom * 0.5);
+                c = mixRgb(c, "#2c3466", nf * 0.62);
               }
-              st.setProperty("--" + k, c);
+              stl.setProperty("--" + k, c);
+              stl.setProperty("--" + k + "-l", mixRgb(c, lightTint, k === "cloud" ? 0.6 : 0.34));
+              stl.setProperty("--" + k + "-s", mixRgb(c, shadowTint, k === "cloud" ? 0.32 : 0.36));
             }
-
-            var snowing = kind === "snow", raining = kind === "rain" || kind === "drizzle" || kind === "thunder";
-            var cover = Math.max(snowing ? 0.9 : 0, winter > 0.7 ? (winter - 0.7) * 2 : 0);
-            st.setProperty("--snowcover", cover.toFixed(2));
-            st.setProperty("--capop", Math.max(0.55, 1 - summer * 0.45).toFixed(2));
+            /* characters and the cottage are graded with a light filter */
+            stl.setProperty("--cb", (1 - nf * 0.5 - gloom * 0.16).toFixed(2));
+            stl.setProperty("--cs", (1 - nf * 0.35 - gloom * 0.25).toFixed(2));
+            stl.setProperty("--cg", (gold * 0.25).toFixed(2));
+            var lamp = clamp(Math.max(nf, gloom * 0.7, gold * 0.5), 0, 1);
+            stl.setProperty("--lamp", lamp.toFixed(2));
             var wind = wx ? wx.wind : 6;
-            st.setProperty("--drift", (-Math.min(260, wind * 9)).toFixed(0) + "px");
-            st.setProperty("--sway", (1 + Math.min(3, wind / 8)).toFixed(2) + "deg");
+            stl.setProperty("--drift", (-Math.min(260, wind * 9)).toFixed(0) + "px");
+            stl.setProperty("--sway", (1 + Math.min(3, wind / 8)).toFixed(2) + "deg");
+            stl.setProperty("--capop", Math.max(0.5, 1 - summer * 0.5).toFixed(2));
+            var snowing = kind === "snow", raining = kind === "rain" || kind === "drizzle" || kind === "thunder";
+            stl.setProperty("--snow", Math.max(snowing ? 0.95 : 0, winter > 0.6 ? (winter - 0.6) * 2.5 : 0).toFixed(2));
 
-            host.classList.toggle("phc-raining", raining);
-            host.classList.toggle("phc-heavy", kind === "rain" && wx && wx.precip > 2.5 || kind === "thunder");
-            host.classList.toggle("phc-drizzle", kind === "drizzle");
-            host.classList.toggle("phc-thunder", kind === "thunder");
-            host.classList.toggle("phc-snowing", snowing);
-            host.classList.toggle("phc-petals", !raining && !snowing && spring > 0.55);
-            host.classList.toggle("phc-leaves", !raining && !snowing && autumn > 0.55);
-            host.classList.toggle("phc-blossom", spring > 0.4 || autumn > 0.4 || (winter > 0.5 && !raining));
-            host.classList.toggle("phc-fireflies", !raining && !snowing && summer > 0.45 && nf > 0.6);
-            host.classList.toggle("phc-foggy", kind === "fog");
+            var cls = host.classList;
+            ["spring", "summer", "autumn", "winter"].forEach(function (s) { cls.toggle("s-" + s, s === top); });
+            cls.toggle("phc-raining", raining);
+            cls.toggle("phc-heavy", kind === "rain" && wx && wx.precip > 2.5 || kind === "thunder");
+            cls.toggle("phc-drizzle", kind === "drizzle");
+            cls.toggle("phc-thunder", kind === "thunder");
+            cls.toggle("phc-snowing", snowing);
+            cls.toggle("phc-petals", !raining && !snowing && spring > 0.55);
+            cls.toggle("phc-leaves", !raining && !snowing && autumn > 0.55);
+            cls.toggle("phc-blossom", spring > 0.45 || (summer > 0.5) || (winter > 0.5));
+            cls.toggle("phc-fireflies", !raining && !snowing && summer > 0.45 && nf > 0.6);
+            cls.toggle("phc-foggy", kind === "fog");
+            cls.toggle("phc-is-night", nf > 0.5);
+            cls.toggle("phc-is-day", nf < 0.5);
+            cls.toggle("phc-frozen", winter > 0.6);
+            cls.toggle("phc-smoky", winter > 0.3 || autumn > 0.5 || nf > 0.5 || (wx && wx.temp < 55));
+            cls.toggle("phc-calm", !raining && !snowing && kind !== "thunder");
             document.documentElement.classList.toggle("phc-night", nf > 0.5);
 
-            cloudList.forEach(function (cl, i) {
+            cloudList.forEach(function (c, i) {
               var need = Math.round(2 + cloudy * 8);
-              cl.style.opacity = i < need ? "1" : "0";
-              var dur = +cl.dataset.dur / (0.6 + Math.min(2.5, wind / 7));
-              cl.style.animationDuration = dur.toFixed(0) + "s";
+              c.style.opacity = i < need ? "1" : "0";
+              c.style.animationDuration = (+c.dataset.dur / (0.6 + Math.min(2.5, wind / 7))).toFixed(0) + "s";
             });
-            deck.style.opacity = clamp((cloudy - 0.55) * 2.2, 0, 1).toFixed(2);
-            stars.style.opacity = (nf * (1 - cloudy * 0.9)).toFixed(2);
-            warmth.style.opacity = gold.toFixed(2);
+            deckG.style.opacity = clamp((cloudy - 0.55) * 2.2, 0, 1).toFixed(2);
+            starsG.style.opacity = (nf * (1 - cloudy * 0.9)).toFixed(2);
+            goldG.style.opacity = gold.toFixed(2);
+            glowG.style.opacity = lamp.toFixed(2);
 
             var dayT = clamp((h - sun.rise) / (sun.set - sun.rise), 0, 1);
-            sunG.setAttribute("transform", "translate(" + (160 + dayT * 1280).toFixed(0) + "," + (380 - Math.sin(dayT * Math.PI) * 270).toFixed(0) + ")");
+            sunG.setAttribute("transform", "translate(" + (180 + dayT * 1240).toFixed(0) + "," + (420 - Math.sin(dayT * Math.PI) * 300).toFixed(0) + ")");
             sunG.style.opacity = ((1 - nf) * Math.max(0, 1 - cloudy * 0.95)).toFixed(2);
-            rays.style.opacity = ((1 - nf) * Math.max(0, 1 - cloudy * 1.6)).toFixed(2);
+            raysG.style.opacity = ((1 - nf) * Math.max(0, 1 - cloudy * 1.6)).toFixed(2);
             var nightLen = 24 - (sun.set - sun.rise);
             var nt = clamp(((h - sun.set + 24) % 24) / nightLen, 0, 1);
-            moonG.setAttribute("transform", "translate(" + (1420 - nt * 1240).toFixed(0) + "," + (340 - Math.sin(nt * Math.PI) * 230).toFixed(0) + ")");
+            moonG.setAttribute("transform", "translate(" + (1420 - nt * 1240).toFixed(0) + "," + (330 - Math.sin(nt * Math.PI) * 230).toFixed(0) + ")");
             moonG.style.opacity = (nf * Math.max(0, 1 - cloudy * 0.9)).toFixed(2);
 
             updateChip(wx, nf > 0.5);
@@ -753,6 +1079,7 @@ services:
           setInterval(apply, 5 * 60 * 1000);
           /* Homepage can re-render the top bar; put the chip back if it disappears. */
           setInterval(function () { if (chip && !chip.isConnected) updateChip(window.PHC_TEST_WEATHER || weather, document.documentElement.classList.contains("phc-night")); }, 3000);
+          }
         })();
         PHC_EOF
         echo "dashboard config written"
