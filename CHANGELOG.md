@@ -17,3 +17,7 @@ Newest first. Infrastructure changes and documentation baselines.
   validation scripts and GitHub checks. No NAS service was changed.
 - **docs**: added "Access from a phone or laptop" (at home and away) to every
   service README, the service template, and a quick-access table in the README.
+- **immich**: published at `immich.example.com` through Cloudflare Tunnel
+  UGreenNAS (direct to 192.168.0.119:2283); Immich External domain set to it.
+- **docs**: tunnel routes read from Cloudflare and recorded. The four NPM-backed
+  hostnames return 502 because NPM is stopped (not changed).

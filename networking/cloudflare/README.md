@@ -5,7 +5,7 @@
 | --- | --- | --- |
 | Zone | `example.com` | USER-PROVIDED |
 | Nameservers | Cloudflare | TO_BE_VERIFIED (registrar) |
-| Registrar | TO_BE_VERIFIED | |
+| Registrar | Not Cloudflare (no Cloudflare registrations); which one TO_BE_VERIFIED | VERIFIED 2026-11-11 |
 | SSL/TLS mode | TO_BE_VERIFIED (recommend Full) | |
 | Always Use HTTPS | TO_BE_VERIFIED (recommend on) | |
 
@@ -14,8 +14,8 @@
 | --- | --- | --- |
 | Connector | `cloudflare-tunnel` container on the NAS | VERIFIED 2026-11-11 |
 | Type | Remotely managed (token) | VERIFIED 2026-11-11 (`TUNNEL_TOKEN` env present) |
-| Tunnel name / ID | TO_BE_VERIFIED | |
-| Routes (public hostnames) | see [domains/domain-inventory.md](../../domains/domain-inventory.md) | TO_BE_VERIFIED |
+| Tunnel name | `UGreenNAS`, 1 replica, Healthy | VERIFIED 2026-11-11 |
+| Routes (public hostnames) | 6, see [domains/domain-inventory.md](../../domains/domain-inventory.md) | VERIFIED 2026-11-11 |
 | Access applications | TO_BE_VERIFIED | |
 
 Routes live in the Cloudflare dashboard, not on the NAS. Collect them from

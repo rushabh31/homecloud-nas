@@ -39,10 +39,10 @@ Names only. Real values live on the NAS, never in git. Copy `.env.example` to `.
 ## Access from a phone or laptop
 | Device | At home | Away from home |
 | --- | --- | --- |
-| Phone | Install **Immich** (App Store / Google Play). Server URL `http://192.168.0.119:2283`, sign in with your Immich account, turn on Backup. | Not published yet. Use a VPN to the home network (UniFi VPN on the Dream Machine Pro, WireGuard or Teleport; not set up yet, TO_BE_VERIFIED), then use the home address. Or publish `photos.example.com` ([runbooks/add-new-domain.md](../../runbooks/add-new-domain.md)) and set it as the app's external URL. |
-| Laptop | Browser: `http://192.168.0.119:2283` or `http://dxp6800pro-a416.local:2283` | Same as phone: VPN, or the public hostname once it exists. |
+| Phone | Install **Immich** (App Store / Google Play). Server URL `https://immich.example.com` (works everywhere), sign in, turn on Backup. | Same: `https://immich.example.com` |
+| Laptop | Browser: `http://192.168.0.119:2283` (fastest) or `https://immich.example.com` | `https://immich.example.com` |
 
-Tip: once a public URL exists, the phone app's **Settings > Networking > Automatic URL switching** uses the home address on home Wi-Fi and the public one elsewhere.
+Tip: in the phone app, **Settings > Networking > Automatic URL switching**: add your home Wi-Fi name with `http://192.168.0.119:2283` as the local URL and `https://immich.example.com` as the external one. Backups then go straight to the NAS at home (no 100 MB limit) and through Cloudflare elsewhere.
 Phone apps cannot pass a Cloudflare Access login page, so leave Access off this hostname and rely on Immich's own login with 2FA.
 
 ## Networks
@@ -52,7 +52,7 @@ Phone apps cannot pass a Cloudflare Access login page, so leave Access off this 
 Internal: postgres, redis, machine-learning. External: none. Startup order handled by `depends_on`.
 
 ## Domain and routing
-None yet (LAN only: `http://192.168.0.119:2283`). To publish, follow [runbooks/add-new-domain.md](../../runbooks/add-new-domain.md) and turn on 2FA first.
+`https://immich.example.com` via Cloudflare Tunnel **UGreenNAS**, direct route to `http://192.168.0.119:2283` (Pattern A, added 2026-11-11, VERIFIED working). Immich's External domain is set to the same URL (Administration > Settings > Server). No Cloudflare Access, because the phone app cannot pass a browser login; Immich's own login protects it, so use strong passwords. Cloudflare limits one upload request to 100 MB: very large videos may fail from outside the house, so let the phone app back up on home Wi-Fi.
 
 ## Deploy or replicate
 1. Create the project folder on the NAS (`Files > docker > immich`) and any data subfolders listed above.

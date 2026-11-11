@@ -19,7 +19,7 @@ services:
       - {name: immich_postgres, image: "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0", ports: []}
     networks: [immich_default]
     depends_on: []
-    routing: {public_hostname: null, via: null}
+    routing: {public_hostname: immich.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.119:2283"}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: cloudflare-tunnel
@@ -31,7 +31,7 @@ services:
       - {name: cloudflare-tunnel, image: "cloudflare/cloudflared:latest", ports: []}
     networks: [cloudflared_default]
     depends_on: []
-    routing: {public_hostname: "*.example.com (routes TO_BE_VERIFIED)", via: cloudflare}
+    routing: {public_hostname: "6 routes, see domains/domain-inventory.md", via: cloudflare}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
   - name: nginx-proxy-manager

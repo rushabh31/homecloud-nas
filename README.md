@@ -62,7 +62,7 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 
 | Service | Kind | Host port | State | Public hostname | Status of facts |
 | --- | --- | --- | --- | --- | --- |
-| [immich](services/immich/) | Docker project (4 containers) | 2283 | Running | none | VERIFIED 2026-11-11 |
+| [immich](services/immich/) | Docker project (4 containers) | 2283 | Running | immich.example.com | VERIFIED 2026-11-11 |
 | [cloudflare-tunnel](services/cloudflare-tunnel/) | Docker | none | Running | is the entry point | VERIFIED 2026-11-11 (routes TO_BE_VERIFIED) |
 | [nginx-proxy-manager](services/nginx-proxy-manager/) | Docker | 80, 81, 443 | Stopped | wildcard target (TO_BE_VERIFIED) | VERIFIED 2026-11-11 |
 | [portainer](services/portainer/) | Docker | 9000, 8000 | Running | none | VERIFIED 2026-11-11 |
@@ -76,10 +76,10 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | What | At home | Away from home | Phone app |
 | --- | --- | --- | --- |
 | NAS itself (UGOS) | `http://192.168.0.119:9999` | UGREEN NAS app (remote access documented privately) | UGREEN NAS |
-| Immich | `http://192.168.0.119:2283` | VPN, or a hostname once published | Immich |
-| OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` | browser |
+| Immich | `http://192.168.0.119:2283` | `https://immich.example.com` | Immich |
+| OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` (502 until NPM runs) | browser |
 | Mattermost (stopped) | `http://192.168.0.119:8401` | `https://mattermost.example.com` | Mattermost |
-| SiYuan | `http://192.168.0.119:6806` | VPN | browser |
+| SiYuan | `http://192.168.0.119:6806` | `https://siyuan.example.com` (502 until NPM runs) | browser |
 | Home Assistant | `http://homeassistant.local:8123` | HA Cloud, VPN or a hostname | Home Assistant |
 | Portainer, NPM admin | `:9000`, `:81` | VPN only, never published | browser |
 

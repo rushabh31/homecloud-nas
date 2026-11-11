@@ -26,5 +26,6 @@ sequenceDiagram
 | cloudflared -> NPM / app | HTTP on LAN | No (stays inside the NAS/LAN) |
 | NPM -> app | HTTP on LAN | No |
 
-Which pattern is live: `TO_BE_VERIFIED` (NPM is stopped, so routes must currently
-go direct). Full guide: [domains/](../domains/README.md).
+Live (VERIFIED 2026-11-11): oknote, portainer, mattermost and siyuan use Pattern B
+(tunnel -> NPM on port 80, currently stopped, so 502); immich and ha use Pattern A.
+Full guide: [domains/](../domains/README.md).
