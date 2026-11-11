@@ -70,11 +70,13 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | [oknote](services/oknote/) | App Center app (Docker) | 38080 | Running | oknote.example.com | VERIFIED 2026-11-11 |
 | [siyuan](services/siyuan/) | App Center app (Docker) | 6806 | Running | siyuan.example.com | VERIFIED 2026-11-11 |
 | [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | VM stopped | ha.example.com (502 while HA is down) | VERIFIED 2026-11-11 |
+| [dashboard](services/dashboard/) | Docker project (Homepage) | 3010 | Running | dashboard.example.com (Cloudflare Access login) | VERIFIED 2026-11-11 |
 
 ## Quick access (phone and laptop)
 
 | What | At home | Away from home | Phone app |
 | --- | --- | --- | --- |
+| **Dashboard (start here)** | `http://192.168.0.119:3010` | `https://dashboard.example.com` (Cloudflare Access login) | browser, add to home screen |
 | NAS itself (UGOS) | `http://192.168.0.119:9999` | UGREEN NAS app (remote access documented privately) | UGREEN NAS |
 | Immich | `http://192.168.0.119:2283` | `https://immich.example.com` | Immich |
 | OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` | browser |

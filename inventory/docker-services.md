@@ -16,6 +16,8 @@ Machine-readable copy: [services.yaml](services.yaml).
 | Mattermost-DB | mattermost | postgres:18 | mattermost | Stopped | - | mattermost_default | **Disabled** |
 | oknote | [oknote](../services/oknote/) | oknote/oknote:3.2.7 | oknote | Running | 38080 | bridge | TO_BE_VERIFIED |
 | siyuan-app-1 | [siyuan](../services/siyuan/) | ugreen/siyuan:v3.8.4 | siyuan | Running | 6806 | bridge | TO_BE_VERIFIED |
+| dashboard | [dashboard](../services/dashboard/) | ghcr.io/gethomepage/homepage:v2.7.0 | dashboard | Running | 3010:3000 | dashboard_default | unless-stopped |
+| dashboard-config | dashboard | busybox:1.37.0 | dashboard | Exited 0 (runs once per deploy) | - | dashboard_default | no |
 
 UGOS flagged newer images for: cloudflare-tunnel, Portainer, Mattermost, Mattermost-DB.
 

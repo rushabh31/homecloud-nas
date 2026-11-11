@@ -1,0 +1,141 @@
+# Dashboard: "Patel Home Cloud" start page (Homepage, gethomepage.dev)
+# Project folder on the NAS: /volume1/docker/dashboard
+# UGOS Docker app project name: dashboard
+# Public address: https://dashboard.example.com (Cloudflare Tunnel + Cloudflare Access login)
+# At home: http://192.168.0.119:3010
+#
+# This file is the single source of truth for the dashboard. The small
+# "dashboard-config" container writes the Homepage config files on every
+# deploy, so to change a tile: edit the YAML below in the UGOS Docker app
+# (Project > dashboard > Edit) and redeploy. No secrets in this file.
+
+services:
+  dashboard-config:
+    container_name: dashboard-config
+    image: busybox:1.37.0
+    restart: "no"
+    volumes:
+      - /volume1/docker/dashboard/config:/config
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        cat > /config/settings.yaml <<'EOF'
+        title: Patel Home Cloud
+        description: Everything on the HomeCloud NAS in one place
+        theme: dark
+        color: slate
+        headerStyle: clean
+        statusStyle: dot
+        target: _blank
+        hideVersion: true
+        disableUpdateCheck: true
+        useEqualHeights: true
+        layout:
+          Photos:
+            icon: mdi-image-multiple
+          Communication:
+            icon: mdi-chat
+          Smart home:
+            icon: mdi-home-automation
+          Notes:
+            icon: mdi-notebook
+            style: row
+            columns: 2
+          Admin:
+            icon: mdi-shield-lock
+            style: row
+            columns: 3
+        EOF
+        cat > /config/widgets.yaml <<'EOF'
+        - greeting:
+            text_size: xl
+            text: Patel Home Cloud
+        - datetime:
+            text_size: md
+            format:
+              dateStyle: long
+              timeStyle: short
+              hour12: true
+        - resources:
+            label: NAS
+            cpu: true
+            memory: true
+        - resources:
+            label: Storage
+            disk: /app/config
+        EOF
+        cat > /config/services.yaml <<'EOF'
+        - Photos:
+            - Immich:
+                href: https://immich.example.com
+                icon: immich.png
+                description: Family photos and videos
+                siteMonitor: http://192.168.0.119:2283
+        - Communication:
+            - Mattermost:
+                href: https://mattermost.example.com
+                icon: mattermost.png
+                description: Family chat
+                siteMonitor: http://192.168.0.119:8401
+        - Smart home:
+            - Home Assistant:
+                href: https://ha.example.com
+                icon: home-assistant.png
+                description: Lights, cameras and automations
+                siteMonitor: http://192.168.30.99:8123
+        - Notes:
+            - OKNote:
+                href: https://oknote.example.com
+                icon: mdi-notebook-edit-outline
+                description: Quick notes
+                siteMonitor: http://192.168.0.119:38080
+            - SiYuan:
+                href: https://siyuan.example.com
+                icon: siyuan.png
+                description: Knowledge base
+                siteMonitor: http://192.168.0.119:6806
+        - Admin:
+            - NAS admin:
+                href: https://mynas.example.com
+                icon: mdi-nas
+                description: UGOS storage, users and apps
+                siteMonitor: http://192.168.0.119:9999
+            - Portainer:
+                href: https://portainer.example.com
+                icon: portainer.png
+                description: Docker containers
+                siteMonitor: http://192.168.0.119:9000
+            - Nginx Proxy Manager:
+                href: http://192.168.0.119:81
+                icon: nginx-proxy-manager.png
+                description: Proxy admin, at home only
+                siteMonitor: http://192.168.0.119:81
+        EOF
+        printf '[]\n' > /config/bookmarks.yaml
+        printf '{}\n' > /config/docker.yaml
+        cat > /config/custom.css <<'EOF'
+        body, #page_wrapper {
+          background: radial-gradient(1200px 600px at 10% -10%, rgba(56, 189, 248, 0.18), transparent 60%),
+                      radial-gradient(1000px 600px at 110% 10%, rgba(168, 85, 247, 0.16), transparent 60%),
+                      #0b1020 !important;
+        }
+        .service-card, .information-widget-resource { border-radius: 14px !important; }
+        EOF
+        echo "dashboard config written"
+
+  dashboard:
+    container_name: dashboard
+    image: ghcr.io/gethomepage/homepage:v2.7.0
+    restart: unless-stopped
+    depends_on:
+      dashboard-config:
+        condition: service_completed_successfully
+    ports:
+      - '3010:3000'
+    environment:
+      TZ: America/New_York
+      HOMEPAGE_ALLOWED_HOSTS: dashboard.example.com,192.168.0.119:3010,<nas-name>.local:3010
+    volumes:
+      - /volume1/docker/dashboard/config:/app/config

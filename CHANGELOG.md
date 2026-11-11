@@ -2,6 +2,10 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-11 (dashboard)
+- **dashboard**: new Homepage start page "Patel Home Cloud" (UGOS project `dashboard`, port 3010) with a tile for every
+  service. Published at `dashboard.example.com` through the tunnel, behind a new Cloudflare Access app using the "Owner only" policy.
+
 ## 2026-11-11 (domain move)
 - **domains**: primary domain is now `example.com` (Cloudflare zone, Namecheap nameservers
   switched). Six tunnel routes added that go straight to each app's port. Old `example.net`

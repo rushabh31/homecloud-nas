@@ -18,6 +18,7 @@ Read from the Cloudflare dashboard (tunnel **UGreenNAS**, Routes tab) and opened
 | `siyuan.example.com` | SiYuan | `http://192.168.0.119:6806` | Yes, unlock page loads |
 | `portainer.example.com` | Portainer | `http://192.168.0.119:9000` | Yes, login page loads (public, see note) |
 | `ha.example.com` | Home Assistant | `http://192.168.0.75:8123` | No, 502: HA itself is down (being moved to VM "HAOS-2026") |
+| `dashboard.example.com` | Dashboard (Homepage) | `http://192.168.0.119:3010` | Yes, Cloudflare Access sign-in, then the dashboard |
 
 ### example.net (old, kept until removal is approved)
 
@@ -43,7 +44,7 @@ Notes:
 - Portainer controls every container. Put Cloudflare Access in front of
   `portainer.example.com` or remove the route.
 - Records Cloudflare imported from Namecheap on zone setup (apex A, `www` CNAME, MX, TXT) were left as they are.
-- Cloudflare Access applications: none.
+- Cloudflare Access application "Patel Home Cloud dashboard" protects `dashboard.example.com` (reusable policy "Owner only", session 7 days).
 - Wildcard `*` route: none.
 
 ## How to verify
