@@ -8,16 +8,30 @@ opens that service's own sign-in page. Built with [Homepage](https://gethomepage
 A green dot on a tile means the NAS can reach that service right now; red means it can't.
 
 ### Look and background
-Behind the tiles is an animated valley in the style of a warm 3D cartoon film, drawn by
-[config/custom.js](config/custom.js) and styled by [config/custom.css](config/custom.css).
-The characters are original (no film characters or artwork are copied).
-- **Scene**: rounded snow-capped peaks, a mesa, rolling hills, a pond, a cottage with a
-  chimney, and soft light, haze and depth blur so it reads like a film still.
-- **Characters**: a fox cub in the front corner (breathes, looks around, blinks, wags; holds a
-  leaf umbrella in rain, wears a scarf in winter, sleeps at night), a bunny that hops, a duck
-  family that swims around the pond (gone when it freezes), an owl on a branch at night, a
-  snowman in winter, birds by day and butterflies on calm spring and summer days. The cottage
-  windows light up at dusk and smoke rises from the chimney when it is cold.
+Behind the tiles is a small animated mountain village in the style of a warm 3D cartoon film,
+drawn by [config/custom.js](config/custom.js) and styled by [config/custom.css](config/custom.css).
+Everyone in it is an original character (no film characters or artwork are copied).
+- **Village**: six cottages and a chapel with a bell on the first hill, a square with street
+  lamps and a well, a pond with a little dock, rolling hills and snow-capped peaks. Windows and
+  lamps light up at dusk and in gloomy weather, and chimneys smoke when it is cold.
+- **Villagers by season** (daytime, dry weather): spring has a gardener with a watering can, a
+  kid flying a kite and a cyclist; summer has someone fishing off the dock, a swimmer, a picnic
+  and an ice cream cart; fall has leaf raking, a kid jumping into the pile and pumpkin carrying;
+  winter has a snowman being built, sledding, a snowball fight and skaters once the pond freezes.
+- **Rain**: villagers walk under umbrellas and a kid in a raincoat jumps in a puddle; the
+  outdoor activities pause. **Night**: a lantern walker strolls the path and someone sits on
+  the bench looking at the stars.
+- **Holidays** (US calendar, computed each year): Valentine's (Feb 10 to 14, heart garland and a
+  couple on the bench), Easter week (egg hunt), Fourth of July (Jul 1 to 5 flags, bunting and a
+  grill; fireworks the nights of Jul 3 and 4), Halloween (from Oct 15 pumpkins, bats and orange
+  lights; costumed trick-or-treaters from Oct 25), Thanksgiving (the week before to the day after:
+  a feast table in the square, cornstalks and hay bales), Christmas (Dec 1 to Jan 5: roof lights,
+  wreaths, a lit tree with presents, carolers; a sleigh crosses the sky on Christmas Eve night)
+  and New Year (fireworks the nights of Dec 31 and Jan 1). The fox cub, bunny, ducks and owl
+  from the earlier valley still live here.
+- **Testing**: in the browser console set `window.PHC_NOW = new Date(2026, 11, 24, 20)`,
+  `window.PHC_FEST = "fest-xmas fest-eve"` or `window.PHC_TEST_WEATHER = {kind: "rain", ...}`,
+  then run `PHC_APPLY()`.
 - **Season**: colours blend day by day. Peaks (tune to your climate): spring mid-April, summer
   mid-July, fall colour early November, winter mid-January. Spring has blossom and petals,
   fall has falling leaves, summer nights have fireflies, deep winter has snow.

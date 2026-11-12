@@ -2,6 +2,11 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-12 (dashboard village)
+- **dashboard**: the valley is now a small mountain village with original villagers doing seasonal things
+  (gardening, kites, fishing, picnics, raking, sledding, skating), umbrella walkers in rain, and holiday
+  scenes for Valentine's, Easter, Fourth of July, Halloween, Thanksgiving, Christmas and New Year.
+
 ## 2026-11-11 (dashboard film look)
 - **dashboard**: new animated valley in a warm 3D cartoon-film style with original characters (fox cub,
   bunny, ducks, owl, snowman, cottage) that react to the season, time of day and live weather. Tiles are now
