@@ -336,8 +336,11 @@ services:
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-align: center;
           }
           #layout-groups .service-card .service-description { display: none !important; }
-          #layout-groups .service-card .site-monitor-status { top: -3px; right: calc(50% - 33px); z-index: 3; }
+          /* status dot on the icon's top-right corner (its wrapper is the positioned box) */
+          #layout-groups .service-title > div.absolute { top: 4px; right: calc(50% - 30px); }
+          #layout-groups .service-card .site-monitor-status { position: static !important; overflow: visible !important; width: auto !important; height: auto !important; }
           #layout-groups .service-card:hover .site-monitor-status { opacity: 1; }
+          #layout-groups .site-monitor-status > div { width: 10px !important; height: 10px !important; border-radius: 50% !important; box-shadow: 0 0 0 2px #fff !important; }
         }
         @media (max-width: 370px) { .information-widget-resource svg { display: none; } }
         /* Homepage's own utility classes sit in cascade layers, and an !important in a layer beats one outside,
