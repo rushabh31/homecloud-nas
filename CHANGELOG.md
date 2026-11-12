@@ -2,6 +2,10 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-12 (dashboard Diwali and Holi)
+- **dashboard**: the village now celebrates Diwali (diyas, star lanterns, rangoli, sparklers, fireworks)
+  and Holi (coloured powder in the meadow), with dates listed through 2030.
+
 ## 2026-11-12 (dashboard village)
 - **dashboard**: the valley is now a small mountain village with original villagers doing seasonal things
   (gardening, kites, fishing, picnics, raking, sledding, skating), umbrella walkers in rain, and holiday

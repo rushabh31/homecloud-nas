@@ -474,6 +474,29 @@
   }
   var XMAS = ["#ff4d5e", "#ffd84a", "#4fd38a", "#5ab4ff", "#ff9a3c"], HWN = ["#ff8a2c", "#b46cff", "#ffb347"], USA = ["#e2475a", "#ffffff", "#3f8fd6"];
 
+
+  /* Diwali: a clay diya with a flickering flame, a star lantern and a rangoli */
+  function diya(x, y, sc) {
+    return '<g transform="translate(' + x + "," + y + ") scale(" + (sc || 1) + ')">' + tag("path", { d: "M-7 -3 Q0 5 7 -3 Q0 -1 -7 -3 Z", fill: "#b5582c" }) + tag("ellipse", { cx: 0, cy: -3, rx: 7, ry: 1.8, fill: "#e08a3c" }) +
+      '<g class="phc-flame">' + tag("path", { d: "M0 -12 Q3 -7 0 -4 Q-3 -7 0 -12 Z", fill: "#ffd25a" }) + tag("path", { d: "M0 -9.5 Q1.4 -6.5 0 -5 Q-1.4 -6.5 0 -9.5 Z", fill: "#fff6c8" }) + "</g></g>";
+  }
+  function diyaGlow(x, y, sc) { return tag("circle", { cx: x, cy: y - 8 * (sc || 1), r: f1(16 * (sc || 1)), fill: "url(#g-lamp)" }); }
+  function starLantern(x, y, c) {
+    var pts = "";
+    for (var k = 0; k < 10; k++) { var an = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? 6 : 13; pts += (k ? " L" : "M") + f1(x + Math.cos(an) * rr) + " " + f1(y + Math.sin(an) * rr); }
+    return tag("path", { d: "M" + x + " " + (y - 30) + " L" + x + " " + (y - 12), stroke: "#4a3a3a", "stroke-width": "1.4" }) + '<g class="phc-swing" style="transform-origin:' + x + "px " + (y - 30) + 'px">' +
+      tag("path", { d: pts + " Z", fill: c }) + tag("circle", { cx: x, cy: y, r: 4.5, fill: "#fff2b0", opacity: ".9" }) + tag("path", { d: "M" + (x - 4) + " " + (y + 12) + " v12 M" + x + " " + (y + 12) + " v16 M" + (x + 4) + " " + (y + 12) + " v12", stroke: c, "stroke-width": "1.6" }) + "</g>";
+  }
+  function rangoli(x, y, s) {
+    var t = "", cols = ["#ff4f7a", "#ffb02e", "#3fbf7f", "#5a8cff", "#c86bff", "#ffe14a"];
+    for (var ring = 3; ring >= 1; ring--) {
+      var n = ring * 8, R = ring * 14;
+      for (var k = 0; k < n; k++) { var an = k / n * Math.PI * 2; t += tag("ellipse", { cx: f1(Math.cos(an) * R), cy: f1(Math.sin(an) * R), rx: 7, ry: 4, fill: cols[(k + ring) % 6], transform: "rotate(" + f1(an * 180 / Math.PI) + " " + f1(Math.cos(an) * R) + " " + f1(Math.sin(an) * R) + ")" }); }
+    }
+    t += tag("circle", { r: 9, fill: "#ffe14a" }) + tag("circle", { r: 4, fill: "#ff4f7a" });
+    var lamps = ""; for (var j = 0; j < 8; j++) { var aj = j / 8 * Math.PI * 2; lamps += diya(f1(x + Math.cos(aj) * 54 * s), f1(y + Math.sin(aj) * 54 * s * 0.28), 0.9); }
+    return '<g class="phc-char"><g transform="translate(' + x + "," + y + ") scale(" + s + "," + f1(s * 0.28) + ')">' + t + "</g>" + lamps + "</g>";
+  }
   /* A house. w = half width, h = wall height, roof style "gable" or "steep". */
   function house(o) {
     var w = o.w || 70, h = o.h || 80, rh = o.rh || 70, wall = o.wall || "#f6e6cc", roof = o.roof || "#e2704a";
@@ -508,12 +531,15 @@
     s += '<g class="phc-fest phc-fest-july4">' + tag("path", { d: "M" + (-w + 6) + " " + (-h + 4) + " l-16 -30", stroke: "#6a5a4a", "stroke-width": "2" }) +
       tag("path", { d: "M" + (-w - 10) + " " + (-h - 26) + " l22 -6 l4 14 l-22 6 Z", fill: "#ffffff" }) + tag("path", { d: "M" + (-w - 10) + " " + (-h - 26) + " l9 -2.5 l2 6 l-9 2.5 Z", fill: "#2f4f9a" }) +
       tag("path", { d: "M" + (-w - 6) + " " + (-h - 18) + " l20 -5.5 M" + (-w - 5) + " " + (-h - 13) + " l20 -5.5", stroke: "#d93a4a", "stroke-width": "2" }) + "</g>";
+    s += '<g class="phc-fest phc-fest-diwali">' + diya(-dw - 10, 0) + diya(-dw - 24, 0) + diya(dw + 10, 0) + diya(dw + 24, 0) + diya(f1(-w * 0.78 + ww * 0.25), f1(wy + wh + 3)) + diya(f1(-w * 0.78 + ww * 0.75), f1(wy + wh + 3)) +
+      diya(f1(w * 0.42 + ww * 0.25), f1(wy + wh + 3)) + diya(f1(w * 0.42 + ww * 0.75), f1(wy + wh + 3)) + starLantern(f1(-w - 4), f1(-h + 34), ["#ff6a3c", "#ffb02e", "#e2475a", "#c86bff"][Math.round(o.x) % 4]) +
+      tag("path", { d: "M" + (-dw - 4) + " " + f1(-dh - 2) + " Q0 " + f1(-dh + 10) + " " + (dw + 4) + " " + f1(-dh - 2), stroke: "#ff9f1c", "stroke-width": "4", fill: "none", "stroke-dasharray": "4 3" }) + "</g>";
     var g = '<g class="phc-char" transform="translate(' + o.x + "," + o.y + ") scale(" + o.s + ')">' + s + "</g>";
     var smoke = '<g class="phc-smoke" transform="translate(' + o.x + "," + o.y + ") scale(" + o.s + ')">' + [0, 1, 2, 3].map(function (i) {
       return tag("circle", { cx: chx, cy: f1(top + rh * 0.15 - 12), r: 5 + i * 1.5, fill: "#f4f1f6", opacity: ".8", style: "animation-delay:-" + f1(i * 1.8 + o.x % 3) + "s" });
     }).join("") + "</g>";
     var glow = '<g transform="translate(' + o.x + "," + o.y + ") scale(" + o.s + ')">' + tag("circle", { cx: f1(-w * 0.78 + ww / 2), cy: f1(wy + wh / 2), r: f1(w * 0.55), fill: "url(#g-lamp)" }) +
-      tag("circle", { cx: f1(w * 0.42 + ww / 2), cy: f1(wy + wh / 2), r: f1(w * 0.55), fill: "url(#g-lamp)" }) + tag("ellipse", { cx: 0, cy: 12, rx: w, ry: 12, fill: "url(#g-lamp)", opacity: ".5" }) + "</g>";
+      tag("circle", { cx: f1(w * 0.42 + ww / 2), cy: f1(wy + wh / 2), r: f1(w * 0.55), fill: "url(#g-lamp)" }) + tag("ellipse", { cx: 0, cy: 12, rx: w, ry: 12, fill: "url(#g-lamp)", opacity: ".5" }) + '<g class="phc-fest phc-fest-diwali">' + diyaGlow(-dw - 17, 0, 1.6) + diyaGlow(dw + 17, 0, 1.6) + "</g></g>";
     return { art: g + smoke, glow: glow };
   }
   function chapel(x, y, s) {
@@ -616,7 +642,9 @@
   /* the square */
   var l1 = lamp(1158, 710, 0.78), l2 = lamp(1336, 704, 0.78); vGlow += l1.glow + l2.glow;
   vH1 += bunting(1158, 650, 1336, 644, "phc-fest phc-fest-july4", USA) + hearts(1158, 650, 1336, 644) + bunting(1158, 650, 1336, 644, "phc-fest phc-fest-halloween", ["#ff8a2c", "#3b2a5a"]);
-  vH1 += well(1404, 716, 0.75) + l1.art + l2.art + xtree(1246, 720, 0.82);
+  vH1 += bunting(1158, 650, 1336, 644, "phc-fest phc-fest-holi", ["#ff4f7a", "#ffb02e", "#3fbf7f", "#5a8cff", "#c86bff"]) + bunting(1158, 650, 1336, 644, "phc-fest phc-fest-diwali", ["#ff9f1c", "#ffd25a", "#e2475a"]);
+  vH1 += well(1404, 716, 0.75) + l1.art + l2.art + xtree(1246, 720, 0.82) + '<g class="phc-fest phc-fest-diwali">' + rangoli(1246, 722, 1.05) + "</g>";
+  vGlow += '<g class="phc-fest phc-fest-diwali">' + diyaGlow(1246, 722, 4) + "</g>";
   PS = 1.2; vH1 += feast(1246, 726); PS = 1.45;
 
   /* people on the first hill */
@@ -685,6 +713,27 @@
   vH3 += '<g class="phc-fest phc-fest-halloween-kids">' + person({ x: 820, y: 854, s: 0.8, coat: "#3b2a5a", pants: "#2b2238", skin: 1, hat: HAT.witch(), ar: -30, hr: HELD.pail() }) + ghost +
     person({ x: 914, y: 850, s: 0.72, coat: "#ff8a2c", skin: 3, hat: HAT.hood("#2b2238"), flip: true, ar: -20, hr: HELD.lantern() }) + "</g>";
   vH3 += eggs([[440, 852], [700, 860], [1000, 854], [1240, 846]]);
+  function spark(x, y) { return '<g class="phc-sparkler" transform="translate(' + x + "," + y + ')">' + [0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { var an = k / 8 * Math.PI * 2; return tag("path", { d: "M0 0 L" + f1(Math.cos(an) * 9) + " " + f1(Math.sin(an) * 9), stroke: k % 2 ? "#fff6c8" : "#ffd25a", "stroke-width": "1.6", "stroke-linecap": "round" }); }).join("") + tag("circle", { r: 3, fill: "#ffffff" }) + "</g>"; }
+  var stick = function () { return tag("path", { d: "M0 0 L0 22", stroke: "#8a8f9a", "stroke-width": "1.6" }) + '<g transform="translate(0,22)">' + spark(0, 0) + "</g>"; };
+  vH3 += '<g class="phc-fest phc-fest-diwali">' +
+    person({ x: 760, y: 852, s: 0.82, coat: "#ff9f1c", pants: "#e2475a", skin: 2, long: true, hair: "#1f1a1a", scarf: "#e2475a", ar: -40, hr: tag("rect", { x: -9, y: 2, width: 18, height: 10, rx: 2, fill: "#e2475a" }) + tag("path", { d: "M-9 7 h18", stroke: "#ffd25a", "stroke-width": "2" }) }) +
+    person({ x: 820, y: 854, s: 0.74, coat: "#3fbf7f", skin: 1, ar: -150, hr: stick(), clsR: "phc-wave-arm" }) +
+    person({ x: 876, y: 852, s: 0.66, coat: "#c86bff", skin: 3, long: true, hair: "#3a2a22", ar: -120, al: 30, hr: stick() }) +
+    '<g class="phc-char">' + diya(712, 852, 1.4) + diya(930, 850, 1.4) + diya(960, 848, 1.4) + "</g></g>";
+  vGlow += '<g class="phc-fest phc-fest-diwali">' + diyaGlow(712, 852, 1.6) + diyaGlow(945, 849, 1.8) + "</g>";
+  /* Holi: villagers in white throwing colored powder */
+  var splat = function (x, y, c, k) { return tag("circle", { cx: x, cy: y, r: k || 2.4, fill: c }); };
+  var dots = function (cs) { return '<g opacity=".9">' + splat(-6, -36, cs[0], 3) + splat(5, -28, cs[1], 2.6) + splat(-2, -22, cs[2], 2.2) + splat(7, -40, cs[0], 2) + splat(-8, -55, cs[1], 2) + splat(6, -60, cs[2], 2.4) + "</g>"; };
+  function puff(x, y, c, d) { return '<g transform="translate(' + x + "," + y + ')"><g class="phc-puff" style="animation-delay:-' + d + 's">' + tag("circle", { r: 14, fill: c, opacity: ".75" }) + tag("circle", { cx: 10, cy: -6, r: 10, fill: c, opacity: ".6" }) + tag("circle", { cx: -9, cy: -8, r: 9, fill: c, opacity: ".6" }) + "</g></g>"; }
+  var gulal = function (c) { return tag("circle", { cx: 0, cy: 4, r: 4, fill: c }); };
+  vH3 += '<g class="phc-fest phc-fest-holi">' + '<g class="phc-char">' + [[700, 858, "#ff4f7a"], [770, 860, "#ffe14a"], [840, 858, "#3fbf7f"], [900, 856, "#5a8cff"], [980, 852, "#c86bff"], [1040, 850, "#ffb02e"]].map(function (p) { return tag("ellipse", { cx: p[0], cy: p[1], rx: 22, ry: 5, fill: p[2], opacity: ".75" }); }).join("") + "</g>" +
+    person({ x: 720, y: 856, s: 0.8, coat: "#fbfbff", pants: "#fbfbff", skin: 1, ar: -120, hr: gulal("#ff4f7a"), front: dots(["#ff4f7a", "#ffe14a", "#3fbf7f"]), clsR: "phc-throw" }) +
+    person({ x: 806, y: 858, s: 0.76, coat: "#fbfbff", pants: "#fbfbff", skin: 3, long: true, hair: "#1f1a1a", flip: true, ar: -110, hr: gulal("#3fbf7f"), front: dots(["#5a8cff", "#ff4f7a", "#c86bff"]), clsR: "phc-throw" }) +
+    person({ x: 900, y: 856, s: 0.7, coat: "#fbfbff", pants: "#fbfbff", skin: 0, ar: -90, hr: tag("path", { d: "M-4 0 L4 0 L3 16 L-3 16 Z", fill: "#ff8a2c" }), front: dots(["#ffe14a", "#3fbf7f", "#ff4f7a"]) }) +
+    '<g class="phc-squirt">' + [0, 1, 2, 3, 4, 5].map(function (k) { return tag("circle", { cx: f1(922 + k * 10), cy: f1(812 - Math.sin(k / 5 * Math.PI) * 16 + k * 2), r: 2.6, fill: k % 2 ? "#ff4f7a" : "#c86bff", style: "animation-delay:-" + f1(k * 0.12) + "s" }); }).join("") + "</g>" +
+    person({ x: 1000, y: 852, s: 0.8, coat: "#fbfbff", pants: "#fbfbff", skin: 2, flip: true, ar: -130, hr: gulal("#ffe14a"), front: dots(["#c86bff", "#ffb02e", "#5a8cff"]), clsR: "phc-throw" }) +
+    puff(762, 806, "#ff4f7a", 0) + puff(850, 798, "#ffe14a", 0.8) + puff(960, 800, "#3fbf7f", 1.6) + puff(810, 780, "#c86bff", 2.4) + puff(1020, 790, "#5a8cff", 1.2) + "</g>";
+
 
   /* ---------- assemble ---------- */
   S.push('<rect width="' + W + '" height="' + H + '" fill="url(#g-sky)"/>');
@@ -872,6 +921,10 @@
     return new Date(y, Math.floor((h + l - 7 * m + 114) / 31) - 1, (h + l - 7 * m + 114) % 31 + 1);
   }
   function daysFrom(d, ref) { return Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - ref) / 86400000); }
+  /* Diwali and Holi follow the Hindu lunar calendar, so their dates are listed per year
+     (Diwali = Lakshmi Puja day; Holi = the day of colors, sources differ by a day so the window covers both). */
+  var DIWALI = { 2026: [10, 8], 2027: [9, 29], 2028: [9, 17], 2029: [10, 5], 2030: [9, 26] };
+  var HOLI = { 2026: [2, 3], 2027: [2, 22], 2028: [2, 11], 2029: [2, 1], 2030: [2, 20] };
   function festival(d) {
     if (window.PHC_FEST !== undefined) return String(window.PHC_FEST).split(" ").filter(Boolean);
     var y = d.getFullYear(), m = d.getMonth(), day = d.getDate(), out = [];
@@ -887,9 +940,11 @@
     if (m === 1 && day >= 10 && day <= 14) out.push("fest-valentine");
     var ea = daysFrom(d, easter(y));
     if (ea >= -6 && ea <= 1) out.push("fest-easter");
+    if (DIWALI[y]) { var dw = daysFrom(d, new Date(y, DIWALI[y][0], DIWALI[y][1])); if (dw >= -2 && dw <= 2) out.push("fest-diwali"); if (dw === 0) out.push("fest-fw"); }
+    if (HOLI[y]) { var ho = daysFrom(d, new Date(y, HOLI[y][0], HOLI[y][1])); if (ho >= -1 && ho <= 2) out.push("fest-holi"); }
     return out;
   }
-  var FESTS = ["fest-halloween", "fest-halloween-kids", "fest-thanks", "fest-xmas", "fest-eve", "fest-newyear", "fest-fw", "fest-july4", "fest-valentine", "fest-easter"];
+  var FESTS = ["fest-halloween", "fest-halloween-kids", "fest-thanks", "fest-xmas", "fest-eve", "fest-newyear", "fest-fw", "fest-july4", "fest-valentine", "fest-easter", "fest-diwali", "fest-holi"];
 
   /* ---------- apply state ---------- */
   function apply() {

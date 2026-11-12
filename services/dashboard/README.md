@@ -27,7 +27,12 @@ Everyone in it is an original character (no film characters or artwork are copie
   lights; costumed trick-or-treaters from Oct 25), Thanksgiving (the week before to the day after:
   a feast table in the square, cornstalks and hay bales), Christmas (Dec 1 to Jan 5: roof lights,
   wreaths, a lit tree with presents, carolers; a sleigh crosses the sky on Christmas Eve night)
-  and New Year (fireworks the nights of Dec 31 and Jan 1). The fox cub, bunny, ducks and owl
+  and New Year (fireworks the nights of Dec 31 and Jan 1). Diwali (two days either side of
+  Lakshmi Puja: diyas on every doorstep, star lanterns, a rangoli in the square, kids with
+  sparklers and fireworks on the night itself) and Holi (the day of colours and the days around
+  it: villagers in white throwing coloured powder). Their dates follow the Hindu lunar calendar,
+  so they are listed per year in `DIWALI` and `HOLI` near `festival()` in `custom.js`
+  (filled in through 2030; add later years there). The fox cub, bunny, ducks and owl
   from the earlier valley still live here.
 - **Testing**: in the browser console set `window.PHC_NOW = new Date(2026, 11, 24, 20)`,
   `window.PHC_FEST = "fest-xmas fest-eve"` or `window.PHC_TEST_WEATHER = {kind: "rain", ...}`,
