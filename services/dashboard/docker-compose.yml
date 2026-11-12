@@ -29,7 +29,7 @@ services:
         set -e
         mkdir -p /app/config
         cat > /app/config/settings.yaml <<'PHC_EOF'
-        title: Patel Home Cloud
+        title: Our Home
         description: Everything on the HomeCloud NAS in one place
         theme: light
         color: stone
@@ -62,7 +62,7 @@ services:
         cat > /app/config/widgets.yaml <<'PHC_EOF'
         - greeting:
             text_size: xl
-            text: Patel Home Cloud
+            text: Our Home
         - datetime:
             text_size: md
             format:

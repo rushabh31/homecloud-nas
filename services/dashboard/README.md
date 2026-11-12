@@ -1,9 +1,9 @@
-# Dashboard (Patel Home Cloud)
+# Dashboard (Our Home)
 
 > Fact labels: see the [README](../../README.md#verification-labels). Source of this file: deployed from this folder's `docker-compose.yml` on 2026-11-11.
 
 ## Purpose
-One start page, **Patel Home Cloud**, with a tile for every service on the NAS. Each tile
+One start page, **Our Home** (renamed from Patel Home Cloud on 2026-11-12), with a tile for every service on the NAS. Each tile
 opens that service's own sign-in page. Built with [Homepage](https://gethomepage.dev).
 A green dot on a tile means the NAS can reach that service right now; red means it can't.
 
