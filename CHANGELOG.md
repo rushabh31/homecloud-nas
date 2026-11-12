@@ -2,6 +2,10 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-12 (dashboard phone layout)
+- **dashboard**: on phones the tiles are now app icons in one panel under a compact top bar, and the
+  village fills the lower half of the screen. Documents group gains Nextcloud and ConvertX tiles.
+
 ## 2026-11-12 (dashboard Diwali and Holi)
 - **dashboard**: the village now celebrates Diwali (diyas, star lanterns, rangoli, sparklers, fireworks)
   and Holi (coloured powder in the meadow), with dates listed through 2030.

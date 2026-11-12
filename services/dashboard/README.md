@@ -49,8 +49,12 @@ Everyone in it is an original character (no film characters or artwork are copie
   keeps a calm partly cloudy sky.
 - **Weather chip**: the top bar's right end shows the temperature (°F) and the condition.
 - Motion is slow, and switches off for anyone whose device asks for reduced motion.
-- **Tile layout**: one grid of four columns in two rows: Photos, Communication and Notes (two
-  tiles) on top; Smart home and Admin (three tiles) below. Two columns on a tablet, one on a phone.
+- **Tile layout**: one grid of four columns: Photos, Communication and Notes (two
+  tiles) on top; Smart home and Admin (three tiles) below; Documents (three tiles) in a third row. Two
+  columns on a tablet.
+  On a phone (640 px or narrower) the top bar shrinks to the name, the weather and three small gauges, every
+  tile becomes an app icon in one glass panel (four to a row, same order, status dot on the icon), and the
+  village is drawn across the lower half of the screen so the cottages and villagers stay in view.
 - **Design rules**: 4/8/12/16/24 px spacing, 20 px radius for cards and the top bar, 12 px for
   chips and icon boxes, Nunito type (title 26/900, tile name 16/800, tile text 13/600, group
   labels 12/800 capitals), status dot in each tile's top-right corner (an arrow replaces it on
@@ -91,6 +95,7 @@ here if you open it some other way, or Homepage shows "host validation failed".
 | Smart home | Home Assistant | `https://ha.example.com` |
 | Notes | OKNote, SiYuan | `https://oknote.example.com`, `https://siyuan.example.com` |
 | Admin | NAS admin, Portainer, Nginx Proxy Manager | `https://mynas.example.com`, `https://portainer.example.com`, `http://192.168.0.119:81` (home only) |
+| Documents | Paperless, Nextcloud, ConvertX | `https://paperless.example.com`, `https://nextcloud.example.com`, `https://convertx.example.com` |
 
 Top bar: NAS CPU and free memory, free space on Volume 1, date and time, and the weather.
 

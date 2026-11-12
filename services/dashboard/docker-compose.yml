@@ -54,6 +54,10 @@ services:
             icon: mdi-shield-lock
             style: row
             columns: 3
+          Documents:
+            icon: mdi-file-document-multiple
+            style: row
+            columns: 3
         PHC_EOF
         cat > /app/config/widgets.yaml <<'PHC_EOF'
         - greeting:
@@ -119,6 +123,22 @@ services:
                 icon: nginx-proxy-manager.png
                 description: Proxy admin, at home only
                 siteMonitor: http://192.168.0.119:81
+        - Documents:
+            - Paperless:
+                href: https://paperless.example.com
+                icon: paperless-ngx.png
+                description: Scanned papers, bills and IDs
+                siteMonitor: http://192.168.0.119:8010
+            - Nextcloud:
+                href: https://nextcloud.example.com
+                icon: nextcloud.png
+                description: Family files, sync and sharing
+                siteMonitor: http://192.168.0.119:8090
+            - ConvertX:
+                href: https://convertx.example.com
+                icon: convertx.png
+                description: Convert files; documents go to Paperless
+                siteMonitor: http://192.168.0.119:3030
         PHC_EOF
         printf '[]\n' > /app/config/bookmarks.yaml
         printf '{}\n' > /app/config/docker.yaml
@@ -198,6 +218,7 @@ services:
         #layout-groups > .services-group { padding: 0 !important; margin: 0 !important; min-width: 0; flex: none !important; }
         #layout-groups > .services-group:nth-child(3) { grid-column: span 2; }
         #layout-groups > .services-group:nth-child(5) { grid-column: span 3; }
+        #layout-groups > .services-group:nth-child(6) { grid-column: span 3; }
         .services-group > button { margin: 0 0 10px !important; padding: 0 !important; width: auto !important; }
         .services-group h2.service-group-name {
           display: inline-flex; align-items: center; height: 26px; padding: 0 12px 0 0;
@@ -257,15 +278,72 @@ services:
           #layout-groups > .services-group:nth-child(3), #layout-groups > .services-group:nth-child(4), #layout-groups > .services-group:nth-child(5) { grid-column: span 2; }
           #layout-groups > .services-group:nth-child(4) ul.services-list { max-width: calc(50% - var(--gap) / 2); }
           #layout-groups > .services-group:nth-child(5) ul.services-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+          #layout-groups > .services-group:nth-child(6) { grid-column: span 2; }
+          #layout-groups > .services-group:nth-child(6) ul.services-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
         }
+        /* ---------- Phones: a compact top bar, one launcher panel of app icons, and the village below ---------- */
         @media (max-width: 640px) {
-          #information-widgets { margin: 12px 12px 8px !important; padding: 12px !important; }
-          .information-widget-greeting { flex-basis: 100%; }
-          .information-widget-greeting span { font-size: 22px !important; line-height: 28px !important; }
-          #layout-groups { grid-template-columns: minmax(0, 1fr); margin: 12px !important; }
-          #layout-groups > .services-group { grid-column: auto !important; }
-          #layout-groups ul.services-list { grid-template-columns: minmax(0, 1fr) !important; max-width: none !important; }
+          /* the scene keeps its full height in view: drawn across the lower part of the screen, sky colour above */
+          #phc-scene { background: var(--skyTop); }
+          #phc-scene svg { position: absolute; left: 0; bottom: 0; height: min(100%, 112vw); }
+
+          /* top bar: name and weather on one row, the three NAS gauges on the next; the date is on the phone already */
+          #information-widgets { margin: 12px 12px 10px !important; padding: 10px 10px 10px 16px !important; border-radius: 18px; }
+          #widgets-wrap { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 8px; }
+          #widgets-wrap > div:first-child { grid-column: 1 / span 2; min-width: 0; }
+          .information-widget-greeting { flex-basis: auto; }
+          .information-widget-greeting span { font-size: 20px !important; line-height: 26px !important; white-space: nowrap; }
+          #widgets-wrap > .phc-weather { grid-column: 3; justify-self: end; height: 42px; padding: 0 12px 0 8px !important; gap: 6px; }
+          .phc-weather svg { width: 22px; height: 22px; }
+          .phc-weather-temp { font-size: 14px; line-height: 16px; }
+          .phc-weather-label { font-size: 11px; line-height: 13px; }
+          #widgets-wrap > div:has(.information-widget-datetime) { display: none !important; }
+          #widgets-wrap > div:has(.information-widget-resource) { order: 2; grid-column: span 1; width: 100%; }
+          #widgets-wrap > div:has(.information-widget-resource + .information-widget-resource) { grid-column: span 2; }
+          #widgets-wrap > div:has(.information-widget-resource) * { min-width: 0; }
+          #widgets-wrap > div:has(.information-widget-resource) > div { width: 100%; display: flex; gap: 8px; }
+          .information-widget-resource { height: 40px; width: auto !important; min-width: 0 !important; flex: 1 1 0; padding: 0 8px !important; gap: 6px; border-radius: 10px; }
+          .information-widget-resource svg { width: 15px !important; height: 15px !important; }
+          .information-widget-resource .flex-col { flex: 1 1 auto; overflow: hidden; }
+          .information-widget-resource .resource-value, .information-widget-resource .resource-value * { font-size: 12px !important; line-height: 14px !important; white-space: nowrap; }
+          .information-widget-resource .resource-value + div, .information-widget-resource .resource-label { display: none !important; }
+
+          /* every tile becomes an app icon in one glass panel, four to a row, in the desktop order */
+          #layout-groups {
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important; column-gap: 4px; row-gap: 14px;
+            margin: 0 12px !important; padding: 16px 8px 14px !important; border-radius: 24px;
+            background: linear-gradient(180deg, var(--glass-top), var(--glass-bot)); border: 1px solid var(--glass-edge);
+            -webkit-backdrop-filter: blur(20px) saturate(1.6); backdrop-filter: blur(20px) saturate(1.6); box-shadow: var(--glass-hi), var(--shadow);
+          }
+          #layout-groups > .services-group, #layout-groups ul.services-list { display: contents !important; }
+          #layout-groups > .services-group > button { display: none !important; }
+          #layout-groups li.service { min-width: 0; }
+          #layout-groups .service-card {
+            background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none;
+            min-height: 0; height: auto !important; padding: 0 !important; border-radius: 0 !important; justify-content: center;
+          }
+          #layout-groups .service-card:hover { transform: none; }
+          #layout-groups .service-card:active a.service-icon { transform: scale(.94); }
+          #layout-groups .service-card::after { display: none; }
+          #layout-groups .service-title { flex-direction: column; gap: 6px; }
+          #layout-groups a.service-icon { width: 56px !important; height: 56px !important; border-radius: 16px; padding: 11px !important; transition: transform .15s ease; }
+          #layout-groups a.service-icon img { width: 34px !important; height: 34px !important; }
+          #layout-groups a.service-icon > div { width: 32px !important; height: 32px !important; }
+          #layout-groups a.service-title-text { padding: 0 !important; width: 100%; justify-content: center; }
+          #layout-groups a.service-title-text > div { padding: 0 2px !important; text-align: center; min-width: 0; }
+          #layout-groups .service-card .service-name {
+            font-size: 12px !important; line-height: 14px !important; font-weight: 800 !important; white-space: normal;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-align: center;
+          }
+          #layout-groups .service-card .service-description { display: none !important; }
+          #layout-groups .service-card .site-monitor-status { top: -3px; right: calc(50% - 33px); }
+          #layout-groups .service-card:hover .site-monitor-status { opacity: 1; }
         }
+        @media (max-width: 370px) { .information-widget-resource svg { display: none; } }
+        /* Homepage's own utility classes sit in cascade layers, and an !important in a layer beats one outside,
+           so the group panel is flattened from inside the first layer. */
+        @layer properties { @media (max-width: 640px) { #layout-groups > .services-group > div { display: contents !important; } } }
+
 
         /* ---------- Scene ---------- */
         .phc-char { filter: brightness(var(--cb, 1)) saturate(var(--cs, 1)) sepia(var(--cg, 0)); }
