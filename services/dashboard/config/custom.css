@@ -272,6 +272,84 @@ a.service-title-text { padding: 0 28px 0 0 !important; min-width: 0; }
 .phc-flies circle { animation: phc-fly ease-in-out infinite; filter: drop-shadow(0 0 5px #fff3a0); }
 @keyframes phc-fly { 0%, 100% { transform: translate(0, 0); opacity: 0; } 25% { opacity: 1; } 50% { transform: translate(30px, -24px); opacity: .3; } 75% { transform: translate(-16px, -10px); opacity: 1; } }
 
+
+/* ---------- the village ---------- */
+.phc-smoke circle { transform-box: fill-box; transform-origin: center; }
+.phc-act, .phc-fest { display: none; }
+#phc-scene.s-spring:not(.phc-wet) .phc-act-spring, #phc-scene.s-summer:not(.phc-wet) .phc-act-summer,
+#phc-scene.s-autumn:not(.phc-wet) .phc-act-autumn, #phc-scene.s-winter:not(.phc-wet) .phc-act-winter,
+#phc-scene.phc-frozen:not(.phc-wet) .phc-act-skate, #phc-scene.phc-wet .phc-act-rain,
+#phc-scene.phc-is-night:not(.phc-wet) .phc-act-night { display: inline; }
+#phc-scene.phc-is-night .phc-day, #phc-scene.fest-valentine .phc-stargazer, #phc-scene.phc-frozen .phc-swimmer { display: none !important; }
+#phc-scene.fest-halloween .phc-fest-halloween, #phc-scene.fest-halloween-kids .phc-fest-halloween-kids, #phc-scene.fest-thanks .phc-fest-thanks,
+#phc-scene.fest-xmas .phc-fest-xmas, #phc-scene.fest-july4 .phc-fest-july4, #phc-scene.fest-valentine .phc-fest-valentine,
+#phc-scene.fest-easter .phc-fest-easter, #phc-scene.phc-is-night.fest-eve .phc-fest-eve, #phc-scene.phc-is-night.fest-fw .phc-fireworks { display: inline; }
+#phc-scene.phc-wet .phc-fest-thanks.phc-people, #phc-scene.phc-wet .phc-carolers, #phc-scene.phc-wet .phc-fest-halloween-kids, #phc-scene.phc-wet .phc-fest-easter .phc-char { display: none; }
+#phc-scene.fest-thanks .phc-square { display: none !important; }
+
+.phc-bulbs circle { animation: phc-twinkle 2s ease-in-out infinite; filter: drop-shadow(0 0 3px currentColor); }
+#phc-scene.phc-is-night .phc-bulbs circle { filter: drop-shadow(0 0 5px #fff2b0) brightness(1.3); }
+.phc-star { transform-box: fill-box; transform-origin: center; animation: phc-breathe 3s ease-in-out infinite; filter: drop-shadow(0 0 6px #ffe27a); }
+.phc-bell { transform-box: fill-box; transform-origin: 50% 0%; animation: phc-bell 4s ease-in-out infinite; }
+@keyframes phc-bell { 0%, 70%, 100% { transform: rotate(0); } 78% { transform: rotate(14deg); } 86% { transform: rotate(-12deg); } 93% { transform: rotate(6deg); } }
+
+/* people */
+.phc-arm { transform-box: fill-box; transform-origin: 50% 0%; }
+.phc-head { transform-box: fill-box; transform-origin: 50% 100%; animation: phc-nod 6s ease-in-out infinite; }
+@keyframes phc-nod { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(3deg); } }
+.phc-walk .phc-leg-l, .phc-walk .phc-leg-r { transform-box: fill-box; transform-origin: 50% 0%; animation: phc-step .7s ease-in-out infinite alternate; }
+.phc-walk .phc-leg-r { animation-delay: -.7s; }
+@keyframes phc-step { from { transform: rotate(16deg); } to { transform: rotate(-16deg); } }
+.phc-walk { animation: phc-walkbob .35s ease-in-out infinite alternate; }
+@keyframes phc-walkbob { from { transform: translateY(0); } to { transform: translateY(-1.5px); } }
+.phc-stroll { animation: phc-stroll 40s linear infinite; }
+@keyframes phc-stroll { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(var(--dist, 200px)); } }
+.phc-turn2 { transform-box: fill-box; transform-origin: center; animation: phc-turn2 40s steps(1) infinite; }
+@keyframes phc-turn2 { 0%, 49.9% { transform: scaleX(1); } 50%, 100% { transform: scaleX(-1); } }
+.phc-raking { animation: phc-rake 1.6s ease-in-out infinite; }
+@keyframes phc-rake { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(14deg); } }
+.phc-jump { animation: phc-jump 3.4s ease-in-out infinite; }
+@keyframes phc-jump { 0%, 60%, 100% { transform: translateY(0); } 72% { transform: translateY(-26px); } 84% { transform: translateY(4px); } }
+.phc-pour { transform-box: fill-box; transform-origin: 20% 50%; animation: phc-pour 3s ease-in-out infinite; }
+@keyframes phc-pour { 0%, 100% { transform: rotate(0); } 40%, 70% { transform: rotate(18deg); } }
+.phc-drops circle { animation: phc-twinkle .6s linear infinite; }
+.phc-bobber { animation: phc-bob 2.4s ease-in-out infinite; }
+.phc-swimmer { animation: phc-paddle 9s ease-in-out infinite; }
+@keyframes phc-paddle { 0%, 100% { transform: translate(880px, 744px); } 50% { transform: translate(925px, 740px); } }
+.phc-wave { animation: phc-twinkle 1.2s ease-in-out infinite; }
+.phc-skate { animation: phc-skate 7s ease-in-out infinite; }
+@keyframes phc-skate { 0%, 100% { transform: translateX(-70px); } 50% { transform: translateX(50px); } }
+.phc-skate2 { animation-name: phc-skate2; animation-duration: 9s; }
+@keyframes phc-skate2 { 0%, 100% { transform: translateX(70px); } 50% { transform: translateX(-30px); } }
+.phc-push { animation: phc-push 6s ease-in-out infinite; }
+@keyframes phc-push { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-24px); } }
+.phc-throw { animation: phc-throw 3s ease-in-out infinite; }
+@keyframes phc-throw { 0%, 70%, 100% { transform: rotate(0); } 80% { transform: rotate(-60deg); } 88% { transform: rotate(40deg); } }
+.phc-sled { animation: phc-sled 9s ease-in infinite; }
+@keyframes phc-sled { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 80% { transform: translate(-280px, 44px); opacity: 1; } 92%, 100% { transform: translate(-300px, 46px); opacity: 0; } }
+.phc-puddle-hop { animation: phc-hop 2.2s ease-in-out infinite; }
+.phc-kite { transform-box: fill-box; transform-origin: 50% 100%; animation: phc-kite 4s ease-in-out infinite; }
+@keyframes phc-kite { 0%, 100% { transform: rotate(-10deg) translate(0, 0); } 50% { transform: rotate(8deg) translate(10px, -8px); } }
+.phc-bike { animation: none; }
+.phc-sing .phc-head { animation: phc-sing 1.6s ease-in-out infinite; }
+@keyframes phc-sing { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+.phc-notes text { animation: phc-note 3.3s ease-out infinite; opacity: 0; }
+@keyframes phc-note { 0% { opacity: 0; transform: translate(0, 0); } 20% { opacity: .95; } 100% { opacity: 0; transform: translate(26px, -40px); } }
+.phc-bob2 { animation: phc-bob2 2.6s ease-in-out infinite; }
+@keyframes phc-bob2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.phc-floaty { animation: phc-note 4s ease-out infinite; }
+.phc-steam path { animation: phc-note 3s ease-out infinite; }
+.phc-float { animation: phc-bob2 3s ease-in-out infinite; }
+
+/* holiday sky */
+.phc-burst { transform-box: fill-box; transform-origin: center; animation: phc-burst 5.4s ease-out infinite; opacity: 0; }
+@keyframes phc-burst { 0% { transform: scale(.1); opacity: 0; } 6% { opacity: 1; } 30% { transform: scale(1); opacity: .9; } 55%, 100% { transform: scale(1.15) translateY(14px); opacity: 0; } }
+.phc-fireworks { mix-blend-mode: screen; }
+.phc-bat { animation: phc-batfly 6s ease-in-out infinite; }
+@keyframes phc-batfly { 0%, 100% { transform: translate(0, 0) scaleY(1); } 25% { transform: translate(30px, -18px) scaleY(.5); } 50% { transform: translate(60px, 0) scaleY(1); } 75% { transform: translate(28px, 14px) scaleY(.5); } }
+.phc-sleigh { animation: phc-sleigh 40s linear infinite; }
+@keyframes phc-sleigh { from { transform: translate(1750px, 560px); } to { transform: translate(-200px, 500px); } }
+
 @media (prefers-reduced-motion: reduce) {
   #phc-scene * { animation: none !important; }
   .phc-rain, .phc-flakes, .phc-flies, .phc-flash, .phc-bolt { display: none !important; }
