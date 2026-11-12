@@ -27,7 +27,8 @@
   if (document.getElementById("phc-scene")) return;
 
   /* Weather location (rounded to the town). */
-  var LAT = 0.00, LON = 0.00; /* set to your own town, two decimals is enough */
+  /* The home town comes from a one-line prelude the compose file writes ahead of this script. */
+  var LAT = window.PHC_LAT || 0, LON = window.PHC_LON || 0;
   var W = 1600, H = 900;
 
   /* Base colors per season. Lit and shaded tones are derived from these. */
@@ -893,7 +894,7 @@
     if (!chip || !chip.isConnected) {
       chip = document.createElement("div");
       chip.className = "widget-container phc-weather";
-      chip.setAttribute("title", "Local weather");
+      chip.setAttribute("title", window.PHC_PLACE || "Local weather");
       wrap.appendChild(chip);
     }
     if (!wx) { chip.style.display = "none"; return; }
