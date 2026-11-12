@@ -10,6 +10,7 @@ All scripts are **read-only** toward the NAS. None restarts, stops or edits a se
 | `validate-compose.sh` | anywhere | `docker compose config -q` for each service (YAML parse fallback) |
 | `check_docs.py` | anywhere / CI | Required files, broken links, inventory vs folders, `${VAR}` vs `.env.example`, secret scan |
 | `scaffold-service.py` | anywhere | New `services/<name>/` from templates + inventory stub |
+| `build_dashboard_compose.py` | anywhere | Rebuilds `services/dashboard/docker-compose.yml` from `config/custom.css` and `custom.js` (script compressed to stay under 128 KB); prints to stdout |
 
 `make check` runs `validate-compose.sh` and `check_docs.py`.
 

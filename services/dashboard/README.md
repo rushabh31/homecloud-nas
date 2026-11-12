@@ -44,7 +44,7 @@ Everyone in it is an original character (no film characters or artwork are copie
   hour, twilight and stars. Tiles switch to a dark glass look at night.
 - **Live weather**: every 15 minutes the browser asks [Open-Meteo](https://open-meteo.com)
   (free, no key, no account) for the current weather at the home town (coordinates rounded to
-  the town, set as `LAT`/`LON` at the top of `custom.js`). Cloud cover sets the clouds; rain, drizzle, snow, fog and thunderstorms
+  the town, set as `PHC_LAT`/`PHC_LON` on the prelude line the compose file writes ahead of `custom.js`). Cloud cover sets the clouds; rain, drizzle, snow, fog and thunderstorms
   each have their own effect; wind moves clouds, rain and trees. If the lookup fails the scene
   keeps a calm partly cloudy sky.
 - **Weather chip**: the top bar's right end shows the temperature (°F) and the condition.
@@ -99,6 +99,16 @@ Everything is in [docker-compose.yml](docker-compose.yml): when the container st
 entrypoint writes `settings.yaml`, `widgets.yaml`, `services.yaml`, `custom.css` and `custom.js`
 into `/app/config`, then starts Homepage. The copies in [config/](config/) are the readable
 versions of the last two and must match what is in the compose file.
+
+The tiles, widgets, settings and CSS are plain text in the compose file. `custom.js` is not: it is
+written as a one-line prelude (`window.PHC_LAT`, `window.PHC_LON`, `window.PHC_PLACE`, the town the
+weather is for) followed by the village script, gzipped and base64-encoded, because the whole start
+command must stay under Linux's 128 KB limit for one argument. To change the script, edit
+[config/custom.js](config/custom.js) and rebuild the compose file:
+`python3 scripts/build_dashboard_compose.py services/dashboard 'window.PHC_LAT = ...; window.PHC_LON = ...; window.PHC_PLACE = "...";' > new.yml`
+(it keeps the tile and widget blocks from the current compose file and refuses a `$`).
+
+To change a tile:
 1. UGOS Docker app > Project > `dashboard` > Compose configuration.
 2. Change the YAML under `cat > /app/config/services.yaml` (keep the indentation; icons are
    [dashboard-icons](https://github.com/homarr-labs/dashboard-icons) names like `immich.png`, or `mdi-...`).
@@ -153,6 +163,7 @@ Redeploy from this folder (steps above).
 | "Host validation failed" | Add the address to `HOMEPAGE_ALLOWED_HOSTS` and redeploy |
 | A tile has a red dot | The NAS can't reach that service: check the container, or the VLAN path for Home Assistant |
 | Dashboard container not starting | Look at the `dashboard` log: a heredoc may be broken, or a `$` crept into the compose file |
+| Log says `exec /bin/sh: argument list too long` | The start command grew past 128 KB: rebuild with `scripts/build_dashboard_compose.py`, which compresses `custom.js` |
 | No weather chip, scene stays partly cloudy | The browser could not reach `api.open-meteo.com` (blocked by an ad blocker or offline); the rest of the page still works |
 | Public address still shows an old look | Hard refresh; if it persists, purge the Cloudflare cache for the dashboard hostname |
 | Public address shows Cloudflare 502 | Container stopped, or the tunnel route points at the wrong port |

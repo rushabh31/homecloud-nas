@@ -5,6 +5,9 @@ Newest first. Infrastructure changes and documentation baselines.
 ## 2026-11-12 (dashboard Diwali and Holi)
 - **dashboard**: the village now celebrates Diwali (diyas, star lanterns, rangoli, sparklers, fireworks)
   and Holi (coloured powder in the meadow), with dates listed through 2030.
+- **dashboard**: the first deploy crash-looped (`argument list too long`: the start command passed
+  128 KB) and the page showed a 502 for about 20 minutes. The village script is now gzipped in the
+  compose file and the town's coordinates moved to a one-line prelude; new `scripts/build_dashboard_compose.py`.
 
 ## 2026-11-12 (dashboard village)
 - **dashboard**: the valley is now a small mountain village with original villagers doing seasonal things
