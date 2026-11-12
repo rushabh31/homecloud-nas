@@ -41,7 +41,7 @@ Notes:
   `portainer.example.com` with the reusable policy "Owner only" (email one-time code, the owner's
   address only). Both apps still ask for their own login after that.
 - Records Cloudflare imported from Namecheap on zone setup (apex A, `www` CNAME, MX, TXT) were left as they are.
-- Cloudflare Access application "Patel Home Cloud dashboard" protects `dashboard.example.com` (reusable policy "Owner only", session 7 days).
+- Cloudflare Access application "Our Home dashboard" protects `dashboard.example.com` (reusable policies "Owner only" and "Family", session 7 days). Access team name: "Our Home".
 - Wildcard `*` route: none.
 
 ## How to verify

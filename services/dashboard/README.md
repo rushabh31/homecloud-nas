@@ -126,8 +126,9 @@ To change a tile:
 | Phone | `https://dashboard.example.com` (or `http://192.168.0.119:3010`). Add it to the home screen: Safari Share > Add to Home Screen, or Chrome menu > Add to Home screen. | `https://dashboard.example.com` |
 | Laptop | `http://192.168.0.119:3010` or `https://dashboard.example.com`; bookmark it or set it as the browser start page | `https://dashboard.example.com` |
 
-**Login**: the public address is behind Cloudflare Access (app "Patel Home Cloud dashboard",
-reusable policy "Owner only"). Enter the owner's email and type the code Cloudflare emails,
+**Login**: the public address is behind Cloudflare Access (app "Our Home dashboard", reusable
+policies "Owner only" and "Family"; Family adds one family member's email, set 2026-11-12 and used
+for this app only). Enter your email and type the code Cloudflare emails,
 or use "Sign in with Google" with the same address. One sign-in lasts 7 days per browser.
 The LAN address has no login of its own, like the other apps' LAN ports.
 
