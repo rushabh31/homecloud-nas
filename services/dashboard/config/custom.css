@@ -283,9 +283,22 @@ a.service-title-text { padding: 0 28px 0 0 !important; min-width: 0; }
 #phc-scene.phc-is-night .phc-day, #phc-scene.fest-valentine .phc-stargazer, #phc-scene.phc-frozen .phc-swimmer { display: none !important; }
 #phc-scene.fest-halloween .phc-fest-halloween, #phc-scene.fest-halloween-kids .phc-fest-halloween-kids, #phc-scene.fest-thanks .phc-fest-thanks,
 #phc-scene.fest-xmas .phc-fest-xmas, #phc-scene.fest-july4 .phc-fest-july4, #phc-scene.fest-valentine .phc-fest-valentine,
-#phc-scene.fest-easter .phc-fest-easter, #phc-scene.phc-is-night.fest-eve .phc-fest-eve, #phc-scene.phc-is-night.fest-fw .phc-fireworks { display: inline; }
+#phc-scene.fest-easter .phc-fest-easter, #phc-scene.fest-diwali .phc-fest-diwali, #phc-scene.fest-holi .phc-fest-holi, #phc-scene.phc-is-night.fest-eve .phc-fest-eve, #phc-scene.phc-is-night.fest-fw .phc-fireworks { display: inline; }
 #phc-scene.phc-wet .phc-fest-thanks.phc-people, #phc-scene.phc-wet .phc-carolers, #phc-scene.phc-wet .phc-fest-halloween-kids, #phc-scene.phc-wet .phc-fest-easter .phc-char { display: none; }
-#phc-scene.fest-thanks .phc-square { display: none !important; }
+#phc-scene.fest-thanks .phc-square, #phc-scene.fest-diwali .phc-square { display: none !important; }
+#phc-scene.phc-wet .phc-fest-holi, #phc-scene.phc-wet .phc-fest-diwali .phc-sparkler { display: none; }
+#phc-scene.fest-holi .phc-fest-easter, #phc-scene.fest-holi .phc-stargazer { display: none !important; }
+#phc-scene:not(.phc-is-night) .phc-sparkler { display: none; }
+.phc-flame { transform-box: fill-box; transform-origin: 50% 100%; animation: phc-flicker .9s ease-in-out infinite alternate; filter: drop-shadow(0 0 3px #ffb84a); }
+@keyframes phc-flicker { from { transform: scale(1, 1) rotate(-3deg); } to { transform: scale(.85, 1.15) rotate(3deg); } }
+.phc-swing { animation: phc-lantern 4s ease-in-out infinite; }
+@keyframes phc-lantern { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+.phc-sparkler { animation: phc-sparkle .25s steps(2) infinite; filter: drop-shadow(0 0 4px #ffd25a); }
+@keyframes phc-sparkle { 0% { transform: rotate(0) scale(1); } 100% { transform: rotate(22deg) scale(1.25); } }
+.phc-wave-arm { animation: phc-throw 2.4s ease-in-out infinite; }
+.phc-puff { transform-box: fill-box; transform-origin: center; animation: phc-puff 3.2s ease-out infinite; opacity: 0; }
+@keyframes phc-puff { 0% { transform: scale(.2); opacity: 0; } 15% { opacity: 1; } 70% { transform: scale(1.6) translateY(-10px); opacity: .5; } 100% { transform: scale(2) translateY(-18px); opacity: 0; } }
+.phc-squirt circle { animation: phc-twinkle .6s linear infinite; }
 
 .phc-bulbs circle { animation: phc-twinkle 2s ease-in-out infinite; filter: drop-shadow(0 0 3px currentColor); }
 #phc-scene.phc-is-night .phc-bulbs circle { filter: drop-shadow(0 0 5px #fff2b0) brightness(1.3); }
