@@ -44,7 +44,7 @@ stamped with the signer-in's Access email (`lan` when opened on the home Wi-Fi).
 
 ## Domain and routing
 - `kitchen.example.com` -> tunnel UGreenNAS -> `http://192.168.0.119:3040` (Pattern A).
-- Cloudflare Access app "Our Kitchen", self-hosted, policy **Family**, 7-day session, like the dashboard.
+- Cloudflare Access app "Our Kitchen", self-hosted, policies **Family** and **Owner only**, 7-day session, like the dashboard. Family alone does not include the owner.
 - Sign-in happens on the Cloudflare Access team domain (`<team>.cloudflareaccess.com`), then returns to the app.
 
 ## Deploy or replicate

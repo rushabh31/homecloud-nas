@@ -43,7 +43,7 @@ Notes:
   address only). Both apps still ask for their own login after that.
 - Records Cloudflare imported from Namecheap on zone setup (apex A, `www` CNAME, MX, TXT) were left as they are.
 - Cloudflare Access application "Our Home dashboard" protects `dashboard.example.com` (reusable policies "Owner only" and "Family", session 7 days). Access team name: "Our Home".
-- Cloudflare Access application "Our Kitchen" protects `kitchen.example.com` (reusable policy "Family", session 7 days). Added 2026-11-27.
+- Cloudflare Access application "Our Kitchen" protects `kitchen.example.com` (reusable policies "Family" and "Owner only", session 7 days; Owner only added 2026-11-27 so the owner can sign in). Added 2026-11-27.
 - Every Access app signs people in on the team domain `<team>.cloudflareaccess.com`, then returns to the app. That is the sign-in page, not a tunnel.
 - Wildcard `*` route: none.
 
