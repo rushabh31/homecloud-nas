@@ -35,6 +35,7 @@ settings `TO_BE_VERIFIED`: collect via [networking/unifi/README.md](../networkin
 | 445/tcp | SMB | LAN only |
 | 2283/tcp | Immich | LAN only |
 | 3010/tcp | Dashboard (Homepage) | via tunnel, behind Cloudflare Access |
+| 3040/tcp | Our Kitchen (meals) | via tunnel (kitchen.example.com), behind Cloudflare Access (VERIFIED 2026-11-27) |
 | 6806/tcp | SiYuan | LAN only |
 | 8000, 9000/tcp | Portainer | LAN only |
 | 8401/tcp | Mattermost (stopped) | via tunnel |

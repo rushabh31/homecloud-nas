@@ -1,0 +1,31 @@
+# UGOS Docker project "meals": Our Kitchen family meal planner.
+# One Node 22 container serves the app and keeps the family's data in ./data/kitchen.db (SQLite) on the NAS.
+# LAN: http://192.168.0.119:3040   Public: https://kitchen.example.com (Cloudflare Tunnel + Access)
+services:
+  meals:
+    image: node:22-alpine
+    container_name: meals
+    restart: unless-stopped
+    user: "1000:10"          # the NAS user that owns ./data (UGOS shows PUID=1000 PGID=10)
+    working_dir: /app
+    command: ["node", "--disable-warning=ExperimentalWarning", "/app/server.mjs"]
+    environment:
+      - PORT=8080
+      - DB_PATH=/data/kitchen.db
+    ports:
+      - "3040:8080"
+    volumes:
+      - ./app:/app:ro        # server, built site and the seed menu (read-only)
+      - ./data:/data         # the database lives here; back this folder up
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 60s
+      timeout: 5s
+      retries: 3

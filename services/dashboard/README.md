@@ -96,6 +96,7 @@ here if you open it some other way, or Homepage shows "host validation failed".
 | Notes | OKNote, SiYuan | `https://oknote.example.com`, `https://siyuan.example.com` |
 | Admin | NAS admin, Portainer, Nginx Proxy Manager | `https://mynas.example.com`, `https://portainer.example.com`, `http://192.168.0.119:81` (home only) |
 | Documents | Paperless, Nextcloud, ConvertX | `https://paperless.example.com`, `https://nextcloud.example.com`, `https://convertx.example.com` |
+| Home | Our Kitchen | `https://kitchen.example.com` |
 
 Top bar: NAS CPU and free memory, free space on Volume 1, date and time, and the weather.
 

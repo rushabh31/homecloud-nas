@@ -21,6 +21,7 @@ Read from the Cloudflare dashboard (tunnel **UGreenNAS**, Routes tab) and opened
 | `ha.example.com` | Home Assistant | `http://192.168.30.99:8123` | Yes, HA login page loads (HA VM on the NAS) |
 | `mynas.example.com` | UGOS web admin (the NAS itself) | `http://192.168.0.119:9999` | Yes, Cloudflare Access (owner only), then UGOS login |
 | `dashboard.example.com` | Dashboard (Homepage) | `http://192.168.0.119:3010` | Yes, Cloudflare Access sign-in, then the dashboard |
+| `kitchen.example.com` | Our Kitchen (meal planner) | `http://192.168.0.119:3040` | Yes, Cloudflare Access sign-in page "Log in to Our Kitchen" (2026-11-27) |
 
 ### example.net (routes removed 2026-11-11)
 
@@ -42,6 +43,8 @@ Notes:
   address only). Both apps still ask for their own login after that.
 - Records Cloudflare imported from Namecheap on zone setup (apex A, `www` CNAME, MX, TXT) were left as they are.
 - Cloudflare Access application "Our Home dashboard" protects `dashboard.example.com` (reusable policies "Owner only" and "Family", session 7 days). Access team name: "Our Home".
+- Cloudflare Access application "Our Kitchen" protects `kitchen.example.com` (reusable policy "Family", session 7 days). Added 2026-11-27.
+- Every Access app signs people in on the team domain `<team>.cloudflareaccess.com`, then returns to the app. That is the sign-in page, not a tunnel.
 - Wildcard `*` route: none.
 
 ## How to verify

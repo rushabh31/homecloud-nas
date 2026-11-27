@@ -17,10 +17,11 @@ Machine-readable copy: [services.yaml](services.yaml).
 | oknote | [oknote](../services/oknote/) | oknote/oknote:3.2.7 | oknote | Running | 38080 | bridge | TO_BE_VERIFIED |
 | siyuan-app-1 | [siyuan](../services/siyuan/) | ugreen/siyuan:v3.8.4 | siyuan | Running | 6806 | bridge | TO_BE_VERIFIED |
 | dashboard | [dashboard](../services/dashboard/) | ghcr.io/gethomepage/homepage:v2.7.0 | dashboard | Running | 3010:3000 | dashboard_default | unless-stopped |
+| meals | [meals](../services/meals/) | node:22-alpine | meals | Running | 3040:8080 | meals_default | unless-stopped |
 
 UGOS flagged newer images for: cloudflare-tunnel, Portainer, Mattermost, Mattermost-DB.
 
-Projects visible in the UGREEN Docker *Project* list: immich, siyuan, portainer, oknote.
+Projects visible in the UGREEN Docker *Project* list: immich, siyuan, portainer, oknote, meals.
 `cloudflared`, `npm` and `mattermost` are Portainer stacks (#2, #1, #3; VERIFIED 2026-11-11).
 Edit them in Portainer: the UGOS Docker app cannot edit them.
 

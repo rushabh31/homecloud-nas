@@ -120,3 +120,15 @@ services:
     routing: {public_hostname: dashboard.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.119:3010, Cloudflare Access app 'Patel Home Cloud dashboard'"}
     last_verified: 2026-11-11
     status_of_facts: VERIFIED
+  - name: meals
+    kind: docker-compose
+    deploy_method: UGREEN Docker Project "meals"
+    project_dir: /volume1/docker/meals
+    state: running
+    containers:
+      - {name: meals, image: "node:22-alpine", ports: ["3040:8080"]}
+    networks: [meals_default]
+    depends_on: [cloudflare-tunnel]
+    routing: {public_hostname: kitchen.example.com, via: "cloudflare tunnel UGreenNAS, direct 192.168.0.119:3040, Cloudflare Access app 'Our Kitchen' (Family)"}
+    last_verified: 2026-11-27
+    status_of_facts: VERIFIED

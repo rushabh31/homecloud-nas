@@ -13,4 +13,5 @@ Full detail: [domains/domain-inventory.md](../domains/domain-inventory.md).
 | portainer.example.com | 192.168.0.119:9000 | Tunnel UGreenNAS + Cloudflare Access | VERIFIED 2026-11-11, working |
 | mynas.example.com | 192.168.0.119:9999 (UGOS) | Tunnel UGreenNAS + Cloudflare Access | VERIFIED 2026-11-11, working |
 | dashboard.example.com | 192.168.0.119:3010 | Tunnel UGreenNAS + Cloudflare Access | VERIFIED 2026-11-11 |
+| kitchen.example.com | 192.168.0.119:3040 | Tunnel UGreenNAS + Cloudflare Access | VERIFIED 2026-11-27 |
 | *.example.net | removed 2026-11-11 | none | old domain, no routes |

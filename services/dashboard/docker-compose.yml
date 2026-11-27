@@ -58,6 +58,8 @@ services:
             icon: mdi-file-document-multiple
             style: row
             columns: 3
+          Home:
+            icon: mdi-silverware-fork-knife
         PHC_EOF
         cat > /app/config/widgets.yaml <<'PHC_EOF'
         - greeting:
@@ -139,6 +141,12 @@ services:
                 icon: convertx.png
                 description: Convert files; documents go to Paperless
                 siteMonitor: http://192.168.0.119:3030
+        - Home:
+            - Our Kitchen:
+                href: https://kitchen.example.com
+                icon: mdi-silverware-fork-knife
+                description: Menu, today's meals, groceries
+                siteMonitor: http://192.168.0.119:3040/healthz
         PHC_EOF
         printf '[]\n' > /app/config/bookmarks.yaml
         printf '{}\n' > /app/config/docker.yaml

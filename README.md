@@ -35,7 +35,7 @@ flowchart LR
     subgraph NAS[HomeCloud - UGREEN DXP6800 Pro]
       CFD --> NPM[Nginx Proxy Manager<br/>stopped]
       CFD --> APPS
-      NPM --> APPS[Docker services<br/>Immich, OKNote, SiYuan,<br/>Portainer, Mattermost]
+      NPM --> APPS[Docker services<br/>Immich, OKNote, SiYuan,<br/>Portainer, Mattermost,<br/>Our Kitchen]
       VM[HAOS VM<br/>stopped]
     end
     HA[homeassistant device<br/>separate host]
@@ -71,12 +71,14 @@ Machine-readable list: [inventory/services.yaml](inventory/services.yaml).
 | [siyuan](services/siyuan/) | App Center app (Docker) | 6806 | Running | siyuan.example.com | VERIFIED 2026-11-11 |
 | [home-assistant](services/home-assistant/) | KVM VM "HAOS" on the NAS + separate device | 8123 | Running (HA VM, 192.168.30.99) | ha.example.com | VERIFIED 2026-11-11 |
 | [dashboard](services/dashboard/) | Docker project (Homepage) | 3010 | Running | dashboard.example.com (Cloudflare Access login) | VERIFIED 2026-11-11 |
+| [meals](services/meals/) | Docker project (1 container) | 3040 | Running | kitchen.example.com (Cloudflare Access login) | VERIFIED 2026-11-27 |
 
 ## Quick access (phone and laptop)
 
 | What | At home | Away from home | Phone app |
 | --- | --- | --- | --- |
 | **Dashboard (start here)** | `http://192.168.0.119:3010` | `https://dashboard.example.com` (Cloudflare Access login) | browser, add to home screen |
+| Our Kitchen (meal planner) | `http://192.168.0.119:3040` | `https://kitchen.example.com` (Cloudflare Access login) | browser, add to home screen |
 | NAS itself (UGOS) | `http://192.168.0.119:9999` | `https://mynas.example.com` (Cloudflare Access login), or the UGREEN NAS app (remote access documented privately) | UGREEN NAS |
 | Immich | `http://192.168.0.119:2283` | `https://immich.example.com` | Immich |
 | OKNote | `http://192.168.0.119:38080` | `https://oknote.example.com` | browser |

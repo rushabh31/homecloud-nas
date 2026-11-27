@@ -2,6 +2,14 @@
 
 Newest first. Infrastructure changes and documentation baselines.
 
+## 2026-11-27 (Our Kitchen)
+- **meals**: new UGOS Docker project `meals` (Our Kitchen meal planner, `node:22-alpine`), LAN port 3040, folder
+  `/volume1/docker/meals`. Runs as uid 1000:10, read-only, no capabilities. Data in `data/kitchen.db` (SQLite).
+- **domains**: `kitchen.example.com` behind Cloudflare Access app "Our Kitchen" (policy "Family", 7-day
+  session), tunnel route on UGreenNAS to `http://192.168.0.119:3040`.
+- **dashboard**: new "Home" group with the Our Kitchen tile (settings layout + services heredoc); `dashboard`
+  project redeployed without pulling a new image.
+
 ## 2026-11-12 (dashboard phone layout)
 - **dashboard**: on phones the tiles are now app icons in one panel under a compact top bar, and the
   village fills the lower half of the screen. Documents group gains Nextcloud and ConvertX tiles.
